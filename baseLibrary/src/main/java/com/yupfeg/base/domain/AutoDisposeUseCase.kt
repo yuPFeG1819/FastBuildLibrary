@@ -14,6 +14,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
  * * 修改自[AndroidLifecycleScopeProvider]，实现`AutoDispose`的`LifecycleScopeProvider`接口，
  * 使子类能直接使用`autoDispose(this)`关联生命周期，自动管理`RxJava`事件流
  * * 在`ViewModel`使用时，需要绑定到视图作用域的[Lifecycle]
+ * //TODO 后续迁移到RxJava模块
  * @author yuPFeG
  * @date 2021/10/08
  */
