@@ -1,0 +1,150 @@
+import com.version.dependents.AndroidX
+import com.version.dependents.ThirdParty
+import com.version.dependents.Google
+import com.version.dependents.RxJava
+import com.version.dependents.Network
+
+plugins{
+    id "com.android.library"
+    //依赖版本管理与公共gradle配置的插件
+    id "com.version.config"
+    id "kotlin-android"
+    id "kotlin-parcelize"
+    //kotlin替代注解
+    id "kotlin-kapt"
+}
+
+android {
+    compileSdk AppBuildConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdk AppBuildConfig.minSdkVersion
+        targetSdk AppBuildConfig.targetSdkVersion
+        versionCode AppBuildConfig.versionCode
+        versionName AppBuildConfig.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            //在子Module(apply plugin: 'com.android.library')混淆时，
+            //需要使用consumerProguardFile 'proguard-rules.pro'来设置混淆规则
+            consumerProguardFile 'proguard-rules.pro'
+        }
+        debug{
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        //kotlin编译使用java1.8特性
+        jvmTarget = '1.8'
+    }
+
+    //开启dataBinding
+    buildFeatures{
+        dataBinding = true
+        // for view binding :
+        // viewBinding = true
+    }
+}
+
+dependencies {
+    //kotlin
+    api (ThirdParty.Kotlin.stdlib)
+    //kotlin协程
+    api (ThirdParty.Kotlin.coroutinesAndroid)
+    //------------基础官方依赖库--------------
+    api (AndroidX.appcompat)
+    //AppCompat已包含fragment的依赖，这里另外依赖带ktx后缀的库
+    api (AndroidX.Fragment.fragmentKtx)
+    //fragment已包含activity的依赖，这里另外依赖带ktx后缀的库
+    api (AndroidX.activityKtx)
+
+    api (Google.material)
+    api (AndroidX.recyclerView)
+    api (AndroidX.viewpager2)
+    api (AndroidX.cardView)
+    //约束布局
+    api (AndroidX.constraintLayout)
+    //官方提供的流式布局库
+    api (Google.flexbox)
+    //dex分包
+    api (AndroidX.multiDex)
+    //---------------JetPack--------------------
+    api (AndroidX.coreKtx)
+    api (AndroidX.Lifecycle.viewModelKtx)
+//    api (AndroidX.Lifecycle.commonJava8)
+    api (AndroidX.Lifecycle.runtimeKtx)
+    api (AndroidX.Lifecycle.liveDataKtx)
+    api (AndroidX.Lifecycle.viewModelSavedState)
+    api (AndroidX.Lifecycle.service)
+    api (AndroidX.Lifecycle.process)
+
+//    kapt (AndroidX.Lifecycle.compiler)
+    //Navigation库
+    api (AndroidX.Navigation.fragmentKtx)
+    api (AndroidX.Navigation.uiKtx)
+    //Room数据库
+    api (AndroidX.Room.runtime)
+    api (AndroidX.Room.roomKtx)
+    api (AndroidX.Room.testing)
+    //多模块项目，必须在用到database的位置添加上room的kapt
+    kapt (AndroidX.Room.compiler)
+    //-----------RxJava3(TODO 后续移除)--------------
+
+    api (RxJava.rxJava3)
+    api (RxJava.rxAndroid3)
+    api (RxJava.rxKotlin3)
+    //不中断事件流的RxJava3热流拓展，排除重复依赖
+    api (RxJava.rxRelay3){
+        exclude group: 'io.reactivex.rxjava3', module: "rxjava"
+    }
+    //管理rxJava内存泄漏问题(0.8.0以上需要AndroidX支持)
+    api (RxJava.AutoDispose.rxJava3)
+    api (RxJava.AutoDispose.rxJava3Lifecycle)
+
+    //-----------自用封装库----------
+    //网络库
+    api(ThirdParty.httpMediator)
+    //日志库
+    api(ThirdParty.logger)
+    //单次执行LiveData
+    api(ThirdParty.stateLiveData)
+    //resultAPI封装
+    api(ThirdParty.easyResultApi)
+    //----------------网络相关-------------
+    //支持RxJava3 CallBack处理
+    api (Network.retrofitRxJava3Adapter)
+    //支持GSON解析
+    api (Network.retrofitGson2)
+    //----------------Glide图片加载框架-----------------
+    api (ThirdParty.Glide.glide)
+    // Glide 的注解和注解解析器
+    api (ThirdParty.Glide.glideAnnotations)
+    kapt (ThirdParty.Glide.compiler)
+    //Glide对OkHttp3的支持，同时排除OkHttp重复依赖
+    api (ThirdParty.Glide.okHttp) {
+        exclude group: "com.squareup.okhttp3", module: "okhttp"
+    }
+
+    //-------其他杂项-----------
+    api (Google.gson)
+    //toast框架
+    implementation (ThirdParty.toastUtils)
+    //mmkv储存库
+    api (ThirdParty.mmkv)
+    //智能下拉刷新库
+    api (ThirdParty.SmartRefreshLayout.base)
+    //中文拼音转化核心库
+    api (ThirdParty.TinPinYin.base)
+    //仿iOS的PickerView控件
+    api (ThirdParty.androidPickerView)
+}

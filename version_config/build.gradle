@@ -1,0 +1,67 @@
+buildscript {
+    /**引入插件依赖版本管理*/
+//    apply "../dependencies.gradle"
+    repositories {
+        google()
+        mavenCentral()
+        //central仓和jcenter仓的聚合仓 参见(https://developer.aliyun.com/mvn/guide)
+        maven{ url'https://maven.aliyun.com/repository/public'}
+    }
+    dependencies {
+        //kotlin插件(必须，否则找不到plugins)
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
+    }
+}
+
+//plugins {
+//    id("groovy")
+//    id("kotlin")
+//    id("java-gradle-plugin")
+//}
+apply plugin: 'groovy'
+apply plugin: 'kotlin'
+apply plugin: 'java-gradle-plugin'
+
+repositories {
+    // 需要添加 jcenter 否则会提示找不到 gradlePlugin
+//    jcenter()
+    google()
+    //central仓和jcenter仓的聚合仓 参见(https://developer.aliyun.com/mvn/guide)
+    maven{ url'https://maven.aliyun.com/repository/public'}
+    mavenCentral()
+
+}
+
+//该模块内部的依赖，都仅在编译期内生效
+dependencies {
+    compileOnly(gradleApi())
+    compileOnly(localGroovy())
+    //kotlin插件(必须，否则找不到plugins)
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31")
+    //引用android gradle api, 里面包含transform api
+    compileOnly("com.android.tools.build:gradle:4.1.3")
+    //asm字节码插桩
+    compileOnly("org.ow2.asm:asm:9.0")
+    compileOnly("org.ow2.asm:asm-util:9.0")
+    compileOnly("org.ow2.asm:asm-commons:9.0")
+}
+
+//---------------------------自定义plugin--------------------------
+
+/**
+ * 在其他模块的build.gradle可以直接通过
+ * * plugins{
+ *     id "com.version.config"
+ * }
+ * 来引用该版本依赖控制的插件
+ *
+ * * PS: plugins字段必须先写在build.gradle内执行过sync Now，否则无法import模块内部的对象
+ */
+gradlePlugin {
+    plugins {
+        version {
+            id = "com.version.config"
+            implementationClass = "com.version.plugins.VersionConfigPlugin"
+        }
+    }
+}

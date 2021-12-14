@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="viewConfig"
+            type="com.yupfeg.sample.TestWindowInsetActivity.BindingConfig" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+
+        <!-- <editor-fold ============ 顶部标题栏==============> -->
+
+        <View
+            android:id="@+id/view_test_window_inset_title_group"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="#AA00FF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <androidx.constraintlayout.helper.widget.Layer
+            android:id="@+id/layer_test_window_inset_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_test_window_inset_title_group"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_window_inset_title_group"
+            app:constraint_referenced_ids="iv_feed_back_title_bar_back_icon"
+            android:padding="20dp"
+            onViewClick="@{()->viewConfig.naviBack()}"
+            />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_feed_back_title_bar_back_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_vector_left_arrow"
+            android:tint="#ffffff"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_window_inset_title_group"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="15dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试WindowInset"
+            android:textSize="16sp"
+            android:textColor="#ffffff"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_window_inset_title_group"
+            android:layout_marginBottom="15dp"
+            />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:background="#ededed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_window_inset_title_group"
+            />
+
+        <!-- </editor-fold============ 顶部标题栏==============> -->
+
+        <Button
+            android:id="@+id/btn_test_window_inset_full_screen"
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            android:text="开启/隐藏 全屏模式"
+            app:layout_constraintTop_toBottomOf="@id/view_test_window_inset_title_group"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            onViewClick="@{()->viewConfig.fullScreen()}"
+            />
+
+        <Button
+            android:id="@+id/btn_test_window_inset_full_navigation"
+            android:layout_width="180dp"
+            android:layout_height="60dp"
+            android:text="开启/隐藏 导航栏"
+            app:layout_constraintTop_toBottomOf="@id/btn_test_window_inset_full_screen"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            onViewClick="@{()->viewConfig.updateNavigationBar()}"
+            />
+
+        <View
+            android:id="@+id/view_test_window_inset_navigation_group"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_title_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

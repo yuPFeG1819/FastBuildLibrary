@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="config"
+            type="com.yupfeg.sample.TestResultApiActivity.BindingConfig"
+            />
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <Button
+            android:id="@+id/btn_test_result_api_normal_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正常返回"
+            onViewClick="@{()->config.normalBack()}"
+            />
+
+        <Button
+            android:id="@+id/btn_test_result_api_result_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="set_Result"
+            onViewClick="@{()->config.resultDataBack()}"
+            />
+    </LinearLayout>
+</layout>

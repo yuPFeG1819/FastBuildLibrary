@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    横向滑动指示器View的自定义属性-->
+    <declare-styleable name="HorizontalSlideView">
+        <!-- 滑块指示器颜色 -->
+        <attr name="indicatorColor" format="color|reference"/>
+        <!-- 滚动条背景颜色-->
+        <attr name="sliderBackgroundColor" format="color|reference"/>
+    </declare-styleable>
+</resources>

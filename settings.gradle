@@ -1,0 +1,46 @@
+//dependencyResolutionManagement {
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositories {
+//        google()
+//        mavenCentral()
+//        //central仓和jcenter仓的聚合仓 参见(https://developer.aliyun.com/mvn/guide)
+//        maven{ url'https://maven.aliyun.com/repository/public'}
+////        jcenter() // Warning: this repository is going to shut down soon
+//        //jitpack
+//        maven {url = "https://jitpack.io"}
+//    }
+//}
+rootProject.name = "FastBuildLibrary"
+//自定义gradle script 自定义插件（依赖版本管理）
+includeBuild("version_config")
+include ':app'
+include ':baseLibrary'
+
+
+//gradle的hook监听（每个gradle task都会hook）
+gradle.addBuildListener(new BuildListener() {
+    void buildStarted(Gradle var1) {
+        println "开始构建gradle - buildStarted"
+    }
+    void settingsEvaluated(Settings var1) {
+        // var1.gradle.rootProject 这里访问 Project 对象时会报错，
+        // 因为还未完成 Project 的初始化。
+        println 'settings gradle评估完成（settings.gradle 中代码执行完毕 settingsEvaluated）'
+    }
+    void projectsLoaded(Gradle var1) {
+        println '项目结构加载完成（projectsLoaded 初始化阶段结束）'
+        println '初始化结束，可访问根项目：' + var1.gradle.rootProject
+    }
+    void projectsEvaluated(Gradle var1) {
+        println '所有项目评估完成（projectsEvaluated 配置阶段结束）'
+    }
+    void buildFinished(BuildResult var1) {
+        println '构建结束 - buildFinished'
+    }
+
+    @Override
+    void beforeSettings(Settings settings) {
+        super.beforeSettings(settings)
+    }
+})
+include ':RxJavaExtra'

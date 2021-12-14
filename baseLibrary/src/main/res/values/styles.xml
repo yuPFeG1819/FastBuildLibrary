@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    默认Dialog样式 -->
+    <style name="FastBuildSimpleDialogStyle" parent="android:style/Theme.Dialog">
+        <!--windowBackground是显示内容区域的窗口的背景色，不是整个屏幕的背景色-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 是否悬浮于遮罩上-->
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--透明灰色的覆盖层 backgroundDimEnabled = true / false无覆盖层-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 是否显示半透明-->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/FastBuildDefaultDialogAnim</item>
+    </style>
+
+    <!-- 默认Dialog动画样式 -->
+    <style name="FastBuildDefaultDialogAnim">
+        <item name="android:windowEnterAnimation">@anim/dialog_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_scale_out</item>
+    </style>
+
+    <!-- 底部弹出窗口动画样式 -->
+    <style name="FastBuildBottomDialogAnim">
+        <item name="android:windowEnterAnimation">@anim/dialog_push_and_fade_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_push_and_fade_bottom_out</item>
+    </style>
+
+    <!--禁用5.0以上按钮自带阴影-->
+    <style name="ButtonNoElevation_Shadow">
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <!--重写bottomSheetDialog源码内的样式，修改背景色为透明色-->
+    <style name="SheetStyle" parent="android:Widget">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="behavior_peekHeight">auto</item>
+        <item name="behavior_hideable">true</item>
+        <item name="behavior_skipCollapsed">false</item>
+    </style>
+</resources>

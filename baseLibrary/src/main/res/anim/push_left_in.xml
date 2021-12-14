@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--从屏幕左侧靠近屏幕中心位置，移动到屏幕中心 ，先快后慢-->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:fromXDelta="-100.0%p"
+        android:toXDelta="0.0"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        />
+</set>

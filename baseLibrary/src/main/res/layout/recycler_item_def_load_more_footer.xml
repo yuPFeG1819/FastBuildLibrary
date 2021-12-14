@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--默认加载更多FooterView布局-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/loading_view"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <!-- <editor-fold desc="正在加载中状态"> -->
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_load_more_loading_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="progress_load_more_loading,tv_load_more_loading_text"
+        />
+
+    <ProgressBar
+        android:id="@+id/progress_load_more_loading"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginEnd="5dp"
+        android:indeterminateDrawable="@drawable/fast_build_recyclerview_footer_loading_progress"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_load_more_loading_text"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_load_more_loading_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/load_more_footer_loading"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <!--</editor-fold>-->
+
+    <!-- <editor-fold desc="已完成状态"> -->
+
+    <!--    已经是最后一页的说明文本-->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_load_more_end_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/load_more_footer_end"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        />
+
+    <!-- </editor-fold>-->
+
+    <!-- <editor-fold desc="错误重试状态"> -->
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_load_more_retry_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="iv_load_more_retry_icon,tv_load_more_retry_text"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_load_more_retry_icon"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/fast_build_recyclerview_footer_error"
+        app:layout_constraintTop_toTopOf="@id/tv_load_more_retry_text"
+        app:layout_constraintBottom_toBottomOf="@id/tv_load_more_retry_text"
+        app:layout_constraintEnd_toStartOf="@id/tv_load_more_retry_text"
+        android:layout_marginStart="5dp"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_load_more_retry_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/load_more_footer_network_error"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <!-- </editor-fold>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

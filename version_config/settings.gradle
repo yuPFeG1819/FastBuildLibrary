@@ -1,0 +1,2 @@
+//用于防止version_config模块，在build时报错.
+// 表明该module不是实际项目依赖模块，仅控制依赖版本
