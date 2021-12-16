@@ -31,7 +31,7 @@ abstract class BaseBindingViewHolder<T,VDB : ViewDataBinding>(itemView : View) :
     fun bind(itemData : T,position : Int){
         mBinding.apply {
             onBind(mBinding, itemData, position)
-            //在绑定数据更新后才会更新数据，防止item数据闪烁，必须在主线程
+            //在绑定数据更新后才会更新数据，防止item数据闪烁，必须在主线程调用该函数
             executePendingBindings()
         }
     }

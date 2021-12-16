@@ -9,10 +9,10 @@ import java.util.concurrent.*
 
 /**
  * 模仿[AsyncListDiffer]的RecyclerView列表diff处理类，
- * * 用于视图与具体数据处理的解耦
  * @author yuPFeG
  * @date 2020/10/20
  */
+@Deprecated("直接使用AsyncListDiffer")
 class AsyncListDiffHelper constructor(
     /**列表数据更新时的回调接口*/
     private val mListUpdateCallback: ListUpdateCallback,

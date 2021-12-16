@@ -3,63 +3,62 @@ package com.yupfeg.base.widget.recyclerview
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
-import com.yupfeg.base.widget.recyclerview.delegate.BaseListItemDelegate
+import com.yupfeg.base.widget.recyclerview.strategy.BaseItemStrategy
+import java.util.concurrent.Executor
 import kotlin.math.max
 
 /**列表item数据类型的别名*/
-typealias DataDelegateClass = Class<out Any>
+typealias ItemStrategyDataClass = Class<out Any>
 
-/**列表item委托类的别名*/
-typealias AdapterItemDelegate = BaseListItemDelegate<Any, RecyclerView.ViewHolder>
+/**列表item策略类的别名*/
+typealias AdapterItemStrategy = BaseItemStrategy<Any, RecyclerView.ViewHolder>
 
 /**
  * 不限制具体item数据类型的RecyclerView列表适配器
- * * 参考[官方方案](https://github.com/google/iosched/blob/89df01ebc19d9a46495baac4690c2ebfa74946dc/mobile/src/main/java/com/google/samples/apps/iosched/ui/feed/FeedAdapter.kt)
- * * 参考[掘金上的委托方案](https://juejin.cn/post/6882531923537707015#heading-4)
  * * 将adapter与具体业务逻辑数据类型解耦，仅根据列表item的数据类型，将具体显示逻辑交由委托类处理
- * @param mItemDelegates adapter的item委托类集合，管理当前adapter内部所有具体业务逻辑的item委托类
- * @param diffConfig diff计算的配置
+ *
+ * @param mItemStrategies adapter的item策略类Map，管理当前adapter内部所有具体业务逻辑的item委托类
+ * @param diffExecutor diff计算执行的线程池
  *
  * @author yuPFeG
  * @date 2020/10/20
  */
-class RecyclerListAdapter(
-    private val mItemDelegates : Map<DataDelegateClass, AdapterItemDelegate>,
-    private val diffConfig : AsyncDifferConfig<Any>? = null
+class RecyclerListAdapter private constructor(
+    private val mItemStrategies : Map<ItemStrategyDataClass, AdapterItemStrategy>,
+    private val diffExecutor : Executor? = null
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     companion object{
         /**
          * 利用可变参数添加不固定的item委托类，创建RecyclerView的adapter实例
-         * @param delegates
-         * @param diffConfig diff计算的配置
+         * @param strategies
+         * @param diffExecutor diff计算执行的线程池
          * @return
          */
         @Suppress("UNCHECKED_CAST", "unused")
         fun createAdapter(
-            vararg delegates: BaseListItemDelegate<*, *>,
-            diffConfig: AsyncDifferConfig<Any>? = null,
+            vararg strategies: BaseItemStrategy<*, *>,
+            diffExecutor: Executor? = null,
         ) : RecyclerListAdapter{
-            val map = mutableMapOf<DataDelegateClass, AdapterItemDelegate>()
-            for (delegate in delegates) {
-                val itemDelegate = delegate as? AdapterItemDelegate
-                itemDelegate ?: continue
-                map[itemDelegate.dataClass] = itemDelegate
+            val map = mutableMapOf<ItemStrategyDataClass, AdapterItemStrategy>()
+            for (strategy in strategies) {
+                val itemStrategy = strategy as? AdapterItemStrategy ?: continue
+                map[itemStrategy.dataClass] = itemStrategy
             }
-            return RecyclerListAdapter(map, diffConfig)
+            return RecyclerListAdapter(map, diffExecutor)
         }
 
     }
 
     /**DiffUtil帮助类实例，管理Adapter数据*/
-    private val mDiffHelper : AsyncListDiffer<Any> = createAsyncDiffHelper()
+    private val mDiffHelper : AsyncListDiffer<Any> = createAsyncDiffInstance()
 
     /**
      * viewType作为key的Item委托类缓存Map类
      * * 用于简化通过item的viewType来获取对应item委托类的重复操作。
      * */
-    private val mViewTypeItemDelegates =
-        mItemDelegates.mapKeys { it.value.itemType }
+    private val mViewTypeItemStrategies =
+        mItemStrategies.mapKeys { it.value.itemType }
 
     /**当前列表滑动状态*/
     private var mCurrScrollState : Int = SCROLL_STATE_IDLE
@@ -133,7 +132,7 @@ class RecyclerListAdapter(
     //</editor-fold desc="分页加载相关“>
 
     init {
-        //开启根据typeId和itemId进行获取缓存机制
+        //开启尝试根据itemType与itemId进行获取缓存机制
         setHasStableIds(true)
     }
 
@@ -141,15 +140,15 @@ class RecyclerListAdapter(
 
     override fun getItemId(position: Int): Long {
         val itemData = adapterList[position]
-        return getItemDelegate(itemData.javaClass).getItemId(itemData, position)
+        return getItemStrategy(itemData.javaClass).getItemId(itemData, position)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItemDelegate(getListItem(position).javaClass).itemType
+        return getItemStrategy(getListItem(position).javaClass).itemType
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val itemDelegate = mViewTypeItemDelegates.getValue(viewType)
+        val itemDelegate = mViewTypeItemStrategies.getValue(viewType)
         return itemDelegate.createViewHolder(parent, itemDelegate.inflateLayoutView(parent))
     }
 
@@ -163,7 +162,7 @@ class RecyclerListAdapter(
         payloads: MutableList<Any>
     ) {
         val itemData = getListItem(position)
-        val itemDelegate = getItemDelegate(itemData.javaClass)
+        val itemDelegate = getItemStrategy(itemData.javaClass)
         //这里的payloads参数是从notify()方法中的payload集合而来（DiffUtil里的getChangePayload也能获取到）
         //需要判断payloads.isEmpty(),只要有值就能执行定向部分刷新，不会重新渲染整个item
         if (payloads.isEmpty()) {
@@ -189,107 +188,121 @@ class RecyclerListAdapter(
                 super.onScrollStateChanged(recyclerView, newState)
             }
         })
-        //兼容GridLayoutManager
-        (recyclerView.layoutManager as? GridLayoutManager)?.also {layoutManager->
-            //设置item所占据列数
-            val maxSpanCount = layoutManager.spanCount
-            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
-                override fun getSpanSize(position: Int): Int {
-                    return when(val currSpanSize = getItemDelegateFromPosition(position).spanSize){
-                        in 1..maxSpanCount -> currSpanSize
-                        in Int.MIN_VALUE..1 -> 1
-                        else -> maxSpanCount
-                    }
-                }
-            }
-        }
-
+        //兼容GridLayoutManager，便于控制itemViewHolder的宽度
+        (recyclerView.layoutManager as? GridLayoutManager)?.setGridSpanSizeLookup()
         super.onAttachedToRecyclerView(recyclerView)
     }
 
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        val itemDelegate = getItemDelegateByItemType(holder.itemViewType)
-        itemDelegate.onViewAttachedToWindow(holder)
-        //兼容StaggeredGridLayoutManager
-        takeIf { itemDelegate.spanSize == 1}
-            ?.run {
-                (holder.itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams)
-                    ?.isFullSpan = true
-            }
+        val itemStrategy = getItemStrategyByItemType(holder.itemViewType)
+        itemStrategy.onViewAttachedToWindow(holder)
+        //兼容StaggeredGridLayoutManager，控制item在视图内的宽度
+        takeIf { itemStrategy.spanSize > 1 }?.run {
+            (holder.itemView.layoutParams as? StaggeredGridLayoutManager.LayoutParams)
+                ?.isFullSpan = true
+        }
     }
 
     //回收ViewHolder失败后回调，如果返回true，表示该项ViewHolder需要被强制回收
     override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        return getItemDelegateByItemType(holder.itemViewType).onFailRecycledView(holder)
+        return getItemStrategyByItemType(holder.itemViewType).onFailRecycledView(holder)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        getItemDelegateByItemType(holder.itemViewType).onViewRecycled(holder)
+        getItemStrategyByItemType(holder.itemViewType).onViewRecycled(holder)
         super.onViewRecycled(holder)
     }
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        getItemDelegateByItemType(holder.itemViewType).onViewDetachedFromWindow(holder)
+        getItemStrategyByItemType(holder.itemViewType).onViewDetachedFromWindow(holder)
         super.onViewDetachedFromWindow(holder)
     }
 
     //</editor-fold desc="==============生命周期方法==============“>
 
     /**
-     * 获取item的数据类型对应的item委托类
-     * @param itemClass item委托类的数据类型
+     * [GridLayoutManager]拓展函数，设置itemViewHolder占据列表视图的列数
+     * * 多用于设置部分列表item占用宽度，如spanSize = 3，而layoutManager设置spanCount也为3，则item占据完整一行
      * */
-    private fun getItemDelegate(itemClass: DataDelegateClass)
-            = mItemDelegates.getValue(itemClass)
+    private fun GridLayoutManager.setGridSpanSizeLookup(){
+        //设置item所占据列数
+        val maxSpanCount = this.spanCount
+        this.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup(){
+            override fun getSpanSize(position: Int): Int {
+                return when(val currSpanSize = getItemStrategyFromPosition(position).spanSize){
+                    in 1..maxSpanCount -> currSpanSize
+                    in Int.MIN_VALUE..1 -> 1
+                    else -> maxSpanCount
+                }
+            }
+        }
+    }
 
     /**
-     * 获取itemType对应的item委托类
-     * @param itemType item委托类的itemType，[BaseListItemDelegate.itemType]
+     * 获取item的数据类型对应的item策略实例
+     * @param itemClass item策略对应的数据类型
      * */
-    private fun getItemDelegateByItemType(itemType: Int)
-            = mViewTypeItemDelegates.getValue(itemType)
+    private fun getItemStrategy(itemClass: ItemStrategyDataClass)
+            = mItemStrategies.getValue(itemClass)
+
+    /**
+     * 获取itemType对应的item策略实例
+     * @param itemType item委托类的itemType，[BaseItemStrategy.itemType]
+     * */
+    private fun getItemStrategyByItemType(itemType: Int)
+            = mViewTypeItemStrategies.getValue(itemType)
 
     /**
      * 根据列表item下标获取对应类型的item委托类
      * @param position 列表item下标
      */
-    private fun getItemDelegateFromPosition(position: Int)
-            = mItemDelegates.getValue(getListItem(position).javaClass)
+    private fun getItemStrategyFromPosition(position: Int)
+            = mItemStrategies.getValue(getListItem(position).javaClass)
 
     /**
-     * 创建diff异步帮助类对象
+     * 创建diff异步处理类对象
      * @return
      */
-    private fun createAsyncDiffHelper() : AsyncListDiffer<Any>{
-        return if (diffConfig != null){
-            AsyncListDiffer(AdapterListUpdateCallback(this), diffConfig)
-        }else {
-            AsyncListDiffer(this, object : DiffUtil.ItemCallback<Any>() {
-                override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
-                    if (oldItem::class != newItem::class) {
-                        return false
-                    }
-                    return mItemDelegates[oldItem::class.java]
-                        ?.areItemsTheSame(oldItem, newItem) ?: false
-                }
+    private fun createAsyncDiffInstance() : AsyncListDiffer<Any>{
+        val diffItemCallBack = createDiffItemCallBack()
+        diffExecutor?:return AsyncListDiffer(this, diffItemCallBack)
 
-                override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
-                    if (oldItem::class != newItem::class) {
-                        return false
-                    }
-                    return mItemDelegates[oldItem::class.java]
-                        ?.areContentsTheSame(oldItem, newItem) ?: false
-                }
+        val diffConfig =  AsyncDifferConfig.Builder(diffItemCallBack)
+            .setBackgroundThreadExecutor(diffExecutor)
+            .build()
 
-                override fun getChangePayload(oldItem: Any, newItem: Any): Any? {
-                    if (oldItem::class != newItem::class) {
-                        return false
-                    }
-                    return mItemDelegates[oldItem::class.java]
-                        ?.getChangePayload(oldItem, newItem)
+        return AsyncListDiffer(AdapterListUpdateCallback(this), diffConfig)
+    }
+
+    /**
+     * 创建diff计算item比较差异回调
+     */
+    private fun createDiffItemCallBack() : DiffUtil.ItemCallback<Any>{
+        return object : DiffUtil.ItemCallback<Any>() {
+            override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
+                if (oldItem::class != newItem::class) {
+                    return false
                 }
-            })
+                return mItemStrategies[oldItem::class.java]
+                    ?.areItemsTheSame(oldItem, newItem) ?: false
+            }
+
+            override fun areContentsTheSame(oldItem: Any, newItem: Any): Boolean {
+                if (oldItem::class != newItem::class) {
+                    return false
+                }
+                return mItemStrategies[oldItem::class.java]
+                    ?.areContentsTheSame(oldItem, newItem) ?: false
+            }
+
+            override fun getChangePayload(oldItem: Any, newItem: Any): Any? {
+                if (oldItem::class != newItem::class) {
+                    return false
+                }
+                return mItemStrategies[oldItem::class.java]
+                    ?.getChangePayload(oldItem, newItem)
+            }
         }
     }
 }

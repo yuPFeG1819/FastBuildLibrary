@@ -1,4 +1,4 @@
-package com.yupfeg.base.widget.recyclerview.delegate
+package com.yupfeg.base.widget.recyclerview.strategy
 
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +49,7 @@ interface OnLoadMoreItemClickListener{
 @Suppress("unused")
 class SimpleLoadMoreListItemDelegate(
     private val onItemClick : OnLoadMoreItemClickListener ?= null
-) : BaseListItemDelegate<LoadMoreFooterItemBean, BaseViewHolder>(LoadMoreFooterItemBean::class.java){
+) : BaseItemStrategy<LoadMoreFooterItemBean, BaseViewHolder>(LoadMoreFooterItemBean::class.java){
 
     override val layoutId: Int
         get() = R.layout.recycler_item_def_load_more_footer

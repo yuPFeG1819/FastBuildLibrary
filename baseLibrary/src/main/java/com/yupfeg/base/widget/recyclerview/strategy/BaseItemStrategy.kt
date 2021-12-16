@@ -1,4 +1,4 @@
-package com.yupfeg.base.widget.recyclerview.delegate
+package com.yupfeg.base.widget.recyclerview.strategy
 
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +16,7 @@ import com.yupfeg.base.widget.recyclerview.viewHolder.BaseBindingViewHolder
  * @author yuPFeG
  * @date 2020/10/20
  */
-abstract class BaseListItemDelegate<T,in VH : RecyclerView.ViewHolder>(
+abstract class BaseItemStrategy<T,in VH : RecyclerView.ViewHolder>(
     val dataClass: Class<out T>
 ) : DiffUtil.ItemCallback<T>(){
 
@@ -26,7 +26,9 @@ abstract class BaseListItemDelegate<T,in VH : RecyclerView.ViewHolder>(
 
     /**
      * item在列表中占据的列数，默认为1
-     * * 提供给GridLayoutManager与StaggeredGridLayoutManager 使用
+     * * 提供给`GridLayoutManager`与`StaggeredGridLayoutManager` 使用
+     * * 如`GridLayoutManager`设置的spanCount = 3，此时[spanSize] = 3则可以占据视图完整一行位置
+     * * 如使用`StaggeredGridLayoutManager`则，只要设置[spanSize]不为1即可占据完整一行位置
      * */
     open var spanSize : Int = 1
 
@@ -64,7 +66,7 @@ abstract class BaseListItemDelegate<T,in VH : RecyclerView.ViewHolder>(
      * 在viewHolder回收失败时回调
      * * 通常在ViewHolder处于正在执行动画状态，而被回收失败
      * @param viewHolder
-     * @return true-该ViewHolder需要被强制回收否则为false
+     * @return true-该ViewHolder需要被强制回收，否则为false
      */
     open fun onFailRecycledView(viewHolder: VH) : Boolean = false
 
@@ -74,6 +76,7 @@ abstract class BaseListItemDelegate<T,in VH : RecyclerView.ViewHolder>(
      * @param viewHolder
      */
     open fun onViewRecycled(viewHolder: VH){
+        //默认回收dataBinding viewHolder的绑定信息
         (viewHolder as? BaseBindingViewHolder<*,*>)?.release()
     }
 

@@ -7,8 +7,8 @@ import com.yupfeg.base.domain.extra.ListPageable
 import com.yupfeg.base.provider.ResourceContentProvider
 import com.yupfeg.base.tools.bridge.LoadMoreDataTransformer
 import com.yupfeg.base.widget.recyclerview.ListLoadMoreState
-import com.yupfeg.base.widget.recyclerview.delegate.LoadMoreFooterItemBean
-import com.yupfeg.base.widget.recyclerview.delegate.ILoadMoreItem
+import com.yupfeg.base.widget.recyclerview.strategy.LoadMoreFooterItemBean
+import com.yupfeg.base.widget.recyclerview.strategy.ILoadMoreItem
 import com.yupfeg.logger.ext.logd
 
 /**

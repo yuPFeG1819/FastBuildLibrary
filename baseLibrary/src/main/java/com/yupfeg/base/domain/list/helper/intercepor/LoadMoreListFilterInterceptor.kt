@@ -4,8 +4,8 @@ import com.yupfeg.base.R
 import com.yupfeg.base.domain.list.helper.ListFilterDataHelper
 import com.yupfeg.base.provider.ResourceContentProvider
 import com.yupfeg.base.widget.recyclerview.ListLoadMoreState
-import com.yupfeg.base.widget.recyclerview.delegate.ILoadMoreItem
-import com.yupfeg.base.widget.recyclerview.delegate.LoadMoreFooterItemBean
+import com.yupfeg.base.widget.recyclerview.strategy.ILoadMoreItem
+import com.yupfeg.base.widget.recyclerview.strategy.LoadMoreFooterItemBean
 import kotlin.jvm.Throws
 
 /**
