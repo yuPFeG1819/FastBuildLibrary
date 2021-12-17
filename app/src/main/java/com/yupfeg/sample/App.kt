@@ -1,7 +1,10 @@
 package com.yupfeg.sample
 
 import com.yupfeg.base.application.BaseApplication
+import com.yupfeg.base.tools.dispatcher.ITask
+import com.yupfeg.base.tools.dispatcher.IdleDelayTaskDispatcher
 import com.yupfeg.base.tools.initToast
+import com.yupfeg.base.tools.pool.WebViewPool
 import com.yupfeg.logger.ext.setDslLoggerConfig
 import com.yupfeg.logger.printer.LogcatPrinter
 
@@ -11,6 +14,12 @@ class App : BaseApplication(){
         super.onCreate()
         initToast()
         initLoggerConfig()
+        val dispatcher = IdleDelayTaskDispatcher().addTask(object : ITask {
+            override fun run() {
+                WebViewPool.prepare(this@App.applicationContext)
+            }
+        })
+        dispatcher.start()
     }
 
     /**

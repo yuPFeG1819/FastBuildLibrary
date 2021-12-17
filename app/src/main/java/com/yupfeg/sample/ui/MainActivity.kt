@@ -3,16 +3,12 @@ package com.yupfeg.sample.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.LayoutInflaterCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -30,7 +26,6 @@ import com.yupfeg.result.*
 import com.yupfeg.result.permission.RequestPermissionLauncher
 import com.yupfeg.result.permission.dialog.DefaultRationaleDialogFragment
 import com.yupfeg.sample.R
-import com.yupfeg.sample.TestWindowInsetActivity
 import com.yupfeg.sample.databinding.ActivityMainBinding
 import java.io.File
 
@@ -181,13 +176,13 @@ class MainActivity : BaseActivity() {
         fun testResultApiStartActivity(){
             mViewModel.testUseCase.queryTestData()
             //测试跳转页面
-//            mTestResultActivityLauncher.launch<TestResultApiActivity>{ resultIntent->
-//                resultIntent?.extras?.also {
-//                    Toast.makeText(this@MainActivity,"接收返回值${it["key"]}",Toast.LENGTH_SHORT).show()
-//                }
-//            }
+            mTestResultActivityLauncher.launch<TestResultApiActivity>{ resultIntent->
+                resultIntent?.extras?.also {
+                    Toast.makeText(this@MainActivity,"接收返回值${it["key"]}",Toast.LENGTH_SHORT).show()
+                }
+            }
 
-            startActivity(Intent(this@MainActivity,TestWindowInsetActivity::class.java))
+//            startActivity(Intent(this@MainActivity,TestWindowInsetActivity::class.java))
         }
 
         fun takeSystemPicture(){

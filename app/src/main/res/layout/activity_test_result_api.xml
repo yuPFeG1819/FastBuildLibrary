@@ -3,7 +3,7 @@
     <data>
         <variable
             name="config"
-            type="com.yupfeg.sample.TestResultApiActivity.BindingConfig"
+            type="com.yupfeg.sample.ui.TestResultApiActivity.BindingConfig"
             />
     </data>
 
@@ -28,6 +28,12 @@
             android:layout_height="wrap_content"
             android:text="set_Result"
             onViewClick="@{()->config.resultDataBack()}"
+            />
+
+        <FrameLayout
+            android:id="@+id/fragment_webview"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
             />
     </LinearLayout>
 </layout>
