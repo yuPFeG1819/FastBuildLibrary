@@ -16,7 +16,7 @@ import java.util.*
  * @date 2021/06/18
  */
 object WebViewPool{
-    private const val DEF_MAX_CACHE_COUNT = 3
+    private const val MAX_CACHE_COUNT = 3
 
     private val mQueue : Queue<WebView> = LinkedList()
 
@@ -24,12 +24,13 @@ object WebViewPool{
      * 预加载webView，提前初始化webView内核
      * - 最好在IdleHandle中延迟加载
      * @param context
+     * @param maxSize 预加载webView个数
      * */
     @JvmStatic
-    fun prepare(context: Context,maxSize : Int = DEF_MAX_CACHE_COUNT){
+    fun prepare(context: Context,maxSize : Int = 1){
         for (i in 0 until maxSize){
             val webView = createNewWebViewInstance(MutableContextWrapper(context))
-            if (mQueue.size < maxSize){
+            if (mQueue.size < MAX_CACHE_COUNT){
                 mQueue.offer(webView)
             }
         }
