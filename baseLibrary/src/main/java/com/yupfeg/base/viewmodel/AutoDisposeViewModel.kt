@@ -25,6 +25,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 /**
  * 集成了AutoDispose框架的ViewModel，
  * 实现[LifecycleScopeProvider],能够自动管理ViewModel内调用的RxJava订阅
+ * //TODO 后续移动到RxJAVA模块
  */
 open class AutoDisposeViewModel : ViewModel(),
     LifecycleScopeProvider<AutoDisposeViewModel.ViewModelEvent> {

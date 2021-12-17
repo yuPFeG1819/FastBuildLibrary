@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
+import com.yupfeg.base.domain.LifecycleUseCase
 import com.yupfeg.base.domain.UseCase
 import com.yupfeg.base.tools.lifecycle.LifecycleEndObserver
 import com.yupfeg.logger.ext.logd
@@ -18,8 +19,7 @@ abstract class BaseViewModel : ViewModel(){
     private val mUseCaseLifecycleObservers : MutableList<LifecycleObserver> = mutableListOf()
 
     /**是否已订阅视图生命周期*/
-    var isSubscribedLifecycle : Boolean = false
-        private set
+    private var mSubscribedLifecycle : Boolean = false
 
     /**
      * 订阅视图生命周期，绑定管理`UseCase`生命周期
@@ -29,30 +29,16 @@ abstract class BaseViewModel : ViewModel(){
      * */
     @MainThread
     open fun bindUseCaseLifecycle(lifecycle: Lifecycle){
-        logd("${this.javaClass.name} registerLifecycle : $isSubscribedLifecycle")
-        if (isSubscribedLifecycle) return
-        isSubscribedLifecycle = true
+        if (mSubscribedLifecycle) return
+        mSubscribedLifecycle = true
         for (lifecycleObserver in mUseCaseLifecycleObservers) {
             lifecycle.addObserver(lifecycleObserver)
         }
         lifecycle.addObserver(LifecycleEndObserver(Lifecycle.State.DESTROYED) {
-            // 在视图销毁后，重置useCase订阅状态，
-            // 防止屏幕旋转（等视图配置修改情况）后无法重新绑定
-            clearLifecycleObserver(lifecycle)
+            //在视图销毁后，重置useCase订阅状态
+            //防止屏幕旋转（等视图配置修改情况）后无法重新绑定
+            mSubscribedLifecycle = false
         })
-    }
-
-    /**
-     * 清空绑定生命周期的useCase订阅
-     * @param lifecycle
-     * */
-    @MainThread
-    private fun clearLifecycleObserver(lifecycle: Lifecycle){
-        if (!isSubscribedLifecycle) return
-        isSubscribedLifecycle = false
-        for (lifecycleObserver in mUseCaseLifecycleObservers) {
-            lifecycle.removeObserver(lifecycleObserver)
-        }
     }
 
     /**
@@ -62,10 +48,10 @@ abstract class BaseViewModel : ViewModel(){
      * 并且`ViewModel`要在视图层调用[bindUseCaseLifecycle]函数，绑定视图生命周期才会生效.
      *
      * * 如果不需要绑定视图生命周期，则直接使用[UseCase]，手动管理内部任务
-     * @param useCase
+     * @param useCase 支持[LifecycleObserver]的UseCase
      * */
     @Suppress("unused")
-    protected fun addUseCase(useCase : UseCase){
+    protected fun addUseCase(useCase : LifecycleUseCase){
         val lifecycleObserver = useCase as? LifecycleObserver
         lifecycleObserver?:return
         mUseCaseLifecycleObservers.add(lifecycleObserver)
@@ -76,27 +62,24 @@ abstract class BaseViewModel : ViewModel(){
      * @param useCase
      * */
     @Suppress("unused")
-    protected open fun removeUseCase(useCase: UseCase){
+    protected open fun removeUseCase(useCase: LifecycleUseCase){
         val lifecycleObserver = useCase as? LifecycleObserver
         lifecycleObserver?:return
         mUseCaseLifecycleObservers.remove(lifecycleObserver)
     }
 
     override fun onCleared() {
-        clearUseCase()
-        isSubscribedLifecycle = false
+        clearUseCaseLifecycleObservers()
     }
 
     /**
-     * 清空业务用例，并结束用例的协程作用域
+     * 清空绑定生命周期的useCase订阅
      * */
-    @Suppress("MemberVisibilityCanBePrivate")
-    protected fun clearUseCase(){
+    @MainThread
+    protected open fun clearUseCaseLifecycleObservers(){
+        if (!mSubscribedLifecycle) return
+        mSubscribedLifecycle = false
         if (mUseCaseLifecycleObservers.isNullOrEmpty()) return
-
-//        mUseCaseLifecycleObservers.forEach {
-//            (it as? UseCase)?.cancel()
-//        }
         mUseCaseLifecycleObservers.clear()
     }
 
