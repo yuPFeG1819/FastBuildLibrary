@@ -112,9 +112,9 @@
   >
   >- 后续尝试添加更多自定义LayoutManager的拓展实现
   >
-  >- 参考[BRV](https://github.com/liangjingkanji/BRV)库，改进视图
+  >- 参考[BRV](https://github.com/liangjingkanji/BRV)库，以DSL方式改进视图配置
   >
-  >- 考虑使用`RecyclerView`替代实现三级联动滚轮的实现
+  >- 考虑使用`RecyclerView`的自定义Layout替代实现三级联动滚轮的实现
   >
   >- [DiffUtils 遇到Kotlin](https://juejin.cn/post/7033206569181544461)
   >
@@ -139,6 +139,7 @@
   >
   > TODO :
   > - 尝试WebView放入单独进程，需要跨进程通信
+  > - 尝试增加`okhttp`代理`WebView`加载资源，提供外部设置的`OkHttpClient`实例，进行构建网络请求
 
 - `IdleHandler`延迟启动管理类
 
@@ -177,3 +178,9 @@
 - 尝试实现BottomSheet效果
 
 - 尝试引入或实现本地图片选择库
+
+- 实现NestedScrolling机制的嵌套滑动RecyclerView
+  
+  > 参考思路[也许是最贴近京东首页体验的嵌套滑动吸顶效果](http://solart.cc/2020/07/17/nested_ceiling_effect/)
+  > 
+- 考虑RecyclerView内部嵌入RefreshLayout下拉刷新机制
