@@ -59,12 +59,6 @@ open class BaseApplication : MultiDexApplication(), ViewModelStoreOwner{
 
     }
 
-    override fun onTerminate() {
-        super.onTerminate()
-        ActivityStackHelper.destroyActivityLifeListener(this)
-        unRegisterFastCacheLog()
-    }
-
     /**ViewModelStoreOwner接口方法实现，表示其作用域范围在整个Application*/
     override fun getViewModelStore(): ViewModelStore {
         return mAppViewModelStore

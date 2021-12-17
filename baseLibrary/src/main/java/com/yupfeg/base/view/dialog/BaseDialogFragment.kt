@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.yupfeg.base.tools.system.getScreenWidth
 
@@ -12,7 +13,7 @@ import com.yupfeg.base.tools.system.getScreenWidth
  * @author yuPFeG
  * @date 19/11/16
  */
-abstract class BaseDialogFragment : AutoDisposeDialogFragment(){
+abstract class BaseDialogFragment : DialogFragment(){
     protected var mRootView : View ?= null
 
     //<editor-fold desc="子类可修改属性">

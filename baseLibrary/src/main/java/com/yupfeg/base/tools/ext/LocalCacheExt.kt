@@ -61,6 +61,7 @@ fun Application.initLocalFastCache(){
 
 /**
  * [Application]的拓展函数，取消[MMKV]日志的转发
+ * * 可在应用销毁时反注册
  */
 @Suppress("unused")
 fun Application.unRegisterFastCacheLog(){

@@ -10,6 +10,7 @@ import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
  * @author yuPFeG
  * @date 2020/03/19
  */
+@Deprecated("移除到RxJava支持模块")
 open class AutoDisposeDialogFragment : DialogFragment(){
 
     /**提供给AutoDispose框架使用的作用域范围，与fragment的onDestroy绑定*/

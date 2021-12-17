@@ -11,6 +11,7 @@ import java.util.*
  * @author yuPFeG
  * @date 2021/12/11
  */
+@Suppress("unused")
 class IdleDelayTaskDispatcher {
     private var mTaskQueue : Queue<ITask> = LinkedList()
 
