@@ -45,5 +45,6 @@ abstract class UseCase{
      * */
     open fun cancel(){
         mScope?.cancel()
+        isScopeCanceled = true
     }
 }
