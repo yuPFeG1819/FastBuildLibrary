@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.yupfeg.base.application.BaseApplication
-import java.util.concurrent.Executor
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 

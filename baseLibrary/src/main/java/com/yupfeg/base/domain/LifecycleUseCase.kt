@@ -8,11 +8,17 @@ import com.yupfeg.logger.ext.logd
 
 /**
  * 允许绑定视图生命周期的业务逻辑用例基类
- * * 在`ViewModel`内使用，业务逻辑与ViewModel解耦，提高复用性，需要绑定到视图[Lifecycle]
- * * 避免子类直接使用LifecycleOwner
+ * - 仅在`ViewModel`内使用，需要手动绑定到视图的[Lifecycle]
+ * - 谨慎继承该类，避免子类直接使用LifecycleOwner
+ * - 特定场景可能需要视图生命周期，可以抽离部分页面的功能
+ * ```
+ *    //在Activity或Fragment内，订阅生命周期相关的调用
+ *    this.lifecycle.addObserver(useCase)
+ * ```
  *
- * 视图启动（onCreate -> onResume）的生命周期顺序是按照`viewModel.addUseCase`的添加顺序依次调用
- * 视图结束（onPause -> onDestroy）的生命周期顺序是按照`viewModel.addUseCase`的添加顺序倒序调用
+ * - 多业务用例绑定生命的执行顺序：
+ * 视图启动（onCreate -> onResume）的生命周期顺序是按照添加订阅顺序依次调用，
+ * 视图结束（onPause -> onDestroy）的生命周期顺序是按照添加订阅顺序倒序调用，
  * 详情参见[DefaultLifecycleObserver]的调用顺序
  * @author yuPFeG
  * @date 2020/10/24
@@ -23,7 +29,8 @@ abstract class LifecycleUseCase : UseCase(), LifecycleEventObserver,DefaultLifec
     /**初始化标识，避免在UI重建时，重复获取数据*/
     var isInitial : Boolean = true
         protected set
-    /**是否输出debug用的生命周期日志*/
+
+    /**是否输出调试用的生命周期日志*/
     @Suppress("MemberVisibilityCanBePrivate")
     open var isPrintDebugLifecycleLog : Boolean = false
         protected set
@@ -36,9 +43,8 @@ abstract class LifecycleUseCase : UseCase(), LifecycleEventObserver,DefaultLifec
      * */
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         if (source.lifecycle.currentState <= Lifecycle.State.DESTROYED) {
+            //在视图生命周期结束时，结束移除生命周期订阅
             source.lifecycle.removeObserver(this)
-            //在视图生命周期结束时，结束正在执行的任务
-            cancel()
         }
     }
 
@@ -95,41 +101,41 @@ abstract class LifecycleUseCase : UseCase(), LifecycleEventObserver,DefaultLifec
      * * 避免子类直接使用LifecycleOwner
      * * 视图启动的生命周期顺序是按照`viewModel.addUseCase`的添加顺序依次调用
      * */
-    protected open fun onCreate() {}
+    protected open fun onCreate() = Unit
 
     /**
      * 外部绑定的生命周期onStart
      * * 避免子类直接使用LifecycleOwner
      * * 视图启动的生命周期顺序是按照`viewModel.addUseCase`的添加顺序依次调用
      * */
-    protected open fun onStart() {}
+    protected open fun onStart() = Unit
 
     /**
      * 外部绑定的视图生命周期onResume
      * * 避免子类直接使用LifecycleOwner
      * * 视图启动的生命周期顺序是按照`viewModel.addUseCase`的添加顺序依次调用
      * */
-    protected open fun onResume() {}
+    protected open fun onResume() = Unit
 
     /**
      * 外部绑定的视图生命周期onPause
      * * 避免子类直接使用LifecycleOwner
      * * 视图结束生命周期顺序是按照`viewModel.addUseCase`的添加顺序倒序调用
      * */
-    protected open fun onPause() {}
+    protected open fun onPause() = Unit
 
     /**
      * 外部绑定的视图生命周期onStop
      * * 避免子类直接使用LifecycleOwner
      * * 视图结束生命周期顺序是按照`viewModel.addUseCase`的添加顺序倒序调用
      * */
-    protected open fun onStop() {}
+    protected open fun onStop() = Unit
 
     /**
      * 外部绑定的生命周期onDestroy
      * * 避免子类直接使用LifecycleOwner
      * * 视图结束生命周期顺序是按照`viewModel.addUseCase`的添加顺序倒序调用
      * */
-    protected open fun onDestroy() {}
+    protected open fun onDestroy() = Unit
 
 }

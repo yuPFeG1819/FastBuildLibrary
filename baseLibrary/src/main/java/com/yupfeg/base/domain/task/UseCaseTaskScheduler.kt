@@ -6,7 +6,6 @@ import com.yupfeg.base.domain.UseCase
  * `UseCase`在后台运行的任务调度类
  * * 允许`UseCase`脱离`ViewModel`，单独运行在Application进程的后台
  * * 仅提供给后台Service或者其他非UI场景
- * //TODO 后续可改为使用WorkManager，或者JobSchedulers
  * @author yuPFeG
  * @date 2021/08/09
  */
