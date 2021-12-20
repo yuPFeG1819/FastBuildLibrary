@@ -27,7 +27,7 @@
   > [StateLiveDataWrapper](https://gitee.com/yupfeg/state-live-data-wrapper) 单次执行事件LiveData
   > [EasyResultApi](https://gitee.com/yupfeg/easy-result-api) ResultApi,包含权限请求
 
-- [RxJava](https://github.com/ReactiveX/RxJava) TODO ：后续移除
+- ~~[RxJava](https://github.com/ReactiveX/RxJava)~~ 已移除基础库
 - [Glide](https://github.com/bumptech/glide) 图片加载库
 - [Gson](https://github.com/google/gson)
 - [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) 下拉刷新框架
@@ -135,7 +135,7 @@
 - WebView缓存池
 
   > 尝试管理WebView实例，提供kotlin-dsl方式配置webView属性
-  > 仅提供预加载，除第一次加载WebView外，后续加载速度很快，且destroy后暂无办法无法复用
+  > 仅提供预加载，除第一次加载WebView外，后续加载速度很快，且destroy后暂无办法复用
   >
   > TODO :
   > - 尝试WebView放入单独进程，需要跨进程通信
