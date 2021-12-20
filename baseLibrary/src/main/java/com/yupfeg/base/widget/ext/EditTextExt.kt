@@ -1,14 +1,87 @@
 package com.yupfeg.base.widget.ext
 
+import android.annotation.TargetApi
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.annotation.MainThread
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+
+
+// <editor-fold desc="软键盘">
+
+/**
+ * [EditText]拓展函数，设置软键盘高度监听
+ * 内部利用setOnApplyWindowInsetsListener，如果外部调用同样函数，会覆盖该实现
+ * @param listener 软键盘状态回调监听，imeVisible-是否显示，imeHeight-软键盘高度
+ * */
+@Suppress("unused")
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+fun EditText.setKeyBoardListener(listener : (imeVisible : Boolean, imeHeight : Int)->Unit){
+    ViewCompat.setOnApplyWindowInsetsListener(this){ _, insets->
+        val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+        val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+        listener(imeVisible,imeHeight)
+        insets
+    }
+}
+
+/**
+ * [EditText]拓展函数，显示软键盘
+ * - 同时获取焦点
+ * */
+@Suppress("unused")
+fun EditText.showKeyboard() {
+    this.requestFocus()
+    ViewCompat.getWindowInsetsController(this)?.apply{
+        systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        show(WindowInsetsCompat.Type.ime())
+    }
+}
+
+/**
+ * [EditText]拓展函数，隐藏软键盘
+ * - 同时清除焦点
+ * */
+@Suppress("unused")
+fun EditText.hideKeyboard(){
+    this.clearFocus()
+    ViewCompat.getWindowInsetsController(this)?.apply {
+        systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        hide(WindowInsetsCompat.Type.ime())
+    }
+}
+
+/**
+ * [EditText]的拓展函数，设置软键盘的搜索按钮点击事件
+ * @param onSearch
+ */
+@Suppress("unused")
+fun EditText.setKeyboardSearchClick(onSearch : ()->Unit){
+    setOnEditorActionListener { _, actionId, _ ->
+        if (actionId != EditorInfo.IME_ACTION_SEARCH){
+            onSearch.invoke()
+            true
+        }else{
+            false
+        }
+    }
+}
+
+// </editor-fold>
+
+// <editor-fold desc="文本输入监听">
 
 /**
  * 创建监听文本输入结束内容变化的flow数据流
@@ -98,17 +171,4 @@ class DSLTextWatcher : TextWatcher{
 
 }
 
-/**
- * [EditText]的拓展函数，设置软键盘的搜索按钮点击事件
- * @param onSearch
- */
-fun EditText.setKeyboardSearchClick(onSearch : ()->Unit){
-    setOnEditorActionListener { _, actionId, _ ->
-        if (actionId != EditorInfo.IME_ACTION_SEARCH){
-            onSearch.invoke()
-            true
-        }else{
-            false
-        }
-    }
-}
+// </editor-fold>
