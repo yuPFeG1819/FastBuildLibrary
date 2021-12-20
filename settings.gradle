@@ -15,6 +15,7 @@ rootProject.name = "FastBuildLibrary"
 includeBuild("version_config")
 include ':app'
 include ':baseLibrary'
+include ':rxjavaSupport'
 
 
 //gradle的hook监听（每个gradle task都会hook）
@@ -43,4 +44,5 @@ gradle.addBuildListener(new BuildListener() {
         super.beforeSettings(settings)
     }
 })
+
 

@@ -1,7 +1,6 @@
 import com.version.dependents.AndroidX
 import com.version.dependents.ThirdParty
 import com.version.dependents.Google
-import com.version.dependents.RxJava
 import com.version.dependents.Network
 
 plugins{
@@ -98,19 +97,6 @@ dependencies {
     api (AndroidX.Room.testing)
     //多模块项目，必须在用到database的位置添加上room的kapt
     kapt (AndroidX.Room.compiler)
-    //-----------RxJava3(TODO 后续移除)--------------
-
-    api (RxJava.rxJava3)
-    api (RxJava.rxAndroid3)
-    api (RxJava.rxKotlin3)
-    //不中断事件流的RxJava3热流拓展，排除重复依赖
-    api (RxJava.rxRelay3){
-        exclude group: 'io.reactivex.rxjava3', module: "rxjava"
-    }
-    //管理rxJava内存泄漏问题(0.8.0以上需要AndroidX支持)
-    api (RxJava.AutoDispose.rxJava3)
-    api (RxJava.AutoDispose.rxJava3Lifecycle)
-
     //-----------自用封装库----------
     //网络库
     api(ThirdParty.httpMediator)

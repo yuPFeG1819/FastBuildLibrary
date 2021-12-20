@@ -1,4 +1,4 @@
-package com.yupfeg.base.domain.list.helper
+package com.yupfeg.base.domain.list
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
@@ -9,13 +9,13 @@ import com.yupfeg.livedata.StateLiveData
 import com.yupfeg.logger.ext.logd
 
 /**
- * 列表数据过滤处理的基类
- * * 如果需要`分页加载`功能，可以使用的其子类[LoadMoreFilterDataHelper]
+ * 列表数据过滤处理器的基类
+ * * 如果需要`分页加载`功能，可以使用的其子类[LoadMoreListDataFilter]
  * @author yuPFeG
  * @date 2021/03/20
  */
 @Suppress("unused")
-abstract class BaseListFilterDataHelper : EventReleasable{
+abstract class BaseListDataFilter : EventReleasable{
 
     /**
      * 原始列表数据
@@ -75,14 +75,14 @@ abstract class BaseListFilterDataHelper : EventReleasable{
     //<editor-fold desc="空视图item">
 
     @Suppress("MemberVisibilityCanBePrivate")
-    protected var mEmptyViewData : Any ?= null
+    protected var emptyItemViewData : Any ?= null
 
     /**
-     * 设置空数据显示的item数据
-     * * 需要在外部设置要空页面对应的`ItemDelegate`才会生效
+     * 设置空数据显示的itemView数据
+     * * 需要在外部设置空视图数据类型对应的`ItemStrategy`才会生效
      * */
     fun setEmptyViewData(itemData : Any?){
-        mEmptyViewData = itemData
+        emptyItemViewData = itemData
     }
 
     //</editor-fold>
@@ -143,7 +143,7 @@ abstract class BaseListFilterDataHelper : EventReleasable{
      * */
     @MainThread
     protected open fun disPatchListEmptyViewData(){
-        mEmptyViewData?.also {itemData->
+        emptyItemViewData?.also { itemData->
             //分发给UI显示数据
             mListFilteredLiveData.value = listOf(itemData)
         }?:run {

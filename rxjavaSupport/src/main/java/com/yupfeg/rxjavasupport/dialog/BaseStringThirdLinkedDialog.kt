@@ -1,4 +1,4 @@
-package com.yupfeg.base.view.dialog
+package com.yupfeg.rxjavasupport.dialog
 
 import android.content.Context
 import android.view.View
@@ -16,7 +16,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 /**
  * 字符串格式的条件选择弹窗基类
  * * 支持三级联动的字符串条件选择滚轮
- * //TODO 后续替换为更好的实现方案，移除RxJava依赖
+ * //TODO 后续替换为更好的实现方案
  * @author yuPFeG
  * @date 2020/01/21
  */

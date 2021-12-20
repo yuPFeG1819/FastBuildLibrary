@@ -1,4 +1,4 @@
-package com.yupfeg.base.tools.bridge
+package com.yupfeg.rxjavasupport.tools
 
 import com.yupfeg.base.domain.extra.ListPageable
 import io.reactivex.rxjava3.core.*
@@ -6,7 +6,6 @@ import org.reactivestreams.Publisher
 
 /**
  * 列表分页加载数据预处理的RxJava3变换操作符
- * //TODO 后续分离到RxJava模块
  * @author yuPFeG
  * @date 2021/03/08
  */
@@ -14,7 +13,7 @@ import org.reactivestreams.Publisher
 class LoadMoreDataTransformer<T : ListPageable>(
     private val doOnNextAction : ((T)->Unit)?,
     private val doOnError : ((Throwable)->Unit)?
-) : MaybeTransformer<T,T>, FlowableTransformer<T,T>,ObservableTransformer<T,T> {
+) : MaybeTransformer<T, T>, FlowableTransformer<T, T>, ObservableTransformer<T, T> {
 
     // <editor-fold desc="Maybe类型数据源预处理">
 

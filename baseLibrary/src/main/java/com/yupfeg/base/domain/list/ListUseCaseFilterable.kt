@@ -28,8 +28,7 @@ interface ListUseCaseFilterable {
 
     /**
      * 列表加载出现的错误事件
-     * * 单次执行事件，UI层调用[StateLiveData.observe]
-     * 或者[StateLiveData.observe]订阅处理该事件
+     * * 单次执行事件，UI层调用[StateLiveData.observe]订阅处理该事件
      */
     val listErrorEvent : StateLiveData<Throwable>
 

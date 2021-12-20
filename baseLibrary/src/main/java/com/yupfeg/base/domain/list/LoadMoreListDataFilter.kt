@@ -1,15 +1,15 @@
-package com.yupfeg.base.domain.list.helper
+package com.yupfeg.base.domain.list
 
 import androidx.annotation.MainThread
 import com.yupfeg.base.R
-import com.yupfeg.base.domain.list.ListUseCaseFilterable
 import com.yupfeg.base.domain.extra.ListPageable
 import com.yupfeg.base.provider.ResourceContentProvider
-import com.yupfeg.base.tools.bridge.LoadMoreDataTransformer
 import com.yupfeg.base.widget.recyclerview.ListLoadMoreState
 import com.yupfeg.base.widget.recyclerview.strategy.LoadMoreFooterItemBean
 import com.yupfeg.base.widget.recyclerview.strategy.ILoadMoreItem
-import com.yupfeg.logger.ext.logd
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onEach
 
 /**
  * 分页加载列表数据过滤处理帮助类
@@ -19,15 +19,15 @@ import com.yupfeg.logger.ext.logd
  * @date 2021/03/17
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-open class LoadMoreFilterDataHelper(
+open class LoadMoreListDataFilter(
     /**单页的请求数据量 */
     protected val requestCount : Int = DEF_PAGE_DATA_COUNT,
     /**原始集合的数据来源*/
     private var originDataSource : ((pageIndex : Int)->Unit)
-) : BaseListFilterDataHelper(){
+) : BaseListDataFilter(){
     companion object {
         /**默认单页加载数据量，默认为10条数据*/
-        private const val DEF_PAGE_DATA_COUNT = 10
+        const val DEF_PAGE_DATA_COUNT = 10
         /**默认的加载更多item数据*/
         private val defaultLoadMoreItem = LoadMoreFooterItemBean(
             status = ListLoadMoreState.NORMAL,
@@ -40,8 +40,6 @@ open class LoadMoreFilterDataHelper(
         )
     }
 
-    //<editor-fold desc="分页请求成员变量">
-
     /**
      * 当前加载页数
      * * 只可在子类内部修改
@@ -53,25 +51,14 @@ open class LoadMoreFilterDataHelper(
             else value
         }
 
-    /**
-     * 列表数据源的数据总量
-     * * 仅用于计算最大页数
-     * */
-    @Suppress("MemberVisibilityCanBePrivate")
-    var totalDataCount : Int = 0
-        protected set(value){
-            field = if (value <= 0) 0
-            else value
-        }
-
-    /**当前加载更多的状态*/
-    private var mCurrLoadMoreState : ListLoadMoreState = ListLoadMoreState.NORMAL
-
-    //</editor-fold>
 
     //<editor-fold desc="分页加载 item">
 
     private var mLoadMoreItemData : ILoadMoreItem = defaultLoadMoreItem.copy()
+
+    /**当前加载更多的状态*/
+    protected val currLoadMoreState : ListLoadMoreState
+        get() = mLoadMoreItemData.loadMoreStatus
 
     /**
      * 设置分页加载更多的列表item显示数据
@@ -98,55 +85,48 @@ open class LoadMoreFilterDataHelper(
      * */
     open fun getPageListData(isLoadMore : Boolean){
         takeUnless { isLoadMore }?.also {
-            originDataSource.invoke(1)
+            originDataSource(1)
         }?:run {
-            prepareObtainLoadMoreData()
+            requestLoadMoreData()
         }
     }
 
     /**
      * 处理的数据请求结果，并发送到UI数据页面
      * * 在数据源请求返回结果时调用，处理后分发给UI显示
-     * @param pageIndex 当前请求页数
-     * @param newList 当前页数的返回列表数据
+     * @param newList 当前请求的列表数据
      * */
-    open fun setNewListData(pageIndex: Int, newList : List<Any>?){
-        if (pageIndex == 1){
+    open fun setNewListData(newList : List<Any>?){
+        if (currPageIndex == 1){
             //第一页时，清空原有数据
             cleanOriginListData()
+        }else if (newList.isNullOrEmpty()){
+            //如果是分页加载时数据为空，则表示列表已经到底了，切换FooterView显示状态为END
+            dispatchLoadMoreListData(ListLoadMoreState.THE_END)
+            return
         }
-        dispatchNewListData(pageIndex, newList)
+        dispatchNewListData(currPageIndex, newList)
     }
 
 
     //<editor-fold desc="预处理集合数据">
 
     /**
-     * 预处理可分页的原始集合数据的RxJava数据流
-     * * 实现分页加载功能的数据bean类需要实现[ListPageable]接口
-     * @param requestPageIndex 当前数据请求页数
-     * */
-    open fun <T : ListPageable> preProcessPageableList(
-        requestPageIndex : Int
-    ) : LoadMoreDataTransformer<T> {
-        return LoadMoreDataTransformer(
-            doOnNextAction = {result->
-                doOnListLoadMore(requestPageIndex,result.totalCount)
-            },
-            doOnError = {
-                doOnLoadMoreError(requestPageIndex,it)
-            }
-        )
+     * [Flow]数据流拓展函数，预处理分页列表数据
+     * @param requestPageIndex
+     */
+    open fun <T : ListPageable> Flow<T>.preProcessPageableList(requestPageIndex: Int){
+        this.onEach { updateListPageIndex(requestPageIndex) }
+            .catch { error-> doOnLoadMoreError(requestPageIndex,error) }
     }
 
     /**
-     * 子类在执行列表分页时需要调用该方法，更新请求成功的页数与总计数据量
+     * 更新请求成功的页数
+     * - 在执行成功列表分页时需要调用该方法更新页数
      * @param pageIndex 请求成功的分页页数
-     * @param totalCount 数据源总计列表item数据量
      * */
-    protected open fun doOnListLoadMore(pageIndex: Int,totalCount : Int){
+    protected open fun updateListPageIndex(pageIndex: Int){
         currPageIndex = pageIndex
-        totalDataCount = totalCount
     }
 
     /**
@@ -167,40 +147,22 @@ open class LoadMoreFilterDataHelper(
     }
 
     /**
-     * 准备获取分页列表数据
+     * 准备请求获取分页列表数据
      * */
-    protected open fun prepareObtainLoadMoreData(){
-        takeUnless {
+    protected open fun requestLoadMoreData(){
+        if (getOriginDataCount() < requestCount){
             // 如果当前加载的数据还不满一页，则不执行上拉加载操作
-            getOriginDataCount() < requestCount || totalDataCount <= 0
-        }?.takeUnless {
+            return
+        }
+
+        if (currLoadMoreState == ListLoadMoreState.LOADING){
             //过滤已处于正在分页加载更多的操作，防止重复触发请求
-            mCurrLoadMoreState == ListLoadMoreState.LOADING
-        }?.also {
-            //计算是否获取列表数据
-            calculateObtainLoadMoreData()
-        }?:run {
-            logd("ignore load more action")
+            return
         }
-    }
-
-    /**计算是否请求列表数据*/
-    protected open fun calculateObtainLoadMoreData() {
-        //计算总页数
-        val totalPageSize = if (totalDataCount % requestCount == 0) {
-            totalDataCount / requestCount
-        } else {
-            totalDataCount / requestCount + 1
-        }
-
-        if (getOriginDataCount() < totalDataCount && currPageIndex < totalPageSize) {
-            dispatchLoadMoreListData(ListLoadMoreState.LOADING)
-            //存在更多数据，加载下一页 (切换FooterView显示状态为Loading)
-            originDataSource.invoke(currPageIndex+1)
-        } else {
-            //已经到底了，loadMoreItem显示为TheEnd
-            dispatchLoadMoreListData(ListLoadMoreState.THE_END)
-        }
+        //在原有列表末尾添加正在加载item视图
+        dispatchLoadMoreListData(ListLoadMoreState.LOADING)
+        //尝试请求新一页数据
+        originDataSource(currPageIndex+1)
     }
 
     //</editor-fold desc="预处理列表数据">
@@ -231,8 +193,8 @@ open class LoadMoreFilterDataHelper(
      * */
     @MainThread
     protected open fun dispatchLoadMoreListData(loadMoreState : ListLoadMoreState){
-        mCurrLoadMoreState = loadMoreState
-        val newItemList = mutableListOf<Any>().apply {
+        updateLoadMoreItemData(loadMoreState)
+        val newItemList = ArrayList<Any>(mOriginList.size+1).apply {
             addAll(mOriginList)
         }
 
@@ -252,7 +214,7 @@ open class LoadMoreFilterDataHelper(
     //</editor-fold>
 
     /**
-     * 获取加载更多FooterItem数据
+     * 更新FooterItem数据
      * @param loadMoreState  加载更多的状态[ListLoadMoreState]
      **/
     protected open fun updateLoadMoreItemData(loadMoreState : ListLoadMoreState) : Any{

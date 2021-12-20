@@ -1,0 +1,55 @@
+import com.version.dependents.RxJava
+
+plugins {
+    id 'com.android.library'
+    //依赖版本管理与公共gradle配置的插件
+    id "com.version.config"
+    id 'kotlin-android'
+}
+
+android {
+    compileSdk AppBuildConfig.compileSdkVersion
+
+    defaultConfig {
+        minSdk AppBuildConfig.minSdkVersion
+        targetSdk AppBuildConfig.targetSdkVersion
+        versionCode AppBuildConfig.versionCode
+        versionName AppBuildConfig.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        //kotlin编译使用java1.8特性
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(":baseLibrary")
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    api (RxJava.rxJava3)
+    api (RxJava.rxAndroid3)
+    api (RxJava.rxKotlin3)
+    //不中断事件流的RxJava3热流拓展，排除重复依赖
+    api (RxJava.rxRelay3){
+        exclude group: 'io.reactivex.rxjava3', module: "rxjava"
+    }
+    //管理rxJava内存泄漏问题(0.8.0以上需要AndroidX支持)
+    api (RxJava.AutoDispose.rxJava3)
+    api (RxJava.AutoDispose.rxJava3Lifecycle)
+}
