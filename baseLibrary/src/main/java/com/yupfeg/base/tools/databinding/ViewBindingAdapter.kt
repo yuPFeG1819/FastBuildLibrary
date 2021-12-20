@@ -8,9 +8,9 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.yupfeg.base.tools.toPx
+import com.yupfeg.base.tools.window.fitToSystemNavigationWindow
+import com.yupfeg.base.tools.window.fitToSystemStatusBar
 import com.yupfeg.base.widget.ext.ThrottleClickListenerWrapper
-import com.yupfeg.base.widget.ext.fitSystemNavigationWindow
-import com.yupfeg.base.widget.ext.fitSystemStatusBar
 import com.yupfeg.base.widget.ext.setThrottleClickListener
 
 
@@ -157,7 +157,7 @@ fun View.bindViewSelectedStatus(isSelected: Boolean?){
 fun View.bindFitTopSystemWindow(isFitStatusBar : Boolean?,extraPadding : Boolean?){
     isFitStatusBar?:return
     if (!isFitStatusBar) return
-    fitSystemStatusBar(extraPadding?:false)
+    fitToSystemStatusBar(extraPadding?:false)
 }
 
 /**
@@ -172,7 +172,7 @@ fun View.bindFitTopSystemWindow(isFitStatusBar : Boolean?,extraPadding : Boolean
 fun View.bindFitBottomSystemWindow(isFitNavigation : Boolean?,extraPadding: Boolean?){
     isFitNavigation?:return
     if (!isFitNavigation) return
-    fitSystemNavigationWindow(extraPadding?:false)
+    fitToSystemNavigationWindow(extraPadding?:false)
 }
 
 // </editor-fold>
