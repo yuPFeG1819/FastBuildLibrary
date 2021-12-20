@@ -1,25 +1,9 @@
 package com.yupfeg.sample
 
-import autodispose2.autoDispose
-import com.yupfeg.base.tools.pool.GlobalLocalThreadPool
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.internal.schedulers.ScheduledDirectTask
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.actor
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
-import java.util.concurrent.Executors
-import java.util.concurrent.locks.ReentrantLock
 import kotlin.coroutines.*
-import kotlin.system.measureTimeMillis
 
 /**
  * Kotlin协程的单元测试
