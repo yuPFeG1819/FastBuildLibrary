@@ -29,9 +29,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            //在子Module(apply plugin: 'com.android.library')混淆时，
-            //需要使用consumerProguardFile 'proguard-rules.pro'来设置混淆规则
-            consumerProguardFile 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug{
             minifyEnabled false
