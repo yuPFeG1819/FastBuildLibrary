@@ -7,17 +7,19 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
-import com.yupfeg.base.tools.system.getSystemNavigationBarHeight
+import com.yupfeg.base.tools.window.getNavigationBarHeight
 import com.yupfeg.logger.ext.logd
 import kotlin.math.abs
 
 
 /**
  * 软键盘输入状态变化的委托处理类
+ * //TODO 后续尝试使用WindowInset监听软键盘高度变化
  * @author yuPFeG
  * @date 2021/06/28
  */
 @Suppress("unused")
+@Deprecated("可以使用WindowInsetsController替代")
 class KeyBoardInputChangeMediator {
 
     private var sDecorViewDelta = 0
@@ -86,6 +88,7 @@ class KeyBoardInputChangeMediator {
      * */
     private fun getDecorViewInvisibleHeight(@NonNull window: Window): Int {
         val decorView = window.decorView
+        val navigationBarHeight = window.decorView.getNavigationBarHeight()
         val outRect = Rect()
         decorView.getWindowVisibleDisplayFrame(outRect)
         logd(
@@ -93,7 +96,7 @@ class KeyBoardInputChangeMediator {
                     + (decorView.bottom - outRect.bottom)
         )
         val delta: Int = abs(decorView.bottom - outRect.bottom)
-        if (delta <= getSystemNavigationBarHeight()) {
+        if (delta <= navigationBarHeight) {
             sDecorViewDelta = delta
             return 0
         }
