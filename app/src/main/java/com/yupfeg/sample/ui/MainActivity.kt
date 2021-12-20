@@ -3,21 +3,21 @@ package com.yupfeg.sample.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.lifecycle.*
 import com.yupfeg.base.tools.ContactsTools
 import com.yupfeg.base.tools.file.getUriFromFile
 import com.yupfeg.base.tools.image.ImageLoader
 import com.yupfeg.base.tools.showShortToast
-import com.yupfeg.base.tools.system.immersiveStatusBar
+import com.yupfeg.base.tools.window.fitImmersiveStatusBar
+import com.yupfeg.base.tools.window.getStatusBarHeight
+import com.yupfeg.base.tools.window.isNavigationBarVisible
+import com.yupfeg.base.tools.window.fitToSystemStatusBar
 import com.yupfeg.base.view.activity.BaseActivity
 import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
@@ -26,6 +26,7 @@ import com.yupfeg.result.*
 import com.yupfeg.result.permission.RequestPermissionLauncher
 import com.yupfeg.result.permission.dialog.DefaultRationaleDialogFragment
 import com.yupfeg.sample.R
+import com.yupfeg.sample.TestWindowInsetActivity
 import com.yupfeg.sample.databinding.ActivityMainBinding
 import java.io.File
 
@@ -117,24 +118,14 @@ class MainActivity : BaseActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.apply {
             config = BindingConfig()
-            mViewModel.bindUseCaseLifecycle(this@MainActivity.lifecycle)
         }
-        immersiveStatusBar(isDarkText = false)
-        var initialPadding = mBinding.toolbarMain.paddingTop
-        var initialHeight = 0
-        ViewCompat.setOnApplyWindowInsetsListener(mBinding.toolbarMain) { v, insets ->
-            val statusBarInsets = insets.getInsetsIgnoringVisibility(
-                WindowInsetsCompat.Type.statusBars()
-            )
-            v.layoutParams?.apply {
-                if (initialHeight == 0 && height > 0) initialHeight = height
-                height = initialHeight + statusBarInsets.top //增高
-            }
-            v.updatePadding(top = initialPadding + statusBarInsets.top)
-            insets
-        }
+        fitImmersiveStatusBar(isDarkText = false)
+        //延伸视图到状态栏，并添加额外padding
+        mBinding.toolbarMain.fitToSystemStatusBar(true)
+        this.window.decorView.post {
+            logd("当前状态栏高度${this.getStatusBarHeight()} 是否存在导航栏${isNavigationBarVisible}")
 
-        lifecycleScope
+        }
     }
 
     /**初始化数据*/
@@ -176,13 +167,13 @@ class MainActivity : BaseActivity() {
         fun testResultApiStartActivity(){
             mViewModel.testUseCase.queryTestData()
             //测试跳转页面
-            mTestResultActivityLauncher.launch<TestResultApiActivity>{ resultIntent->
-                resultIntent?.extras?.also {
-                    Toast.makeText(this@MainActivity,"接收返回值${it["key"]}",Toast.LENGTH_SHORT).show()
-                }
-            }
+//            mTestResultActivityLauncher.launch<TestResultApiActivity>{ resultIntent->
+//                resultIntent?.extras?.also {
+//                    Toast.makeText(this@MainActivity,"接收返回值${it["key"]}",Toast.LENGTH_SHORT).show()
+//                }
+//            }
 
-//            startActivity(Intent(this@MainActivity,TestWindowInsetActivity::class.java))
+            startActivity(Intent(this@MainActivity, TestWindowInsetActivity::class.java))
         }
 
         fun takeSystemPicture(){

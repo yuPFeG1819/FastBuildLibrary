@@ -25,7 +25,6 @@ import com.yupfeg.sample.databinding.ActivityTestResultApiBinding
  * @date
  */
 class TestResultApiActivity : BaseActivity(){
-    private val mViewModel : TestResultViewModel by viewModelDelegate()
     private val mBinding : ActivityTestResultApiBinding by bindingActivity(layoutId)
     private var mMessenger : Messenger? = null
     private var mTestAIDL : TestServiceAIDL? = null
@@ -79,7 +78,6 @@ class TestResultApiActivity : BaseActivity(){
      * */
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.config = BindingConfig()
-        mViewModel.bindUseCaseLifecycle(this.lifecycle)
         val intent = Intent(this, TestMessengerService::class.java)
         bindService(intent,mConnection, BIND_AUTO_CREATE)
 

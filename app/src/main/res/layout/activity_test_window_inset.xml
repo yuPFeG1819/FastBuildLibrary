@@ -95,6 +95,8 @@
             onViewClick="@{()->viewConfig.updateNavigationBar()}"
             />
 
+        <!-- <editor-fold desc="底部导航栏"> -->
+
         <View
             android:id="@+id/view_test_window_inset_navigation_group"
             android:layout_width="0dp"
@@ -103,6 +105,76 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <androidx.constraintlayout.helper.widget.Layer
+            android:id="@+id/layer_test_window_inset_bottom_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_test_window_inset_navigation_group"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_window_inset_navigation_group"
+            app:constraint_referenced_ids="tv_btn_bottom_test_window_inset_1"
+            android:padding="20dp"
+            onViewClick="@{()->viewConfig.bottomBtn1()}"
+            />
+
+        <TextView
+            android:id="@+id/tv_btn_bottom_test_window_inset_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="底部按钮1"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="@id/view_test_window_inset_navigation_group"
+            app:layout_constraintEnd_toStartOf="@id/tv_btn_bottom_test_window_inset_2"
+            app:layout_constraintTop_toTopOf="@id/view_test_window_inset_navigation_group"
+            android:layout_marginTop="15dp"
+            />
+
+        <androidx.constraintlayout.helper.widget.Layer
+            android:id="@+id/layer_test_window_inset_bottom_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_test_window_inset_navigation_group"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_window_inset_navigation_group"
+            app:constraint_referenced_ids="tv_btn_bottom_test_window_inset_2"
+            android:padding="20dp"
+            onViewClick="@{()->viewConfig.bottomBtn2()}"
+            />
+
+        <TextView
+            android:id="@+id/tv_btn_bottom_test_window_inset_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="底部按钮2"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@id/tv_btn_bottom_test_window_inset_1"
+            app:layout_constraintEnd_toStartOf="@id/tv_btn_bottom_test_window_inset_3"
+            app:layout_constraintBottom_toBottomOf="@id/tv_btn_bottom_test_window_inset_1"
+            />
+
+        <androidx.constraintlayout.helper.widget.Layer
+            android:id="@+id/layer_test_window_inset_bottom_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_test_window_inset_navigation_group"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_window_inset_navigation_group"
+            app:constraint_referenced_ids="tv_btn_bottom_test_window_inset_3"
+            android:padding="20dp"
+            onViewClick="@{()->viewConfig.bottomBtn3()}"
+            />
+
+        <TextView
+            android:id="@+id/tv_btn_bottom_test_window_inset_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="底部按钮3"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toEndOf="@id/tv_btn_bottom_test_window_inset_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_btn_bottom_test_window_inset_1"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
