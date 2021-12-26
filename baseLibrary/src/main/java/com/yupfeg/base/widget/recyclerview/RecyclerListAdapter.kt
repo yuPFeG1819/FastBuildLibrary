@@ -19,7 +19,7 @@ typealias AdapterItemStrategy = BaseItemStrategy<Any, RecyclerView.ViewHolder>
  *
  * @param mItemStrategies adapter的item策略类Map，管理当前adapter内部所有具体业务逻辑的item委托类
  * @param diffExecutor diff计算执行的线程池
- *
+ *ActivityThread
  * @author yuPFeG
  * @date 2020/10/20
  */
@@ -148,8 +148,8 @@ class RecyclerListAdapter private constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val itemDelegate = mViewTypeItemStrategies.getValue(viewType)
-        return itemDelegate.createViewHolder(parent, itemDelegate.inflateLayoutView(parent))
+        val itemStrategy = mViewTypeItemStrategies.getValue(viewType)
+        return itemStrategy.createViewHolder(parent, itemStrategy.inflateLayoutView(parent))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -162,13 +162,13 @@ class RecyclerListAdapter private constructor(
         payloads: MutableList<Any>
     ) {
         val itemData = getListItem(position)
-        val itemDelegate = getItemStrategy(itemData.javaClass)
+        val itemStrategy = getItemStrategy(itemData.javaClass)
         //这里的payloads参数是从notify()方法中的payload集合而来（DiffUtil里的getChangePayload也能获取到）
         //需要判断payloads.isEmpty(),只要有值就能执行定向部分刷新，不会重新渲染整个item
         if (payloads.isEmpty()) {
-            itemDelegate.bindViewHolder(holder, itemData, position,null)
+            itemStrategy.bindViewHolder(holder, itemData, position,null)
         } else {
-            itemDelegate.bindViewHolder(holder, itemData, position,payloads[0])
+            itemStrategy.bindViewHolder(holder, itemData, position,payloads[0])
         }
 
         if (checkPreLoadMore(position)){
@@ -305,4 +305,19 @@ class RecyclerListAdapter private constructor(
             }
         }
     }
+}
+
+
+/**
+ * 列表分页预加载状态
+ */
+enum class ListLoadMoreState{
+    /*正常*/
+    NORMAL,
+    /*加载到最底了*/
+    THE_END,
+    /*加载中..*/
+    LOADING,
+    /*网络异常*/
+    ERROR
 }

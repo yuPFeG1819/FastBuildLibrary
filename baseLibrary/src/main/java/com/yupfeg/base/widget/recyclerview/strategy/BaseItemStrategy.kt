@@ -59,6 +59,10 @@ abstract class BaseItemStrategy<T,in VH : RecyclerView.ViewHolder>(
 
     /**绑定ViewHolder数据
      * * 对应[RecyclerView.Adapter.onBindViewHolder]
+     * @param viewHolder
+     * @param itemData
+     * @param position
+     * @param payload
      * */
     abstract fun bindViewHolder(viewHolder : VH,itemData : T,position: Int,payload: Any?)
 
@@ -95,5 +99,9 @@ abstract class BaseItemStrategy<T,in VH : RecyclerView.ViewHolder>(
     open fun onViewAttachedToWindow(viewHolder: VH) = Unit
 
     //</editor-fold>
+
+    override fun getChangePayload(oldItem: T, newItem: T): Any? {
+        return "changePayload"
+    }
 }
 
