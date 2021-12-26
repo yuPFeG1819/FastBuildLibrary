@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
-import com.yupfeg.base.tools.image.config.ImageRoundCornerType
+import com.yupfeg.base.tools.image.opts.ImageRoundCornerType
 import com.yupfeg.base.tools.image.ext.loadImage
 
 /**

@@ -16,7 +16,7 @@ import com.yupfeg.base.widget.ext.setThrottleClickListener
 
 /**
  * 对于view的控制是否可见状态
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param visible 是否可见
  */
 @Suppress("unused")
@@ -28,7 +28,7 @@ fun View.bindGoneUnless(visible: Boolean?) {
 
 /**
  * View拓展函数，设置View的高度
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param height view高度（dp）、WRAP_CONTENT、MATCH_PARENT
  * */
 @Suppress("unused")
@@ -52,7 +52,7 @@ fun View.bindLayoutHeight(height : Int?){
 
 /**
  * View拓展函数，设置View的宽度
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param width view宽度（dp）、WRAP_CONTENT、MATCH_PARENT
  */
 @Suppress("unused")
@@ -76,7 +76,7 @@ fun View.bindLayoutWidth(width : Int?){
 
 /**
  * View拓展函数，bind背景drawable
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param drawable 背景图
  */
 @Suppress("unused")
@@ -89,7 +89,7 @@ fun View.bindBackgroundDrawable(drawable : Drawable?){
 
 /**
  * View拓展函数，bind view的背景颜色
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param colorResId 背景颜色id
  */
 @Suppress("unused")
@@ -101,7 +101,7 @@ fun View.bindBackgroundColor(@ColorRes colorResId : Int?){
 
 /**
  * View拓展函数，bind view的背景drawable resId
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param drawableResId 背景颜色id
  */
 @Suppress("unused")
@@ -113,7 +113,7 @@ fun View.bindBackgroundDrawable(@DrawableRes drawableResId : Int?){
 
 /**
  * [View]拓展函数，对View设置防抖点击事件，默认为500ms
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param clickDelay 点击防抖延迟，默认为500ms
  * @param onClickListener 点击事件
  */
@@ -133,7 +133,7 @@ fun View.bindViewSingleClick(
 
 /**
  * [View]拓展函数，设置View的选中状态
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * @param isSelected 是否为选中状态
  */
 @Suppress("unused")
@@ -143,36 +143,62 @@ fun View.bindViewSelectedStatus(isSelected: Boolean?){
     setSelected(isSelected)
 }
 
+/**
+ * [View]拓展函数，设置绑定View的焦点变化监听
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
+ * @param listener
+ * */
+@Suppress("unused")
+@BindingAdapter(value = ["setOnFocusChange"])
+fun View.bindFocusChangeListener(listener : View.OnFocusChangeListener?){
+    listener?:return
+    onFocusChangeListener = listener
+}
+
+/**
+ * [View]拓展函数，设置绑定View的触控监听
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
+ * @param listener 触控监听
+ * */
+@Suppress("unused")
+@BindingAdapter(value = ["setOnTouchListener"])
+fun View.bindOnTouchListener(listener : View.OnTouchListener?){
+    listener?:return
+    this.setOnTouchListener(listener)
+}
+
 // <editor-fold desc="状态栏适配">
 
 /**
  * [View]拓展函数，设置视图适配状态栏（增加高度）
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
+ * @param isFitToStatusBar 是否延伸视图内容到状态栏
+ * @param isExtraPadding 是否添加额外的视图padding
  * */
 @Suppress("unused")
 @BindingAdapter(
-    value = ["fitTopSystemWindow", "fitSystemWindowExtraPadding"],
+    value = ["isFitToStatusBar", "isFitExtraPadding"],
     requireAll = false
 )
-fun View.bindFitTopSystemWindow(isFitStatusBar : Boolean?,extraPadding : Boolean?){
-    isFitStatusBar?:return
-    if (!isFitStatusBar) return
-    fitToSystemStatusBar(extraPadding?:false)
+fun View.bindFitToStatusBar(isFitToStatusBar : Boolean?, isExtraPadding : Boolean?){
+    isFitToStatusBar?:return
+    if (!isFitToStatusBar) return
+    fitToSystemStatusBar(isExtraPadding?:false)
 }
 
 /**
  * [View]拓展函数，设置视图适配导航栏（增加高度）
- * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
  * */
 @Suppress("unused")
 @BindingAdapter(
-    value = ["fitBottomSystemWindow","fitSystemWindowExtraPadding"],
+    value = ["isFitToNavigation","isFitExtraPadding"],
     requireAll = false
 )
-fun View.bindFitBottomSystemWindow(isFitNavigation : Boolean?,extraPadding: Boolean?){
-    isFitNavigation?:return
-    if (!isFitNavigation) return
-    fitToSystemNavigationWindow(extraPadding?:false)
+fun View.bindFitToNavigationBar(isFitToNavigation : Boolean?, isExtraPadding: Boolean?){
+    isFitToNavigation?:return
+    if (!isFitToNavigation) return
+    fitToSystemNavigationWindow(isExtraPadding?:false)
 }
 
 // </editor-fold>

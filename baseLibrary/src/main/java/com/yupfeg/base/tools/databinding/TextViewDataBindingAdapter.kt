@@ -2,6 +2,7 @@ package com.yupfeg.base.tools.databinding
 
 import android.text.method.MovementMethod
 import android.util.TypedValue
+import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.databinding.BindingAdapter
@@ -53,12 +54,12 @@ fun TextView.bindHighLightColor(@ColorInt color : Int?){
 }
 
 /**
- * [TextView]的拓展函数，设置文本输入监听，以dsl方式简化文本输入监听
+ * [EditText]的拓展函数，设置文本输入监听，以dsl方式简化文本输入监听
  * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
  * @param textInputWatcher 文本输入监听
  */
 @Suppress("unused")
 @BindingAdapter("setDslTextWatch")
-fun TextView.bindingDslTextWatch(textInputWatcher : DSLTextWatcher){
+fun EditText.bindingDslTextWatch(textInputWatcher : DSLTextWatcher){
     this.addTextChangedListener(textInputWatcher)
 }
