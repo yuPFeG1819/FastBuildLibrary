@@ -82,7 +82,7 @@ class SpannableStringStyleConfig {
         private set
 
     /**
-     * 文本可点击样式，优先与超链接样式
+     * 文本可点击样式，优先级高于超链接样式
      * * 使用该样式时，需要配合将TextView设置`movementMethod`属性设置为`LinkMovementMethod.getInstance()`，
      * 允许文本部分可点击才能触发，并且为了防止点击后变色，需要将TextView的`highlightColor`设置为透明色
      * */
@@ -179,9 +179,10 @@ class SpannableStringStyleConfig {
     }
 
     /**
-     * 设置文本段落点击事件
-     * * 需要配合将TextView设置`movementMethod`属性设置为`LinkMovementMethod.getInstance()`，
-     * 允许文本部分可点击才能触发，并且为了防止点击后变色，需要将TextView的`highlightColor`设置为透明色
+     * 设置文本段落点击事件，优先级高于超链接样式
+     * - 需要配合将TextView设置`movementMethod`属性设置为`LinkMovementMethod.getInstance()`，
+     * 允许文本部分可点击才能触发点击事件。
+     * - 并且为了防止点击后变色，需要将TextView的`highlightColor`设置为透明色
      * @param clickAction 文本点击事件
      * */
     fun setOnClick(clickAction : ()->Unit){
