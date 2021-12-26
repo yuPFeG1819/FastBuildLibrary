@@ -13,6 +13,7 @@ import androidx.databinding.ViewDataBinding
  * @date 2021/04/29
  */
 @Suppress("unused")
+@Deprecated("已废弃，可以直接通过反射构建binding对象，利用by进行代理")
 abstract class BaseBindFragment<T : ViewDataBinding> : BaseFragment(){
     @Suppress("MemberVisibilityCanBePrivate")
     private var mBinding : T ?= null
@@ -29,7 +30,7 @@ abstract class BaseBindFragment<T : ViewDataBinding> : BaseFragment(){
         setHasOptionsMenu(true)
         mBinding = inflateBindFragment(inflater, container).apply {
             mRootView = this.root
-            //在使用Navigation时，由于Fragment与View的生命周期不一致，所有要使用viewLifecycleOwner
+            //在使用Navigation或LiveData时，由于Fragment与View的生命周期不一致，所有要使用viewLifecycleOwner
             lifecycleOwner = this@BaseBindFragment.viewLifecycleOwner
         }
         return mRootView
@@ -37,6 +38,7 @@ abstract class BaseBindFragment<T : ViewDataBinding> : BaseFragment(){
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mBinding?.unbind()
         mBinding = null
     }
 

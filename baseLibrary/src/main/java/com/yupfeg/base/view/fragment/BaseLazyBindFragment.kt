@@ -10,6 +10,7 @@ import androidx.databinding.ViewDataBinding
  * @date 2021/04/29
  */
 @Suppress("unused")
+@Deprecated("已废弃")
 abstract class BaseLazyBindFragment<T : ViewDataBinding> : BaseBindFragment<T>(){
 
     /**是否已完成懒加载*/

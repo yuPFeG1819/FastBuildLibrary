@@ -54,7 +54,8 @@ class FragmentDataBindingProxy<out T : ViewDataBinding>(
         @Suppress("UNCHECKED_CAST")
         return (mBindViewMethod.invoke(null,fragment.view) as T).apply {
             mViewBinding = this
-            lifecycleOwner = fragment
+            //由于Fragment与View的生命周期不一致，所有要使用viewLifecycleOwner
+            lifecycleOwner = fragment.viewLifecycleOwner
         }
     }
 
