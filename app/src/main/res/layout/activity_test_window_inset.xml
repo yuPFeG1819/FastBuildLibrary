@@ -5,8 +5,12 @@
         <variable
             name="viewConfig"
             type="com.yupfeg.sample.TestWindowInsetActivity.BindingConfig" />
+        <variable
+            name="viewModel"
+            type="com.yupfeg.sample.ui.TestWindowInsetViewModel" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,6 +26,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            isFitToStatusBar="@{true}"
+            isFitExtraPadding="@{false}"
             />
 
         <androidx.constraintlayout.helper.widget.Layer
@@ -95,6 +101,42 @@
             onViewClick="@{()->viewConfig.updateNavigationBar()}"
             />
 
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_test_window_inset_input"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_test_window_inset_full_navigation"
+            android:background="@android:color/holo_red_light"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:text="@={viewModel.onTestInputTest}"
+            android:hint="测试输入"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            app:layout_constraintWidth_percent="0.7"
+            android:layout_marginTop="15dp"
+            setDslTextWatch="@{viewConfig.textWatcher}"
+            setOnFocusChange="@{viewConfig.onForceChange}"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_btn_test_window_input_enable"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:text="进入/结束编辑"
+            android:textColor="@color/white"
+            android:background="#AA00FF"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@id/et_test_window_inset_input"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="15dp"
+            app:layout_constraintWidth_percent="0.5"
+            onViewClick="@{()->viewConfig.updateInputState()}"
+            />
+
         <!-- <editor-fold desc="底部导航栏"> -->
 
         <View
@@ -105,6 +147,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            isFitToNavigation="@{true}"
+            isFitExtraPadding="@{true}"
             />
 
         <androidx.constraintlayout.helper.widget.Layer
