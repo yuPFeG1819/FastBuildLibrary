@@ -14,9 +14,9 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
-import com.yupfeg.base.tools.image.config.ImageLoaderConfig
-import com.yupfeg.base.tools.image.config.ImageRoundCornerType
-import com.yupfeg.base.tools.image.config.ImageScaleType
+import com.yupfeg.base.tools.image.opts.ImageLoadOptions
+import com.yupfeg.base.tools.image.opts.ImageRoundCornerType
+import com.yupfeg.base.tools.image.opts.ImageScaleType
 
 /**
  * [Glide]的图片加载帮助类
@@ -30,7 +30,7 @@ class GlideLoadHelper : ImageLoadable {
      * @param imageView
      * @param config 图片加载配置
      * */
-    override fun loadImageToView(imageView: ImageView, config: ImageLoaderConfig) {
+    override fun loadImageToView(imageView: ImageView, config: ImageLoadOptions) {
         config.takeIf { it.localDrawableId != 0 }?.also {
             imageView.preformLoadPicture(it.localDrawableId,config)
         }?: config.imgUri ?.also {uri->
@@ -49,7 +49,7 @@ class GlideLoadHelper : ImageLoadable {
      * */
     override fun loadBitmap(
         context: Context,
-        config: ImageLoaderConfig,
+        config: ImageLoadOptions,
         bitmapReadyAction: (Bitmap) -> Unit,
         loadStartAction : ((Drawable?)->Unit)?,
         loadErrorAction : ((Drawable?)->Unit)?
@@ -89,7 +89,7 @@ class GlideLoadHelper : ImageLoadable {
      * @param config 图片加载的配置
      * */
     @SuppressLint("CheckResult")
-    private fun ImageView.preformLoadPicture(imgUrl : Any, config: ImageLoaderConfig){
+    private fun ImageView.preformLoadPicture(imgUrl : Any, config: ImageLoadOptions){
         Glide.with(context).load(imgUrl).apply {
             setPlaceholder(config.placeholder,config.placeholderId)
             setErrorPlaceholder(config.error,config.errorId)
@@ -103,6 +103,8 @@ class GlideLoadHelper : ImageLoadable {
                 if (config.isSkipDiskCache) DiskCacheStrategy.NONE
                 else DiskCacheStrategy.AUTOMATIC
             )
+            //图片加载尺寸
+            setOverrideSize(config.overrideWidth,config.overrideHeight)
             //优先加载缩略图
             thumbnail(config.thumbnail)
         }.into(this)
@@ -118,7 +120,7 @@ class GlideLoadHelper : ImageLoadable {
      * */
     @SuppressLint("CheckResult")
     private fun preformLoadBitmap(
-        context : Context, config: ImageLoaderConfig,
+        context : Context, config: ImageLoadOptions,
         bitmapReadyAction: (Bitmap) -> Unit,
         loadStartAction : ((Drawable?)->Unit)?,
         loadErrorAction : ((Drawable?)->Unit)?
@@ -137,6 +139,8 @@ class GlideLoadHelper : ImageLoadable {
                 if (config.isSkipDiskCache) DiskCacheStrategy.NONE
                 else DiskCacheStrategy.AUTOMATIC
             )
+            //图片加载尺寸
+            setOverrideSize(config.overrideWidth,config.overrideHeight)
             //优先加载缩略图
             thumbnail(config.thumbnail)
         }?.into(object : CustomTarget<Bitmap>(){
@@ -189,7 +193,7 @@ class GlideLoadHelper : ImageLoadable {
      * @param config
      */
     @SuppressLint("CheckResult")
-    private fun RequestBuilder<*>.setImageBitmapTransform(config: ImageLoaderConfig){
+    private fun RequestBuilder<*>.setImageBitmapTransform(config: ImageLoadOptions){
 
         if (config.roundCornerType == ImageRoundCornerType.CIRCLE){
             //图片剪裁类型
@@ -218,12 +222,12 @@ class GlideLoadHelper : ImageLoadable {
     @Suppress("unused")
     @SuppressLint("CheckResult")
     private fun RequestBuilder<*>.setOverrideSize(width : Int,height : Int){
-        if (width == ImageLoaderConfig.SIZE_ORIGINAL
-            && height == ImageLoaderConfig.SIZE_ORIGINAL){
+        if (width == ImageLoadOptions.SIZE_ORIGINAL
+            && height == ImageLoadOptions.SIZE_ORIGINAL){
             //加载到原图尺寸
             override(Target.SIZE_ORIGINAL)
-        }else if (width == ImageLoaderConfig.SIZE_FROM_TARGET_VIEW
-            && height == ImageLoaderConfig.SIZE_FROM_TARGET_VIEW){
+        }else if (width == ImageLoadOptions.SIZE_FROM_TARGET_VIEW
+            && height == ImageLoadOptions.SIZE_FROM_TARGET_VIEW){
             //采用默认配置，加载根据视图尺寸
             return
         }

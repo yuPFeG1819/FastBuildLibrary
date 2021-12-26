@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
-import com.yupfeg.base.tools.image.config.ImageLoaderConfig
+import com.yupfeg.base.tools.image.opts.ImageLoadOptions
 
 /**
  * 图片加载功能抽象接口
@@ -17,7 +17,7 @@ interface ImageLoadable {
      * @param imageView
      * @param config 图片加载配置
      * */
-    fun loadImageToView(imageView: ImageView, config : ImageLoaderConfig)
+    fun loadImageToView(imageView: ImageView, config : ImageLoadOptions)
 
     /**
      * 加载bitmap
@@ -28,7 +28,7 @@ interface ImageLoadable {
      * */
     fun loadBitmap(
         context: Context,
-        config: ImageLoaderConfig,
+        config: ImageLoadOptions,
         bitmapReadyAction : (Bitmap)->Unit,
         loadStartAction : ((Drawable?)->Unit)? = null,
         loadErrorAction : ((Drawable?)->Unit)? = null

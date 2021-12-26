@@ -4,7 +4,7 @@ import android.content.Context
 import android.media.MediaScannerConnection
 import android.widget.ImageView
 import com.yupfeg.base.tools.image.ImageLoader
-import com.yupfeg.base.tools.image.config.ImageLoaderConfig
+import com.yupfeg.base.tools.image.opts.ImageLoadOptions
 
 /**
  * 图片加载相关拓展函数
@@ -14,9 +14,9 @@ import com.yupfeg.base.tools.image.config.ImageLoaderConfig
 
 /**
  * [ImageView]拓展函数，加载图片url
- * @param config 图片加载配置[ImageLoaderConfig]，以kotlin-dsl方式配置
+ * @param config 图片加载配置[ImageLoadOptions]，以kotlin-dsl方式配置
  * */
-fun ImageView.loadImage(config: ImageLoaderConfig.()->Unit){
+fun ImageView.loadImage(config: ImageLoadOptions.()->Unit){
     ImageLoader.loadImageToView(this, config)
 }
 
