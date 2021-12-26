@@ -12,7 +12,7 @@ class TestUseCase : LifecycleUseCase(){
 
     override var isPrintDebugLifecycleLog: Boolean = true
     fun queryTestData(){
-        logd("测试")
+        logd("queryTestData ${Thread.currentThread().name}")
     }
 
 }

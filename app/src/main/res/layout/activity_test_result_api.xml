@@ -5,6 +5,9 @@
             name="config"
             type="com.yupfeg.sample.ui.TestResultApiActivity.BindingConfig"
             />
+        <variable
+            name="viewModel"
+            type="com.yupfeg.sample.ui.TestResultViewModel" />
     </data>
 
     <LinearLayout
@@ -13,6 +16,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:text="@={viewModel.testSpannableString}"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            movementMethod="@{viewModel.textClickMovementMethod}"
+            highLightColor="@{viewModel.testSpannableHighLightColor}"
+            />
 
         <Button
             android:id="@+id/btn_test_result_api_normal_back"

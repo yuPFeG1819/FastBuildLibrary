@@ -11,6 +11,7 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import com.yupfeg.base.tools.pool.WebViewPool
+import com.yupfeg.base.tools.showShortToast
 import com.yupfeg.base.view.activity.BaseActivity
 import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
@@ -26,6 +27,8 @@ import com.yupfeg.sample.databinding.ActivityTestResultApiBinding
  */
 class TestResultApiActivity : BaseActivity(){
     private val mBinding : ActivityTestResultApiBinding by bindingActivity(layoutId)
+    private val mViewModel : TestResultViewModel by viewModelDelegate()
+
     private var mMessenger : Messenger? = null
     private var mTestAIDL : TestServiceAIDL? = null
 
@@ -70,14 +73,9 @@ class TestResultApiActivity : BaseActivity(){
     override val layoutId: Int
         get() = R.layout.activity_test_result_api
 
-    /**
-     * 初始化控件
-     * * tip : 如果使用原始的布局方式，需要注意设置[setContentView]，
-     * 否则推荐使用DataBinding，利用by关键字，通过`bindingActivity`函数代理DataBinding类，
-     * 或者利用`DataBindingUtil.setContentView<T>(this, layoutId)`
-     * */
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.config = BindingConfig()
+        mBinding.viewModel = mViewModel
         val intent = Intent(this, TestMessengerService::class.java)
         bindService(intent,mConnection, BIND_AUTO_CREATE)
 
@@ -91,7 +89,11 @@ class TestResultApiActivity : BaseActivity(){
     }
 
     /**初始化数据*/
-    override fun initData() {}
+    override fun initData() {
+        mViewModel.spannableClickEvent.observe(this){
+            showShortToast("点击SpannableString")
+        }
+    }
 
     inner class BindingConfig{
 

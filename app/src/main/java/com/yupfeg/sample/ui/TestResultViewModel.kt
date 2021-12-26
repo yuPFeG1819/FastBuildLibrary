@@ -1,7 +1,15 @@
 package com.yupfeg.sample.ui
 
-import androidx.lifecycle.ViewModel
+import android.graphics.Color
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
+import android.text.method.MovementMethod
+import androidx.databinding.ObservableField
+import com.yupfeg.base.tools.spannable.append
+import com.yupfeg.base.tools.toPx
 import com.yupfeg.base.viewmodel.BaseViewModel
+import com.yupfeg.livedata.EventLiveData
+import com.yupfeg.livedata.MutableEventLiveData
 import com.yupfeg.sample.domain.TestUseCase
 
 /**
@@ -11,9 +19,38 @@ import com.yupfeg.sample.domain.TestUseCase
  */
 class TestResultViewModel : BaseViewModel() {
 
-    val mTestUseCase = TestUseCase()
+    val testUseCase = TestUseCase()
+
+    val testSpannableString = ObservableField<CharSequence>()
+    val textClickMovementMethod: MovementMethod = LinkMovementMethod.getInstance()
+    val testSpannableHighLightColor : Int = Color.TRANSPARENT
+
+    val spannableClickEvent : EventLiveData<String>
+        get() = mSpannableClickEvent
+    private val mSpannableClickEvent = MutableEventLiveData<String>()
 
     init {
-        addUseCase(mTestUseCase)
+        addUseCase(testUseCase)
+        initTestSpannableString()
+    }
+
+    private fun initTestSpannableString(){
+        val spannableString = SpannableStringBuilder().apply {
+            append("测试") {
+                textColor = Color.DKGRAY
+                setTextSize(12.toPx())
+            }
+            append("ResultAPI "){
+                setTextSize(18.toPx())
+                textColor = Color.BLUE
+                setOnClick {
+                    mSpannableClickEvent.value = "spannableClick"
+                }
+            }
+            append("返回到原始页面"){
+                textColor = Color.GREEN
+            }
+        }
+        testSpannableString.set(spannableString)
     }
 }

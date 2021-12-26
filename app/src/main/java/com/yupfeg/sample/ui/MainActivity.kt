@@ -8,6 +8,7 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.yupfeg.base.tools.ContactsTools
@@ -15,9 +16,9 @@ import com.yupfeg.base.tools.file.getUriFromFile
 import com.yupfeg.base.tools.image.ImageLoader
 import com.yupfeg.base.tools.showShortToast
 import com.yupfeg.base.tools.window.fitImmersiveStatusBar
+import com.yupfeg.base.tools.window.fitToSystemStatusBar
 import com.yupfeg.base.tools.window.getStatusBarHeight
 import com.yupfeg.base.tools.window.isNavigationBarVisible
-import com.yupfeg.base.tools.window.fitToSystemStatusBar
 import com.yupfeg.base.view.activity.BaseActivity
 import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
@@ -28,7 +29,9 @@ import com.yupfeg.result.permission.dialog.DefaultRationaleDialogFragment
 import com.yupfeg.sample.R
 import com.yupfeg.sample.TestWindowInsetActivity
 import com.yupfeg.sample.databinding.ActivityMainBinding
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
+import kotlin.coroutines.resume
 
 class MainActivity : BaseActivity() {
 
@@ -165,14 +168,20 @@ class MainActivity : BaseActivity() {
         }
 
         fun testResultApiStartActivity(){
-            mViewModel.testUseCase.queryTestData()
             //测试跳转页面
-//            mTestResultActivityLauncher.launch<TestResultApiActivity>{ resultIntent->
-//                resultIntent?.extras?.also {
-//                    Toast.makeText(this@MainActivity,"接收返回值${it["key"]}",Toast.LENGTH_SHORT).show()
-//                }
-//            }
+            mTestResultActivityLauncher.launch<TestResultApiActivity>{ resultIntent->
+                resultIntent?.extras?.also {
+                    Toast.makeText(this@MainActivity,"接收返回值${it["key"]}",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
+        private suspend fun queryData2(lastData: String) = suspendCancellableCoroutine<String> { continuation ->
+            logd("queryData2 ${Thread.currentThread().name}")
+            continuation.resume(lastData + "new query")
+        }
+
+        fun naviToTestWindowInset(){
             startActivity(Intent(this@MainActivity, TestWindowInsetActivity::class.java))
         }
 
