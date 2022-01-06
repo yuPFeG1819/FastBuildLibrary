@@ -21,6 +21,7 @@ import autodispose2.lifecycle.LifecycleEndedException
 import autodispose2.lifecycle.LifecycleScopeProvider
 import com.yupfeg.base.domain.UseCase
 import com.yupfeg.base.viewmodel.BaseViewModel
+import com.yupfeg.rxjavasupport.domain.AutoDisposeUseCase
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
@@ -83,6 +84,7 @@ open class AutoDisposeViewModel : BaseViewModel(), LifecycleScopeProvider<ViewMo
 
     override fun addUseCase(useCase: UseCase) {
         (useCase as? AutoDisposeUseCase)?.apply {
+            //赋值绑定的用例类对应的autoDispose作用域
             this.scopeProvider = this@AutoDisposeViewModel
         }
         super.addUseCase(useCase)
