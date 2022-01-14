@@ -11,6 +11,22 @@ plugins{
     id "kotlin-parcelize"
     //kotlin替代注解
     id "kotlin-kapt"
+    id 'maven-publish'
+
+}
+
+//设置maven Publish目标
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.yupfeg1819'
+                artifactId = 'FastBuildLibrary'
+                version = 'v0.1.0'
+            }
+        }
+    }
 }
 
 android {
@@ -104,6 +120,8 @@ dependencies {
     api(ThirdParty.stateLiveData)
     //resultAPI封装
     api(ThirdParty.easyResultApi)
+    //启动任务调度器
+    api(ThirdParty.startUpDispatcher)
     //----------------网络相关-------------
     //支持RxJava3 CallBack处理
     api (Network.retrofitRxJava3Adapter)
