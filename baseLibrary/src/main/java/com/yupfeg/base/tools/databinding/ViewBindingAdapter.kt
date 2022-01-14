@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.databinding.BindingAdapter
-import com.yupfeg.base.tools.toPx
+import com.yupfeg.base.tools.ext.toPx
 import com.yupfeg.base.tools.window.fitToSystemNavigationWindow
 import com.yupfeg.base.tools.window.fitToSystemStatusBar
+import com.yupfeg.base.tools.window.setWindowInsetsAnimationCompatCallBack
 import com.yupfeg.base.widget.ext.ThrottleClickListenerWrapper
 import com.yupfeg.base.widget.ext.setThrottleClickListener
 
@@ -199,6 +201,23 @@ fun View.bindFitToNavigationBar(isFitToNavigation : Boolean?, isExtraPadding: Bo
     isFitToNavigation?:return
     if (!isFitToNavigation) return
     fitToSystemNavigationWindow(isExtraPadding?:false)
+}
+
+// </editor-fold>
+
+// <editor-fold desc="WindowInset动画监听">
+
+/**
+ * [View]拓展函数，设置WindowInset的兼容动画回调
+ * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错，且属性必须为可空状态
+ * * Android 11以下需要在注册表文件中，Activity设置`android:windowSoftInputMode="adjustResize"`属性
+ * @param callBack 兼容的windowInset动画回调，所有WindowInsets操作都会触发，如状态栏、导航栏、软键盘显示隐藏等操作
+ * */
+@Suppress("unused")
+@BindingAdapter(value = ["windowInsetAnimationCallBack"])
+fun View.bindWindowInsetAnimationCallBack(callBack : WindowInsetsAnimationCompat.Callback?){
+    callBack?:return
+    this.setWindowInsetsAnimationCompatCallBack(callBack)
 }
 
 // </editor-fold>
