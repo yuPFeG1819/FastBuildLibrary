@@ -1,12 +1,11 @@
-package com.yupfeg.base.tools.ext
+package com.yupfeg.base.tools.cache
 
-import android.app.Application
+import android.content.Context
 import com.tencent.mmkv.MMKV
 import com.tencent.mmkv.MMKVHandler
 import com.tencent.mmkv.MMKVLogLevel
 import com.tencent.mmkv.MMKVRecoverStrategic
 import com.yupfeg.logger.ext.*
-import com.yupfeg.logger.ext.logw
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -22,11 +21,12 @@ private const val CACHE_LOG_TAG = "localCache"
 
 // <editor-fold desc="Application初始化缓存">
 /**
- * [Application]的拓展函数，初始化本地快速缓存库
+ * 初始化本地快速缓存库
+ * @param context
  */
 @Suppress("unused")
-fun Application.initLocalFastCache(){
-    MMKV.initialize(this)
+fun initLocalFastCache(context: Context){
+    MMKV.initialize(context)
     MMKV.registerHandler(object : MMKVHandler {
         override fun onMMKVCRCCheckFail(cacheID: String?): MMKVRecoverStrategic {
             return MMKVRecoverStrategic.OnErrorRecover
@@ -60,11 +60,11 @@ fun Application.initLocalFastCache(){
 }
 
 /**
- * [Application]的拓展函数，取消[MMKV]日志的转发
+ * 取消[MMKV]日志的转发
  * * 可在应用销毁时反注册
  */
 @Suppress("unused")
-fun Application.unRegisterFastCacheLog(){
+fun unRegisterFastCacheLog(){
     MMKV.unregisterHandler()
 }
 
