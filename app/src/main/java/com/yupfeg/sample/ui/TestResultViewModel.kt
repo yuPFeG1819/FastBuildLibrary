@@ -6,7 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.text.method.MovementMethod
 import androidx.databinding.ObservableField
 import com.yupfeg.base.tools.spannable.append
-import com.yupfeg.base.tools.toPx
+import com.yupfeg.base.tools.ext.toPx
 import com.yupfeg.base.viewmodel.BaseViewModel
 import com.yupfeg.livedata.EventLiveData
 import com.yupfeg.livedata.MutableEventLiveData
@@ -30,7 +30,6 @@ class TestResultViewModel : BaseViewModel() {
     private val mSpannableClickEvent = MutableEventLiveData<String>()
 
     init {
-        addUseCase(testUseCase)
         initTestSpannableString()
     }
 
