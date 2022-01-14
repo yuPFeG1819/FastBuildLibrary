@@ -14,12 +14,11 @@ import kotlin.math.abs
 
 /**
  * 软键盘输入状态变化的委托处理类
- * //TODO 后续尝试使用WindowInset监听软键盘高度变化
  * @author yuPFeG
  * @date 2021/06/28
  */
 @Suppress("unused")
-@Deprecated("可以使用WindowInsetsController替代")
+@Deprecated("可以使用ViewCompat.WindowInsetsAnimationCallBack替代")
 class KeyBoardInputChangeMediator {
 
     private var sDecorViewDelta = 0
