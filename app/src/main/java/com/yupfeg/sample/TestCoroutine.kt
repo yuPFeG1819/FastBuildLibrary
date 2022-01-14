@@ -1,15 +1,11 @@
 package com.yupfeg.sample
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.yupfeg.base.tools.pool.GlobalLocalThreadPool
+import com.yupfeg.dispatcher.ExecutorProvider
 import com.yupfeg.logger.ext.logd
 import kotlinx.coroutines.*
-import kotlin.coroutines.ContinuationInterceptor
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.suspendCoroutine
 
 /**
  *
@@ -41,7 +37,7 @@ class TestCoroutineActivity : AppCompatActivity(){
 //            }
 //
 //        })
-        val dispatcher = GlobalLocalThreadPool.executorService.asCoroutineDispatcher()
+        val dispatcher = ExecutorProvider.cpuExecutor.asCoroutineDispatcher()
         lifecycleScope.launch {
             val job = launch(dispatcher + CoroutineName("coroutine_1")){
                 logd("${Thread.currentThread().name} job1 running print")
