@@ -23,7 +23,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.yupfeg1819'
                 artifactId = 'FastBuildLibrary'
-                version = 'v0.1.0'
+                version = 'v0.1.1'
             }
         }
     }
