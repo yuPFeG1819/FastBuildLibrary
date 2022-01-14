@@ -9,10 +9,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
-import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import com.yupfeg.base.tools.ActivityStackHelper
 import com.yupfeg.logger.ext.logd
 import com.yupfeg.logger.ext.logw
 import java.io.File
@@ -24,9 +21,8 @@ import java.io.File
  */
 @Suppress("unused")
 object AppUtils {
-    /**跳转到系统请求安装未知来源的apk权限页面的请求码 */
-    @Suppress("MemberVisibilityCanBePrivate")
-    const val REQUEST_CODE_INSTALL_APK_PERMISSION = 0x0101
+    /**当前进程名称*/
+    private var mCurrProcessName : String? = null
 
     /**
      * 获取app系统版本号
@@ -68,82 +64,14 @@ object AppUtils {
     }
 
     /**
-     * 获得当前进程名
-     * @param context [Context]
-     * @return 进程号
-     */
-    @SuppressLint("ServiceCast")
-    @JvmStatic
-    fun getCurProcessName(context: Context): String? {
-        val pid = android.os.Process.myPid()
-        val activityManager = context
-            .getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        for (appProcess in activityManager.runningAppProcesses) {
-            if (appProcess.pid == pid) {
-                return appProcess.processName
-            }
-        }
-        return null
-    }
-
-    /**
      * 安装APK
-     *
-     * 适配Android8.0版本，检查权限并增加FileProvider
-     * @param activity 处理设置权限回调的activity，通常是安装apk功能所在的activity，
-     * 在[Activity.onActivityResult]里面处理设置权限回调，
-     * resultCode为[Activity.RESULT_OK]，requestCode为[REQUEST_CODE_INSTALL_APK_PERMISSION]
-     * @param file 安装的apk文件
-     */
-    @Suppress("unused")
-    @JvmStatic
-    fun installApk(activity : Activity, file: File) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //android8.0以上需要未知来源的apk安装权限
-            val haveInstallPermission = activity.packageManager.canRequestPackageInstalls()
-            if (!haveInstallPermission) {
-                //不存在安装apk权限，则跳转到系统权限管理页面
-                startInstallApkPermissionSettingActivity(activity)
-            } else {
-                install(activity, file)
-            }
-        } else {
-            install(activity, file)
-        }
-    }
-
-    /**
-     * Android8.0以上，跳转到安装未知来源apk系统权限设置页面
-     * @param activity 处理设置权限回调的activity
-     */
-    @SuppressLint("ObsoleteSdkInt")
-    @Deprecated("已废弃，使用")
-    private fun startInstallApkPermissionSettingActivity(activity : Activity){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        val parse = Uri.parse("package:" + activity.packageName)
-        val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, parse)
-        if (!ActivityStackHelper.currentActivity().isDestroyed){
-            //当前activity没有被关闭，则以当前activity跳转到系统权限设置，
-            // 回调在当前activity的onActivityResult处理
-            ActivityCompat.startActivityForResult(
-                ActivityStackHelper.currentActivity(), intent,
-                REQUEST_CODE_INSTALL_APK_PERMISSION, null
-            )
-        }else{
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            activity.startActivityForResult(intent,
-                REQUEST_CODE_INSTALL_APK_PERMISSION
-            )
-        }
-    }
-
-    /**
-     * 安装APK
-     * 适配Android7.0以上版本，增加FileProvider
+     * - 已适配Android7.0以上版本，增加FileProvider
+     * @param context context
+     * @param file 本地安装文件
      * */
     @SuppressLint("ObsoleteSdkInt")
     @JvmStatic
-    private fun install(context: Context, file: File) {
+    fun install(context: Context, file: File) {
         val intent = Intent(Intent.ACTION_VIEW)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
