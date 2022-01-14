@@ -8,7 +8,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.yupfeg.base.tools.toPx
+import com.yupfeg.base.tools.ext.toPx
 import com.yupfeg.base.widget.recyclerview.itemdecoration.config.SimpleItemDividerConfig
 
 
