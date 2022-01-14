@@ -16,7 +16,7 @@ object AndroidX{
      */
     const val appcompat = "androidx.appcompat:appcompat:1.3.1"
     const val recyclerView = "androidx.recyclerview:recyclerview:1.2.1"
-    const val coreKtx = "androidx.core:core-ktx:1.6.0"
+    const val coreKtx = "androidx.core:core-ktx:1.7.0"
     /**
      * Activity库，
      * [Activity版本更新](https://developer.android.google.cn/jetpack/androidx/releases/activity#version_130_3)

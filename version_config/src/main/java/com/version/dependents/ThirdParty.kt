@@ -94,7 +94,7 @@ object ThirdParty {
      * 自用网络库
      * * [Gitee](https://gitee.com/yupfeg/http_request_mediator)
      */
-    const val httpMediator = "com.gitee.yupfeg:http_request_mediator:1.0.5"
+    const val httpMediator = "com.gitee.yupfeg:http_request_mediator:1.0.6"
 
     /**
      * 自用的单次执行LiveData封装
@@ -106,6 +106,12 @@ object ThirdParty {
      * * [Gitee](https://gitee.com/yupfeg/easy-result-api)
      * */
     const val easyResultApi = "com.gitee.yupfeg:easy-result-api:1.1.0"
+
+    /**
+     * 自用的启动任务调度器
+     * * [Gitee](https://gitee.com/yupfeg/StartTaskDispatcher)
+     * */
+    const val startUpDispatcher = "com.github.yuPFeG1819:StartTaskDispatcher:v1.0.2"
 
     /**
      * Mmkv 基于mmap内存映射的key-value储存框架
