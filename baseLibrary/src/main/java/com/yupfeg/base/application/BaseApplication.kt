@@ -1,17 +1,11 @@
 package com.yupfeg.base.application
 
-import android.app.ActivityManager
-import android.content.ComponentCallbacks2
+import android.app.Application
 import android.content.Context
-import android.content.res.Configuration
-import android.os.Process
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import com.yupfeg.base.tools.ActivityStackHelper
-import com.yupfeg.base.tools.ext.initLocalFastCache
-import com.yupfeg.base.tools.ext.unRegisterFastCacheLog
-import com.yupfeg.logger.ext.logw
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -26,7 +20,7 @@ import kotlin.properties.Delegates
  * @author yuPFeG
  * @date 2019/9/19
  */
-open class BaseApplication : MultiDexApplication(), ViewModelStoreOwner{
+open class BaseApplication : Application(), ViewModelStoreOwner{
 
     private lateinit var mAppViewModelStore: ViewModelStore
 
@@ -46,17 +40,16 @@ open class BaseApplication : MultiDexApplication(), ViewModelStoreOwner{
             private set
     }
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
+
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
         appContext = this.applicationContext
         mAppViewModelStore = ViewModelStore()
-        //只在主进程执行初始化
-        if (isAppMainProcess()){
-            //初始化本地缓存
-            initLocalFastCache()
-        }
-
     }
 
     /**ViewModelStoreOwner接口方法实现，表示其作用域范围在整个Application*/
@@ -72,36 +65,6 @@ open class BaseApplication : MultiDexApplication(), ViewModelStoreOwner{
         //使用SupervisorJob，不会让作用域内的协程出现异常后，影响整个作用域内所有协程的运行
         return CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
             .also { mApplicationScope = it }
-    }
-
-    /**
-     * 判断是不是UI主进程，因为有些东西只能在主进程初始化
-     */
-    protected open fun isAppMainProcess(): Boolean {
-        try {
-            val pid = Process.myPid()
-            val processName = getAppNameByPID(this, pid)
-            if (processName.isEmpty()) return true
-            return processName == this.packageName
-        } catch (e: Exception) {
-            logw(e)
-            return true
-        }
-    }
-
-    /**
-     * 根据Pid得到进程名
-     */
-    open fun getAppNameByPID(context: Context, pid: Int): String {
-        val am = context.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
-        val runningApps = am?.runningAppProcesses
-        runningApps?: return ""
-        for (processInfo in runningApps) {
-            if (processInfo.pid == pid) {
-                return processInfo.processName
-            }
-        }
-        return ""
     }
 
 }
