@@ -10,27 +10,27 @@ import com.yupfeg.base.R
 
 // <editor-fold desc="软键盘">
 
-/**
- * [Activity]拓展函数，显示软键盘
- * @param view
- *  */
-@Suppress("unused")
-fun Activity.showInputKeyBoard(view: View) {
-    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    //显示软键盘
-    imm.showSoftInput(view, 0)
-}
-
-/**
- * [Activity]拓展函数，隐藏软键盘
- * @param view
- */
-@Suppress("unused")
-fun Activity.hideInputKeyBoard(view: View) {
-    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    //强制隐藏键盘
-    imm.hideSoftInputFromWindow(view.windowToken, 0)
-}
+///**
+// * [Activity]拓展函数，显示软键盘
+// * @param view
+// *  */
+//@Suppress("unused")
+//fun Activity.showInputKeyBoard(view: View) {
+//    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//    //显示软键盘
+//    imm.showSoftInput(view, 0)
+//}
+//
+///**
+// * [Activity]拓展函数，隐藏软键盘
+// * @param view
+// */
+//@Suppress("unused")
+//fun Activity.hideInputKeyBoard(view: View) {
+//    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//    //强制隐藏键盘
+//    imm.hideSoftInputFromWindow(view.windowToken, 0)
+//}
 
 // </editor-fold>
 
