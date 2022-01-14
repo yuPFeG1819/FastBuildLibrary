@@ -46,6 +46,7 @@ fun ViewPager2.bindFragmentAdapter(adapter : FragmentStateAdapter?){
  * * DataBinding专用函数，所有DataBinding属性在xml都需要以["@{}"]赋值，否则会报错
  * @param pageLimit 保留页面数
  */
+@Suppress("unused")
 @BindingAdapter(value = ["setOffscreenPageLimit"])
 fun ViewPager2.bindOffscreenPageLimit(pageLimit : Int?){
     pageLimit?:return
