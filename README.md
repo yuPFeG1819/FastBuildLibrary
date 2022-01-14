@@ -6,7 +6,7 @@
 
 ## 已依赖库
 
-利用Composing builds方式统一管理配置依赖库
+利用`Composing builds`方式统一管理配置依赖库
 
 [再见吧 buildSrc, 拥抱 Composing builds 提升 Android 编译速度](https://juejin.cn/post/6844904176250519565)
 
@@ -22,10 +22,12 @@
 
 - 自用库 ： 
 
-  > [HttpRequestMediator](https://gitee.com/yupfeg/http_request_mediator) 封装网络请求
+  > [HttpRequestMediator](https://gitee.com/yupfeg/http_request_mediator) Retrofit网络请求封装
   > [Logger](https://gitee.com/yupfeg/logger) 日志库
   > [StateLiveDataWrapper](https://gitee.com/yupfeg/state-live-data-wrapper) 单次执行事件LiveData
   > [EasyResultApi](https://gitee.com/yupfeg/easy-result-api) ResultApi,包含权限请求
+  >
+  > [StartTaskDispatcher](https://gitee.com/yupfeg/StartTaskDispatcher) 启动任务调度器，进行启动优化
 
 - ~~[RxJava](https://github.com/ReactiveX/RxJava)~~ 已移除基础库
 - [Glide](https://github.com/bumptech/glide) 图片加载库
@@ -40,20 +42,20 @@
 
 - 引入`UseCase`业务用例 `Domain`层,承载业务逻辑功能以及原子化状态。
 
-  > - `UseCase`可添加`Lifecycle`支持，提供给`AutoDispose`与`CoroutineScope`根据生命周期管理任务调度。
+  > - `UseCase`内提供给`CoroutineScope`根据生命周期管理任务调度。
   >
-  > - 添加`UseCaseTaskScheduler`支持`UseCase`在后台使用。
+  > - 添加`UseCaseTaskScheduler`支持`UseCase`在非UI场景使用。
   >
   > - 如果是MVI架构可尝试只在`UseCase`内进行数据替换。
   >
-  > - 添加常用的列表分页加载功能的`UseCase`基类
+  > - 提供常用**列表分页加载**功能的`UseCase`
 
 - `ViewModel`拓展
 
   > - 自定义`ViewModel`的委托类，利用by关键字获取实例，并且同时为内部持有的`UseCase`对象订阅视图生命周期
-  > - 新增`Application`作用域，提供添加允许在全应用作用域的`ViewModel`，用于分发视图信息，统一管理事件分发，避免
+  > - 新增`Application`作用域的`ViewModelStore`，提供添加允许在全应用作用域的`ViewModel`，用于分发视图信息，统一管理跨页面事件分发，避免不可控的全局事件分发
 
-- 引入`DataMapper`，隔离数据层与表现层
+- 提供`DataMapper`，隔离数据层与表现层
 
   > - 利用`DataMapper`映射数据源的数据实体映射为本地数据实体，避免后端数据格式影响视图展示。
   > 
@@ -63,19 +65,18 @@
 
   > 利用拓展函数提取基类功能，尽可能移出`BaseActivity`与`BaseFragment`内逻辑，提高复用性，降低冗余部分
 
-- 
+- 提供`ListDataFilter`的列表数据过滤类
 
-
+  > 用于以数据驱动UI修改列表，提供`RecyclerView`数据展示，在原始业务数据上进行过滤处理。
+  >
+  > 默认提供进行分页加载的数据过滤类，在原有数据基础上额外增加**加载更多**、**无数据页**、**分页错误**等数据。
 
 ## 图片库封装
 
 沙盒化隔离图片请求库
 
-> 配合kotlin-dsl，抽象图片请求功能接口
+> 以kotlin-dsl设置图片请求参数，抽象图片请求功能接口
 >
-> TODO :
->
-> - 尝试添加`Coil`加载库的支持
 
 ## Dialog相关
 
@@ -92,9 +93,13 @@
 提供DataBinding代理方式，利用by关键字调用DataBinding
 
 > 封装常用的`BindingAdapter`,方便`DataBinding`使用
-> TODO : 
 >
-> 待完善在DataBinding中构建drawable shape的方式
+> - 底部导航`BottomNabigationView`的DataBinding拓展
+> - `ImageView`的DataBinding拓展
+> - `RecyclerView`的DataBinding拓展
+> - `TextView`的DataBinding拓展
+> - `View`类的DataBinding拓展，其中包含`WindowInset`相关属性
+> - `ViewPager2`的DataBinding拓展
 
 ## RecyclerView封装
 
@@ -124,7 +129,37 @@
   >
   >
 
+## WindowInset相关
 
+对`WindowInsetCompat`中可兼容Api 30以下的常用功能进行封装
+
+- 软键盘、状态栏、底部导航栏相关
+
+  > 只能在视图树构建后才能获取到，相比反射获取高度更为健壮
+
+- 提供`Activity`与`View`拓展函数，利用`WindowInsetsControllerCompat`快捷控制软键盘
+
+- 沉浸式状态栏与导航栏支持（官方称 **边到边适配**）
+
+  > 1. 封装`WindowCompat.setDecorFitsSystemWindows`新版本的延伸内容到系统栏(向下兼容，替代systemUiVisibility)
+  >
+  > 2. 提供`View`拓展函数，延伸视图内容到系统栏（增加视图高度），需要先调用`WindowCompat.setDecorFitsSystemWindows(window,false)`允许将视图内容延伸到状态栏后才能生效。
+
+- 简化`WindowInsets`动画执行回调，默认实现视图跟随软键盘移动，避免遮挡底部视图
+
+## RxJava支持
+
+抽取`RxJava3`依赖到其他module
+
+- `AutoUseCase`，提供`ViewModel`设置`LifecycleScopeProvider`，便于`UseCase`内部使用`RxJava`数据流的自动管理订阅生命周期
+- `AutoDisposeViewModel`，便于`ViewModel`内部使用`AutoDispose`自动管理`RxJava`数据流。
+- 封装`RxJava3`延迟重试`retryWhen`操作符
+- 封装`RxJava3`的轮询操作符`retryWhen`与`repeatWhen`操作符利用`compose`合并
+- 简化`RxJava3`的数据流线程调度操作符使用
+
+## Key-Value本地缓存
+
+利用代理模式，配合`by`关键字，将对象的赋值、取值操作委托到对本地key-value缓存的操作
 
 ## 其他杂项
 
@@ -141,35 +176,40 @@
   > - 尝试WebView放入单独进程，需要跨进程通信
   > - 尝试增加`okhttp`代理`WebView`加载资源，提供外部设置的`OkHttpClient`实例，进行构建网络请求
 
-- `IdleHandler`延迟启动管理类
-
 - `SpannableStringUtils`封装
 
-  > 利用Kotlin-DSL方式，封装当前添加文本段落的文本样式。
+  > 利用Kotlin-DSL方式，设置当前添加文本段落的文本样式。
   > 封装思路：[工具类之SpannableStringUtils](https://www.jianshu.com/p/960467ac56c8)
 
-- 应用信息、设备信息、屏幕尺寸 的工具类
+- 应用信息、设备信息 的工具类 `DevicesTools`
 
-- 状态栏与导航栏相关工具
-
-  > 尝试利用`WindowSet`相关API，进行设置沉浸式状态栏
-  >
-  > TODO : 
-  >
-  > - 寻找在Android R之后被废弃API的替代方案
+- 屏幕尺寸相关函数 `ScreenExt`
 
 - 代码构建`Drawable Shape`
 
-  > TODO ：
-  >
-  > 有待优化完善，尝试加上kotlin-dsl方式方便配置拓展
+- Activity管理栈`ActivityStackHelper`
 
-- Activity管理栈
-- 单位转化拓展
+  > 管理所有`Activity`，更多是提供跨`Activity`关闭等操作
+
+- 单位转化拓展 px->dp , dp->px
+
+- `Double`的高精度运算操作
+
+  > 提供`Double`的拓展函数，利用`BigDecimal`进行高精度运算
+
+- 提供`File`本地文件相关工具类
+
+- 提供本地`Uri`相关函数，兼容到Android 10以上的沙盒系统、兼容Android 7.0的FileProvider
+
+- 金钱价格的`EditText`输入过滤类`AmountInputFilter`，只能输入到小数点后2位
+
+- 日期与时间相关工具类`DateTimeTools`
+
+- 本地联系人相关工具类`ContactsTools`
 
 ## TODO 
 
-- 继续完善整理常用公共组件封装
+- 尝试添加`Coil`加载库的支持
 
 - 拼音排序列表自定义视图
 
@@ -183,4 +223,9 @@
   
   > 参考思路[也许是最贴近京东首页体验的嵌套滑动吸顶效果](http://solart.cc/2020/07/17/nested_ceiling_effect/)
   > 
+  
 - 考虑RecyclerView内部嵌入RefreshLayout下拉刷新机制
+
+- 尝试使用Kotlin-dsl方式方便配置拓展，代码构建`Drawable Shape`，避免项目内存在过多的`Drawable文件`
+
+- 完善在`DataBinding`中构建代码`drawable shape`的方式
