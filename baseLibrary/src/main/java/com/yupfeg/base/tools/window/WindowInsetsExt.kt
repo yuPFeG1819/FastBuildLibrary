@@ -13,10 +13,28 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 
 // <editor-fold desc="状态栏、导航栏、软键盘">
+
+/**
+ * [WindowInsetsCompat]拓展函数，获取软键盘视图对象
+ * */
+@Suppress("unused")
+fun WindowInsetsCompat.getIme() = getInsets(WindowInsetsCompat.Type.ime())
+
+/**
+ * [WindowInsetsCompat]拓展函数，获取底部导航栏视图对象
+ * */
+@Suppress("unused")
+fun WindowInsetsCompat.getNavigationBar() = getInsets(WindowInsetsCompat.Type.navigationBars())
+
+/**
+ * [WindowInsetsCompat]拓展函数，获取状态栏视图对象
+ * */
+@Suppress("unused")
+fun WindowInsetsCompat.getStatusBar() = getInsets(WindowInsetsCompat.Type.statusBars())
+
 
 /**
  * [View]拓展函数，获取`RootWindowInsets`的兼容性属性
@@ -65,6 +83,7 @@ fun Activity.getStatusBarHeight(isIgnoreVisible : Boolean = true): Int {
 
 /**
  * [Activity]拓展函数，获取软键盘高度
+ * - 只在软键盘开启后才能获取
  * @return 在软键盘隐藏时无法获取高度，返回0
  */
 @Suppress("unused")
@@ -148,84 +167,54 @@ fun Activity.hideKeyboard(){
     window.decorView.windowInsetsControllerCompat?.hide(WindowInsetsCompat.Type.ime())
 }
 
-/**
- * [Activity]拓展函数，显示状态栏
- */
-fun Activity.showStatusBar(){
-    window.decorView.windowInsetsControllerCompat?.show(WindowInsetsCompat.Type.statusBars())
-}
-
-/**
- * [Activity]拓展函数，隐藏状态栏
- */
-fun Activity.hideStatusBar(){
-    window.decorView.windowInsetsControllerCompat?.hide(WindowInsetsCompat.Type.statusBars())
-}
-
-/**
- * [Activity]拓展函数，显示导航栏
- */
-fun Activity.showNavigationBar(){
-    if (isNavigationBarVisible)
-    window.decorView.windowInsetsControllerCompat?.show(WindowInsetsCompat.Type.navigationBars())
-}
-
-/**
- * [Activity]拓展函数，隐藏导航栏
- * */
-fun Activity.hideNavigationBar(){
-    window.decorView.windowInsetsControllerCompat?.hide(WindowInsetsCompat.Type.navigationBars())
-}
-
 // </editor-fold>
 
 
 
-/**
- * [Activity]的拓展函数，开启全屏模式
- * * 全屏模式会将状态栏与导航栏关闭
- * * 目前测试在Android R 以下效果很差，鸿蒙系统会移除状态栏
- * @param isEnable 是否开启全屏模式
- */
-@SuppressLint("ObsoleteSdkInt")
-@Suppress("unused")
-fun Activity.setFullScreenMode(isEnable: Boolean = true){
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
-        fullScreenImplBeforeR(isEnable)
-        return
-    }
-    val controller = ViewCompat.getWindowInsetsController(window.decorView)
-    controller?.apply {
-        systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        if (isEnable){
-            //隐藏所有系统视图
-            hide(WindowInsetsCompat.Type.systemBars())
-        }else{
-            //显示所有系统视图
-            show(WindowInsetsCompat.Type.systemBars())
-        }
-    }
-}
+///**
+// * [Activity]的拓展函数，开启全屏模式
+// * * 全屏模式会将状态栏与导航栏关闭
+// * @param isEnable 是否开启全屏模式
+// */
+//@SuppressLint("ObsoleteSdkInt")
+//@Suppress("unused")
+//fun Activity.setFullScreenMode(isEnable: Boolean = true){
+////    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
+////        fullScreenImplBeforeR(isEnable)
+////        return
+////    }
+//    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+//    controller?.apply {
+//        systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+//        if (isEnable){
+//            //隐藏所有系统视图
+//            hide(WindowInsetsCompat.Type.systemBars())
+//        }else{
+//            //显示所有系统视图
+//            show(WindowInsetsCompat.Type.systemBars())
+//        }
+//    }
+//}
 
-/**
- * [Activity]的拓展函数，Android 10以前的全屏模式实现
- * * 机型适配可能有问题
- * @param enabled
- */
-@Deprecated("全屏效果很差，不同机型适配不同，暂时无法取消全屏")
-private fun Activity.fullScreenImplBeforeR(enabled : Boolean){
-    val systemUiVisibility = window.decorView.systemUiVisibility
-    window.decorView.systemUiVisibility = if (enabled) {
-        View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.INVISIBLE or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-    } else {
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE and View.SYSTEM_UI_FLAG_FULLSCREEN.inv() xor
-                View.VISIBLE xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION.inv() xor
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION.inv()
-    }
-}
+///**
+// * [Activity]的拓展函数，Android 10以前的全屏模式实现
+// * * 机型适配可能有问题
+// * @param enabled
+// */
+//@Deprecated("全屏效果很差，不同机型适配不同，暂时无法取消全屏")
+//private fun Activity.fullScreenImplBeforeR(enabled : Boolean){
+//    val systemUiVisibility = window.decorView.systemUiVisibility
+//    window.decorView.systemUiVisibility = if (enabled) {
+//        View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.INVISIBLE or
+//                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+//                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//    } else {
+//        View.SYSTEM_UI_FLAG_LAYOUT_STABLE and View.SYSTEM_UI_FLAG_FULLSCREEN.inv() xor
+//                View.VISIBLE xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION.inv() xor
+//                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION.inv()
+//    }
+//}
 
 // <editor-fold desc="沉浸式状态栏">
 
@@ -233,6 +222,7 @@ private fun Activity.fullScreenImplBeforeR(enabled : Boolean){
  * [Activity]的拓展函数，开启沉浸式状态栏
  * - 可兼容到Android 5.0
  * - 需要配合具体View通过设置`OnApplyWindowInsetsListener`来处理insets冲突问题
+ * - 同样也是使用WindowInsets系列API的前置条件
  * @param color 状态栏颜色，默认为[Color.TRANSPARENT]，
  * 如果为透明颜色，最好再调用`ViewCompat.setOnApplyWindowInsetsListener`函数将对应视图内容到状态栏
  * @param isDarkText 是否为暗色状态栏文本
