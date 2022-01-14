@@ -5,7 +5,7 @@ import android.webkit.WebSettings
 import android.webkit.WebViewClient
 
 /**
- * 网络视图的
+ * 网页视图的可选项配置
  * @author yuPFeG
  * @date 2021/12/15
  */
