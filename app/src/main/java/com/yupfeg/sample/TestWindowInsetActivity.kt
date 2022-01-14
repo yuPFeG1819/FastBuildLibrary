@@ -3,7 +3,8 @@ package com.yupfeg.sample
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.yupfeg.base.tools.showShortToast
+import androidx.core.view.*
+import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.tools.window.*
 import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
@@ -26,8 +27,6 @@ class TestWindowInsetActivity : AppCompatActivity(){
 
     private val mViewModel : TestWindowInsetViewModel by viewModelDelegate()
 
-    private var isFullScreen : Boolean = false
-    private var isNavigationBar : Boolean = false
     private var isInput : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +35,24 @@ class TestWindowInsetActivity : AppCompatActivity(){
         mBinding.viewModel = mViewModel
         //允许沉浸式状态栏
         fitImmersiveStatusBar(isDarkText = true)
-        window.decorView.post {
-            logd("当前状态栏高度${this.getStatusBarHeight()} ，" +
-                    "当前导航栏高度${this.getNavigationBarHeight()} ，" +
-                    " 当前软键盘高度${this.getKeyboardHeight()}")
-        }
 
+        mBinding.etTestWindowInsetInput.setWindowInsetsAnimationCompatCallBack(
+            object : ViewFollowWindowInsetAnimationCallBack(
+                mBinding.viewTestWindowInsetNavigationGroup
+            ){
+                override fun onEnd(animation: WindowInsetsAnimationCompat) {
+                    val rootWindowInsetsCompat = mBinding.root.rootWindowInsetsCompat
+                    val imeInsets = rootWindowInsetsCompat?.getIme()
+                    logd("ime动画结束 ：top : ${imeInsets?.bottom} , bottom : ${imeInsets?.top}")
+                    if (imeInsets?.bottom?:0 > 0){
+                        //软键盘开启
+                        mBinding.etTestWindowInsetInput.requestFocus()
+                    }else{
+                        //软键盘隐藏
+                        mBinding.etTestWindowInsetInput.clearFocus()
+                    }
+                }
+        })
     }
 
     override fun onDestroy() {
@@ -66,25 +77,6 @@ class TestWindowInsetActivity : AppCompatActivity(){
             finish()
         }
 
-        fun fullScreen(){
-            val pre = isFullScreen
-            logd("change fullScreen mode $pre")
-            isFullScreen = !pre
-            //只能在Android R以上完美实现
-            if (isFullScreen){
-                setFullScreenMode(true)
-            }else{
-                setFullScreenMode(false)
-            }
-        }
-
-        fun updateNavigationBar(){
-            val pre = isNavigationBar
-            isNavigationBar = !pre
-            if(isNavigationBar) hideNavigationBar()
-            else showNavigationBar()
-        }
-
         fun bottomBtn1(){
             showShortToast("点击了bottomBtn1")
         }
@@ -98,14 +90,15 @@ class TestWindowInsetActivity : AppCompatActivity(){
         }
 
         fun updateInputState(){
-            if (isInput){
+            isInput = if (isInput){
                 mBinding.etTestWindowInsetInput.hideKeyboard()
-                isInput = false
+                false
             }else{
                 mBinding.etTestWindowInsetInput.showKeyboard()
-                isInput = true
+                true
             }
 
         }
+
     }
 }
