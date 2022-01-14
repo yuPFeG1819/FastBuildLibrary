@@ -11,7 +11,7 @@ import androidx.core.os.bundleOf
  * @author yuPFeG
  * @date 2021/08/17
  */
-class HuaweiBadgeNumHandler : BadgeNumPlatformHandler {
+internal class HuaweiBadgeNumHandler : BadgeNumPlatformHandler {
     override fun setLaunchBadgeNumber(context: Context, num: Int) {
         try {
             var number = num

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -55,7 +56,7 @@ class OppoBadgeNumberHandler : BadgeNumPlatformHandler {
         intent.putExtra(INTENT_EXTRA_BADGE_COUNT, badgeCount)
         intent.putExtra(INTENT_EXTRA_BADGE_UPGRADE_NUMBER, badgeCount)
 
-        val resolveInfos = BadgeNumPlatformHandler.resolveBroadcast(context, intent)
+        val resolveInfos = queryBroadcastReceivers(context, intent)
         if (resolveInfos.isNullOrEmpty()){
             throw IllegalStateException("unable to send oppo broadcast resolve intent $intent")
         }
@@ -65,6 +66,13 @@ class OppoBadgeNumberHandler : BadgeNumPlatformHandler {
             actualIntent.setPackage(info.resolvePackageName)
             context.sendBroadcast(actualIntent)
         }
+    }
+
+    private fun queryBroadcastReceivers(context: Context, intent: Intent?): List<ResolveInfo> {
+        val packageManager = context.packageManager
+        return packageManager.queryBroadcastReceivers(
+            intent!!, 0
+        )
     }
 
     /**
