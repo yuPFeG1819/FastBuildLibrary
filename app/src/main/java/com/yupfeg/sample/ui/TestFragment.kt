@@ -28,8 +28,6 @@ class TestFragment : Fragment(){
 
         })
 
-        val messenger = Messenger(Handler(Looper.myLooper()!!))
-        messenger.binder
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -41,7 +41,10 @@
 
         </activity>
 
-        <activity android:name=".TestWindowInsetActivity"/>
+        <activity android:name=".TestWindowInsetActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
+            />
 
         <provider
             android:name="androidx.core.content.FileProvider"
