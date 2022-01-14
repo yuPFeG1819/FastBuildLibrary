@@ -16,6 +16,12 @@ import kotlin.time.measureTimedValue
  */
 class FlowUnitTest {
 
+    fun test1() {
+        flow<String> {
+            this.emit("112")
+        }
+    }
+
     @Test
     fun testFlow() = runBlocking {
         val scope = CoroutineScope(SupervisorJob())

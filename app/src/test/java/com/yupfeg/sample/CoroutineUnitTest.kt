@@ -16,11 +16,11 @@ class CoroutineUnitTest {
 //    val mainCoroutineRule = MainCoroutineRule()
 
     @Test
-    fun testCreateCoroutine(){
+    fun testCreateCoroutine() {
         val coroutine = suspend {
             println("create coroutine")
             "result"
-        }.createCoroutine(object : Continuation<String>{
+        }.createCoroutine(object : Continuation<String> {
             override val context: CoroutineContext = Job()
 
             override fun resumeWith(result: Result<String>) {
@@ -28,10 +28,9 @@ class CoroutineUnitTest {
             }
         })
         coroutine.resumeWith(Result.success(Unit))
-
     }
 
-    private fun lazyPrint(vararg data : Lazy<String>) : Boolean{
+    private fun lazyPrint(vararg data: Lazy<String>): Boolean {
         return data.all { data.isNullOrEmpty() }
     }
 
@@ -49,7 +48,7 @@ class CoroutineUnitTest {
             println("task2 running print")
             2
         }
-        awaitAll(task1,task2)
+        awaitAll(task1, task2)
         val endTime = System.currentTimeMillis()
         println("async task over ${endTime - startTime}")
     }
@@ -58,17 +57,17 @@ class CoroutineUnitTest {
     fun testThrowCoroutine() {
         println("${Thread.currentThread().name} testThrowCoroutine start")
         runBlocking {
-            val job = launch (CoroutineName("coroutine_1") + SupervisorJob()) {
+            val job = launch(CoroutineName("coroutine_1") + SupervisorJob()) {
                 println("${Thread.currentThread().name} job1 running print")
                 try {
-                    val innerJob = async(CoroutineName("inner_coroutine_1")){
+                    val innerJob = async(CoroutineName("inner_coroutine_1")) {
                         println("${Thread.currentThread().name} 测试抛出异常")
                         throw NullPointerException("${Thread.currentThread().name} 测试抛出异常")
                     }
 //                    println("${Thread.currentThread().name} 测试抛出异常")
 //                    throw NullPointerException("${Thread.currentThread().name} 测试抛出异常")
 //                    innerJob.await()
-                }catch (e : Exception){
+                } catch (e: Exception) {
                     println("coroutine_1 ${Thread.currentThread().name} catch $e")
                 }
 
@@ -106,16 +105,16 @@ class CoroutineUnitTest {
 //            }
 //        }
 
-        supervisorScope{
+        supervisorScope {
             delay(200)
             println("coroutineScope content start 2")
-            launch (CoroutineName("coroutineScope内部协程")+handler){
+            launch(CoroutineName("coroutineScope内部协程") + handler) {
                 println("${Thread.currentThread().name} coroutineScope内部协程 running print")
                 throw NullPointerException("coroutineScope内部协程 测试抛出异常")
             }
         }
 
-        val content = withContext(Dispatchers.Default){
+        val content = withContext(Dispatchers.Default) {
             delay(100)
             "with context over"
         }
@@ -128,15 +127,15 @@ class CoroutineUnitTest {
         println("${coroutineContext[CoroutineName]} handler cast $throwable")
     }
 
-    private suspend fun testSupervisorScope() = supervisorScope{
-        val job2 = async (CoroutineName("coroutine_2")) {
-            repeat(5){i->
+    private suspend fun testSupervisorScope() = supervisorScope {
+        val job2 = async(CoroutineName("coroutine_2")) {
+            repeat(5) { i ->
                 println("${Thread.currentThread().name} running print $i")
-                //开启子协程
+                // 开启子协程
                 launch(CoroutineName("child_coroutine_2_$i")) {
-                    repeat(10){y-> println("${Thread.currentThread().name} inner_running print $y")}
+                    repeat(10) { y -> println("${Thread.currentThread().name} inner_running print $y") }
                 }
-                if (i == 2){
+                if (i == 2) {
 //                    try {
                     println("${Thread.currentThread().name} 测试抛出异常")
                     throw NullPointerException("${Thread.currentThread().name} 测试抛出异常")
@@ -144,13 +143,11 @@ class CoroutineUnitTest {
 //                        println("${Thread.currentThread().name} catch ${e.message} Exception")
 //                    }
                 }
-
-
             }
         }
         try {
             job2.await()
-        }catch (e : Exception){
+        } catch (e: Exception) {
             println("${Thread.currentThread().name} catch ${e.message} Exception")
         }
     }
@@ -158,20 +155,20 @@ class CoroutineUnitTest {
     @Test
     fun testCancelCoroutine() = runBlocking() {
         val startTime = System.currentTimeMillis()
-        val scope = CoroutineScope(SupervisorJob()+Dispatchers.Default)
+        val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
         val job = scope.launch {
             try {
                 var nextPrintTime = startTime
                 var i = 0
-                while (i <= 5){
+                while (i <= 5) {
                     this.ensureActive()
-                    if (System.currentTimeMillis() >= nextPrintTime){
+                    if (System.currentTimeMillis() >= nextPrintTime) {
                         println("job running print ${i++}")
                         testSuspend(i)
                         nextPrintTime += 500
                     }
                 }
-            }finally {
+            } finally {
                 println("job NonCancellable suspend finally")
             }
         }
@@ -189,48 +186,36 @@ class CoroutineUnitTest {
         println("test over")
     }
 
-    private suspend fun testSuspend(count : Int){
-        withTimeout(1000){
+    private suspend fun testSuspend(count: Int) {
+        withTimeout(1000) {
             println("print test suspend $count")
         }
     }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun testCallBackToSuspend() = runBlocking{
+    fun testCallBackToSuspend() = runBlocking {
         val scope = CoroutineScope(Dispatchers.Default)
         scope.launch {
             try {
                 val result = queryData1()
                 val result2 = queryData2(result)
                 println("测试CallBack result : $result2")
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 println("catch $e")
             }
         }
         delay(1000)
     }
 
-    private suspend  fun queryData1() = suspendCancellableCoroutine<String> {continuation->
+    private suspend fun queryData1() = suspendCancellableCoroutine<String> { continuation ->
         println("queryData1 ${Thread.currentThread().name}")
-//        continuation.resume("result 1")
-        continuation.resumeWithException(NullPointerException("111"))
+        continuation.resume("result 1")
+//        continuation.resumeWithException(NullPointerException("111"))
     }
 
-    private suspend fun queryData2(lastData : String) = suspendCancellableCoroutine<String>{continuation->
+    private suspend fun queryData2(lastData: String) = suspendCancellableCoroutine<String> { continuation ->
         println("queryData2 ${Thread.currentThread().name}")
         continuation.resume(lastData + "new query")
     }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun testChannel() = runBlockingTest {
-//        val channel = Channel<String>()
-//        launch (Dispatchers.Default){
-//            channel.send("1")
-//        }
-    }
-
-
 
 }
