@@ -2,10 +2,10 @@ package com.yupfeg.rxjavasupport.dialog
 
 import android.content.Context
 import android.view.View
-import com.yupfeg.base.tools.pool.GlobalLocalThreadPool
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView
+import com.yupfeg.dispatcher.ExecutorProvider
 import com.yupfeg.logger.ext.logw
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
@@ -56,7 +56,7 @@ abstract class BaseStringThirdLinkedDialog constructor(protected val mContext: C
     protected open fun firstInitPickerData(){
         Completable.fromAction { initOptionsData() }
             //step1:切换上游处于子线程
-            .subscribeOn(Schedulers.from(GlobalLocalThreadPool.executorService))
+            .subscribeOn(Schedulers.from(ExecutorProvider.ioExecutor))
             //step2:在订阅发起时，清空原有数据
             .doOnSubscribe { clearPickerData() }
             //step3:切换下游处于主线程
