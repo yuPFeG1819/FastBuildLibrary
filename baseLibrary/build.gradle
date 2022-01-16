@@ -21,7 +21,7 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.yupfeg1819'
+                groupId = 'com.gitee.yupfeg'
                 artifactId = 'FastBuildLibrary'
                 version = 'v0.1.1'
             }
