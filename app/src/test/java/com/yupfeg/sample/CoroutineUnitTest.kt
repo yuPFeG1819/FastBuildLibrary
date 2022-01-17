@@ -1,9 +1,11 @@
 package com.yupfeg.sample
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Test
-import kotlin.coroutines.*
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.createCoroutine
+import kotlin.coroutines.resume
 
 /**
  * Kotlin协程的单元测试

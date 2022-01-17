@@ -37,9 +37,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.TestResultApiActivity" />
-        <activity android:name=".TestCoroutineActivity">
-
-        </activity>
 
         <activity android:name=".TestWindowInsetActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
