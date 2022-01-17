@@ -28,8 +28,9 @@
   > [EasyResultApi](https://gitee.com/yupfeg/easy-result-api) ResultApi,包含权限请求
   >
   > [StartTaskDispatcher](https://gitee.com/yupfeg/StartTaskDispatcher) 启动任务调度器，进行启动优化
+  > [ExecutorProvider](https://gitee.com/yupfeg/ExecutorProvider) 线程池库，收敛项目线程应用
 
-- ~~[RxJava](https://github.com/ReactiveX/RxJava)~~ 已移除基础库
+- ~~[RxJava](https://github.com/ReactiveX/RxJava)~~ 已移除依赖
 - [Glide](https://github.com/bumptech/glide) 图片加载库
 - [Gson](https://github.com/google/gson)
 - [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) 下拉刷新框架
