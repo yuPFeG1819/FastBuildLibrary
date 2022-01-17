@@ -5,7 +5,7 @@ import android.view.View
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener
 import com.bigkoo.pickerview.view.OptionsPickerView
-import com.yupfeg.dispatcher.ExecutorProvider
+import com.yupfeg.executor.ExecutorProvider
 import com.yupfeg.logger.ext.logw
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
