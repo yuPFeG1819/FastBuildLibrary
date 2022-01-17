@@ -35,8 +35,6 @@ android {
     defaultConfig {
         minSdk AppBuildConfig.minSdkVersion
         targetSdk AppBuildConfig.targetSdkVersion
-        versionCode AppBuildConfig.versionCode
-        versionName AppBuildConfig.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -122,6 +120,8 @@ dependencies {
     api(ThirdParty.easyResultApi)
     //启动任务调度器
     api(ThirdParty.startUpDispatcher)
+    //线程库
+    api(ThirdParty.executorProvider)
     //----------------网络相关-------------
     //支持RxJava3 CallBack处理
     api (Network.retrofitRxJava3Adapter)

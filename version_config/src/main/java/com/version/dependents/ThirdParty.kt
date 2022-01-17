@@ -111,7 +111,13 @@ object ThirdParty {
      * 自用的启动任务调度器
      * * [Gitee](https://gitee.com/yupfeg/StartTaskDispatcher)
      * */
-    const val startUpDispatcher = "com.github.yuPFeG1819:StartTaskDispatcher:v1.0.2"
+    const val startUpDispatcher = "com.github.yuPFeG1819:StartTaskDispatcher:1.0.4"
+
+    /**
+     * 自用线程库
+     * * [Gitee](https://gitee.com/yupfeg/ExecutorProvider)
+     * */
+    const val executorProvider = "com.gitee.yupfeg:ExecutorProvider:1.0.2"
 
     /**
      * Mmkv 基于mmap内存映射的key-value储存框架
