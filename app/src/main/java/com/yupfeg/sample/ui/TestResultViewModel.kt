@@ -6,7 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.text.method.MovementMethod
 import androidx.databinding.ObservableField
 import com.yupfeg.base.tools.spannable.append
-import com.yupfeg.base.tools.ext.toPx
+import com.yupfeg.base.tools.ext.dipToPx
 import com.yupfeg.base.viewmodel.BaseViewModel
 import com.yupfeg.livedata.EventLiveData
 import com.yupfeg.livedata.MutableEventLiveData
@@ -37,10 +37,10 @@ class TestResultViewModel : BaseViewModel() {
         val spannableString = SpannableStringBuilder().apply {
             append("测试") {
                 textColor = Color.DKGRAY
-                setTextSize(12.toPx())
+                setTextSize(12.dipToPx())
             }
             append("ResultAPI "){
-                setTextSize(18.toPx())
+                setTextSize(18.dipToPx())
                 textColor = Color.BLUE
                 setOnClick {
                     mSpannableClickEvent.value = "spannableClick"
