@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.yupfeg.base.widget.ArcProgressBar
+        android:id="@+id/arc_progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="100dp"
+        app:startAngle="145"
+        app:sweepAngle="250"
+        app:arcProgressColor="@android:color/holo_blue_light"
+        app:arcNormalColor="@android:color/darker_gray"
+        app:arcMaxProgress="100"
+        app:arcStrokeWidth="20"
+        app:arcLabelText="完成情况"
+        app:arcLabelTextColor="@android:color/holo_blue_light"
+        app:arcLabelTextSize="20sp"
+        app:arcPercentTextColor="@android:color/black"
+        app:arcPercentTextSize="30sp"
+        app:arcIntPercent="true"
+        />
+    
+</androidx.constraintlayout.widget.ConstraintLayout>

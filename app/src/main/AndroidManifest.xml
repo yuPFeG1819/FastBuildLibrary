@@ -43,6 +43,10 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             />
 
+        <activity android:name=".ui.TestNestedScrollActivity"/>
+        <activity android:name=".ui.TestCoordinatorActivity"/>
+        <activity android:name=".ui.TestCustomViewActivity"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

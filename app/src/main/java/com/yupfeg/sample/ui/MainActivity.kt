@@ -206,6 +206,18 @@ class MainActivity : BaseActivity() {
         fun selectImageFromGallery(){
             performSelectImage()
         }
+
+        /**
+         * 测试嵌套滑动
+         * */
+        fun naviToTestNestedScroll(){
+            startActivity(Intent(this@MainActivity,TestCoordinatorActivity::class.java))
+        }
+
+        /**测试自定义View*/
+        fun naviToCustomView(){
+            startActivity(Intent(this@MainActivity,TestCustomViewActivity::class.java))
+        }
     }
 
     private fun performTakePictureAndCrop(){

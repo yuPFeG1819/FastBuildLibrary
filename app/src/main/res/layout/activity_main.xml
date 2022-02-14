@@ -106,7 +106,25 @@
                 onViewClick="@{()->config.selectImageFromGallery()}"
                 />
 
+            <Button
+                android:id="@+id/btn_main_test_nested_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="测试嵌套滑动"
+                android:textAllCaps="false"
+                android:layout_marginTop="10dp"
+                onViewClick="@{()->config.naviToTestNestedScroll()}"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="测试自定义View"
+                android:layout_marginTop="10dp"
+                onViewClick="@{()->config.naviToCustomView()}"
+                />
 
         </LinearLayout>
+        
     </LinearLayout>
 </layout>
