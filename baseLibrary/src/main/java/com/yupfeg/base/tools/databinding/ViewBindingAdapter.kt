@@ -8,7 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.databinding.BindingAdapter
-import com.yupfeg.base.tools.ext.toPx
+import com.yupfeg.base.tools.ext.dipToPx
 import com.yupfeg.base.tools.window.fitToSystemNavigationWindow
 import com.yupfeg.base.tools.window.fitToSystemStatusBar
 import com.yupfeg.base.tools.window.setWindowInsetsAnimationCompatCallBack
@@ -46,7 +46,7 @@ fun View.bindLayoutHeight(height : Int?){
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         }
         else -> {
-            layoutParams.height = height.toPx()
+            layoutParams.height = height.dipToPx()
         }
     }
     this.layoutParams = layoutParams
@@ -70,7 +70,7 @@ fun View.bindLayoutWidth(width : Int?){
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
         }
         else -> {
-            layoutParams.width = width.toPx()
+            layoutParams.width = width.dipToPx()
         }
     }
     this.layoutParams = layoutParams

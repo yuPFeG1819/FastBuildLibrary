@@ -8,7 +8,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.yupfeg.base.tools.ext.toPx
+import com.yupfeg.base.tools.ext.dipToPx
 import com.yupfeg.base.widget.recyclerview.itemdecoration.config.SimpleItemDividerConfig
 
 
@@ -26,10 +26,10 @@ class SimpleDividerItemDecoration private constructor() : RecyclerView.ItemDecor
          * */
         fun create(config: SimpleItemDividerConfig) : SimpleDividerItemDecoration {
             return SimpleDividerItemDecoration().apply {
-                leftOffset = config.left.toPx()
-                topOffset = config.top.toPx()
-                rightOffset = config.right.toPx()
-                bottomOffset = config.bottom.toPx()
+                leftOffset = config.left.dipToPx()
+                topOffset = config.top.dipToPx()
+                rightOffset = config.right.dipToPx()
+                bottomOffset = config.bottom.dipToPx()
                 colorId = config.colorInt
                 isExcludeLast = config.excludeLastItem
             }

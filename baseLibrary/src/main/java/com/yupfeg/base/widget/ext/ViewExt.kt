@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.yupfeg.base.tools.ext.toPx
+import com.yupfeg.base.tools.ext.dipToPx
 
 /**
  * View的拓展函数
@@ -101,7 +101,7 @@ fun View.setRectBackground(@ColorInt solidColor : Int, radius : Float,
         setColor(solidColor)
         cornerRadius = radius
         if (strokeColor == 0 || strokeColor == 0){
-            setStroke(strokeWidth.toPx(), strokeColor)
+            setStroke(strokeWidth.dipToPx(), strokeColor)
         }
     }
 }
@@ -126,7 +126,7 @@ fun View.setRectBackground(@ColorRes solidColor : Int,
     this.background = GradientDrawable().apply {
         setColor(ContextCompat.getColor(context,solidColor))
         cornerRadii = floatArrayOf(topLeftRadius,topRightRadius,downLeftRadius,downRightRadius)
-        setStroke(strokeWidth.toPx(),ContextCompat.getColor(context,strokeColor))
+        setStroke(strokeWidth.dipToPx(),ContextCompat.getColor(context,strokeColor))
     }
 }
 
