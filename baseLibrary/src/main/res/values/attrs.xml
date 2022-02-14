@@ -7,4 +7,35 @@
         <!-- 滚动条背景颜色-->
         <attr name="sliderBackgroundColor" format="color|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="ArcProgressBar">
+        <!-- 圆弧的起始角度-->
+        <attr name="startAngle" format="float"/>
+        <!-- 圆弧扫过的总计角度，360则表示一个完整的圆-->
+        <attr name="sweepAngle" format="float"/>
+        <!-- 圆弧的背景颜色-->
+        <attr name="arcNormalColor" format="color|reference"/>
+        <!-- 圆弧的进度条颜色-->
+        <attr name="arcProgressColor" format="color|reference"/>
+        <!-- 圆弧的宽度，内圆与外圆的间距-->
+        <attr name="arcStrokeWidth" format="float"/>
+        
+        <!-- 最大进度-->
+        <attr name="arcMaxProgress" format="integer"/>
+        <!-- 当前进度-->
+        <attr name="arcProgress" format="float"/>
+
+        <!-- 百分比文本大小-->
+        <attr name="arcPercentTextSize" format="dimension"/>
+        <!-- 百分比文本颜色-->
+        <attr name="arcPercentTextColor" format="color|reference"/>
+        <!-- 整数的百分比-->
+        <attr name="arcIntPercent" format="boolean"/>
+        <!-- 标签文本大小-->
+        <attr name="arcLabelTextSize" format="dimension"/>
+        <!-- 标签文本颜色-->
+        <attr name="arcLabelTextColor" format="color|reference"/>
+        <!-- 标签文本内容-->
+        <attr name="arcLabelText" format="string"/>
+    </declare-styleable>
 </resources>
