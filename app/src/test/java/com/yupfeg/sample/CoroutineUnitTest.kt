@@ -1,7 +1,9 @@
 package com.yupfeg.sample
 
+import com.yupfeg.base.tools.ext.*
 import kotlinx.coroutines.*
 import org.junit.Test
+import java.lang.RuntimeException
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.createCoroutine
@@ -218,6 +220,32 @@ class CoroutineUnitTest {
     private suspend fun queryData2(lastData: String) = suspendCancellableCoroutine<String> { continuation ->
         println("queryData2 ${Thread.currentThread().name}")
         continuation.resume(lastData + "new query")
+    }
+
+    @Test
+    fun testTryRun(){
+        val scope = CoroutineScope(Dispatchers.Default)
+        scope.launch {
+            tryRun {
+
+            } catching {e : RuntimeException->
+
+            } finally {
+
+            }
+        }
+    }
+
+    @Test
+    fun testTryEval(){
+        val scope = CoroutineScope(Dispatchers.Default)
+        scope.launch {
+            val value = tryEval<String> {
+                "normalValue"
+            } catch{e : RuntimeException->
+                "errorValue"
+            }
+        }
     }
 
 }
