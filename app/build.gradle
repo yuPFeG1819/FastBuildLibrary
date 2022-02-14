@@ -43,10 +43,6 @@ android {
         ]
     }
 
-    dexOptions{
-        javaMaxHeapSize "2g"
-    }
-
     //开启dataBinding
     buildFeatures{
         dataBinding = true
