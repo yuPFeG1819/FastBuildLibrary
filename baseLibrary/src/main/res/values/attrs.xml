@@ -8,6 +8,7 @@
         <attr name="sliderBackgroundColor" format="color|reference"/>
     </declare-styleable>
 
+    <!--    圆弧型进度条View的自定义属性-->
     <declare-styleable name="ArcProgressBar">
         <!-- 圆弧的起始角度-->
         <attr name="startAngle" format="float"/>
