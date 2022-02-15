@@ -1,5 +1,7 @@
 package com.yupfeg.sample.ui
 
+import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import com.yupfeg.base.view.activity.BaseActivity
@@ -29,13 +31,13 @@ class TestCustomViewActivity : BaseActivity(){
 //            ),
 //            floatArrayOf(0f,0.6f,0.8f,1.0f)
 //        )
-//        arcProgressView.setProgressWithAnimate(15f,100f,2000)
-
-        arcProgressView.setProgressWithColorChangeAnim(
-            to = 100f,
-            startColor = Color.YELLOW,
-            endColor = Color.GREEN
-        )
+        arcProgressView.setProgressWithAnimate(0f,100f,2000)
+//
+//        arcProgressView.setProgressWithColorChangeAnim(
+//            to = 100f,
+//            startColor = Color.YELLOW,
+//            endColor = Color.GREEN
+//        )
 
         arcProgressView.setOnProgressChangeListener(object : ArcProgressBar.OnProgressChangeListener{
             override fun onProgressChange(progress: Float, max: Int) {
