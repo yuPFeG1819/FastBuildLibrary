@@ -1,6 +1,5 @@
 package com.yupfeg.base.widget
 
-import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
@@ -9,9 +8,9 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.annotation.ColorInt
 import androidx.annotation.MainThread
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.yupfeg.base.R
 import com.yupfeg.base.tools.LinearGradientProcessor
 import kotlin.math.max
@@ -40,7 +39,7 @@ open class ArcProgressBar(
         /**默认的百分比文本大小*/
         private const val DEFAULT_PERCENT_TEXT_SIZE = 20f
         /**默认动画执行时间，单位ms*/
-        private const val DEFAULT_ANIM_DURATION = 3000
+        private const val DEFAULT_ANIM_DURATION = 2000
     }
 
     // <editor-fold desc="圆弧绘制属性">
@@ -66,32 +65,32 @@ open class ArcProgressBar(
     protected var mTempProgressColors : IntArray? = null
 
     /**弧线的起始角度，默认为3点方向，即x轴右侧*/
-    private var mStartAngle : Float = 0f
+    protected var mStartAngle : Float = 0f
 
     /**
      * 设置圆弧的划过角度，360则表示绘制一个完整的圆环
      * */
-    private var mMaxSweepAngle : Float = DEFAULT_SWEEP_ANGLE
+    protected var mMaxSweepAngle : Float = DEFAULT_SWEEP_ANGLE
 
     /**
      * 进度圆弧的边界范围矩形
      * */
-    private var mArcRectF = RectF()
+    protected var mArcRectF = RectF()
 
     /**
      * 最小的圆弧范围，单位为px
      * */
-    private var mMinRectSize = DEFAULT_VIEW_SIZE
+    protected var mMinRectSize = DEFAULT_VIEW_SIZE
 
     /**
      * 圆弧的半径
      * */
-    private var mRadius : Float = 0f
+    protected var mRadius : Float = 0f
 
     /**
      * 圆弧描边的画笔尺寸, px
      * */
-    private var mStrokeWidth : Float = 12f
+    protected var mStrokeWidth : Float = 14f
 
     /**圆弧的圆心X坐标，只在完成视图测量过程后存在*/
     protected var mCenterX : Float = 0f
@@ -146,10 +145,10 @@ open class ArcProgressBar(
     /**
      * 当前进度
      * */
-    private var mCurrProgress : Float = 0f
+    protected var mCurrProgress : Float = 0f
 
     /**最大进度*/
-    private var mMaxProgress : Int = 100
+    protected var mMaxProgress : Int = 100
 
     /**
      * 是否已执行完成测量流程
@@ -159,12 +158,14 @@ open class ArcProgressBar(
 
     /**
      * 是否需要更新进度条着色器
+     * - 避免重复创建对象
      * */
-    protected var isUpdateProgressShader : Boolean = false
+    protected var isNeedBuildProgressShader : Boolean = false
     /**
      * 是否需要更新进度条背景着色器
+     * - 避免重复创建对象
      * */
-    protected var isUpdateNormalShader : Boolean = false
+    protected var isNeedBuildNormalShader : Boolean = false
 
     /**
      * 进度变化监听
@@ -189,7 +190,6 @@ open class ArcProgressBar(
         mProgressPaint.style = Paint.Style.STROKE
         //圆弧型画笔
         mProgressPaint.strokeCap = Paint.Cap.ROUND
-        mProgressPaint.strokeWidth = mStrokeWidth
 
         mNormalPaint.reset()
         mNormalPaint.isAntiAlias = true
@@ -197,7 +197,6 @@ open class ArcProgressBar(
         mNormalPaint.style = Paint.Style.STROKE
         //圆弧型画笔
         mNormalPaint.strokeCap = Paint.Cap.ROUND
-        mNormalPaint.strokeWidth = mStrokeWidth
     }
 
     // <editor-fold desc="自定义属性">
@@ -248,6 +247,8 @@ open class ArcProgressBar(
         //typedArray用完之后需要回收，防止内存泄漏
         typeArray.recycle()
 
+        mProgressPaint.strokeWidth = mStrokeWidth
+        mNormalPaint.strokeWidth = mStrokeWidth
         //移除shader,否则会导致后续颜色值无法生效
         mNormalPaint.shader = null
         mNormalPaint.color = normalColor
@@ -307,8 +308,8 @@ open class ArcProgressBar(
         return ObjectAnimator.ofFloat(
             this,"progress",fromValue,endValue
         ).apply {
-            interpolator = FastOutSlowInInterpolator()
             this.duration = duration.toLong()
+            this.interpolator = LinearInterpolator()
             start()
         }
     }
@@ -331,37 +332,17 @@ open class ArcProgressBar(
         val endValue = min(to,mMaxProgress.toFloat())
         val fromValue = max(from,0f)
         val processor = LinearGradientProcessor(startColor, endColor)
-        //移除shader,否则会导致后续颜色值无法生效
-        mProgressPaint.shader = null
+
         return ValueAnimator.ofFloat(fromValue,endValue).apply {
-            interpolator = FastOutSlowInInterpolator()
             this.duration = duration.toLong()
+            this.interpolator = LinearInterpolator()
             addUpdateListener {
+                //先移除shader,避免后续颜色值无法生效
+                mProgressPaint.shader = null
                 mProgressPaint.color = processor.getColorByRadio(it.animatedFraction)
                 setProgress(it.animatedValue as Float)
             }
             start()
-        }
-    }
-
-    /**
-     * 创建进度变化的属性动画
-     * @param from 起始进度百分比，默认为从当前进度开始
-     * @param to 目标进度百分比
-     * @param duration 动画持续时间
-     * @param updateAction 动画更新监听
-     * */
-    open fun createProgressChangeAnim(
-        from : Float = mCurrProgress, to : Float,
-        duration : Int = DEFAULT_ANIM_DURATION,
-        updateAction : (paint : Paint,valueAnimator : Animator)->Unit
-    ) : ValueAnimator{
-        val endValue = min(to,mMaxProgress.toFloat())
-        val fromValue = max(from,0f)
-        return ValueAnimator.ofFloat(fromValue,endValue).apply {
-            addUpdateListener {
-                updateAction(mProgressPaint,it)
-            }
         }
     }
 
@@ -424,11 +405,12 @@ open class ArcProgressBar(
         }
 
         if (isMeasured){
+            isNeedBuildNormalShader = false
             val shader = SweepGradient(mCenterX,mCenterY,color,null)
             setNormalShader(shader)
         }else{
+            isNeedBuildNormalShader = true
             mTempNormalColors = color
-            isUpdateNormalShader = true
         }
     }
 
@@ -471,11 +453,12 @@ open class ArcProgressBar(
      * */
     fun setProgressColors(@ColorInt colors : IntArray,positions: FloatArray? = null){
         if (isMeasured){
+            isNeedBuildProgressShader = false
             val shader = SweepGradient(mCenterX,mCenterY, colors, positions)
             setProgressShader(shader)
         }else{
+            isNeedBuildProgressShader = true
             mTempProgressColors = colors
-            isUpdateProgressShader = true
         }
     }
 
@@ -599,16 +582,16 @@ open class ArcProgressBar(
      * 初始化圆环的着色器
      * */
     protected open fun initArcShader(){
-        mTempNormalColors?.takeIf { isUpdateNormalShader }?.also {colors->
+        mTempNormalColors?.takeIf { isNeedBuildNormalShader }?.also { colors->
             val shader = SweepGradient(mCenterX,mCenterY,colors,null)
             mNormalPaint.shader = shader
-            isUpdateNormalShader= false
+            isNeedBuildNormalShader= false
         }
 
-        mTempProgressColors?.takeIf { isUpdateProgressShader }?.also {colors->
+        mTempProgressColors?.takeIf { isNeedBuildProgressShader }?.also { colors->
             val shader = SweepGradient(mCenterY,mCenterY,colors,null)
             mProgressPaint.shader = shader
-            isUpdateProgressShader = false
+            isNeedBuildProgressShader = false
         }
     }
 
