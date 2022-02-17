@@ -12,7 +12,6 @@ import android.view.animation.LinearInterpolator
 import androidx.annotation.ColorInt
 import androidx.annotation.MainThread
 import com.yupfeg.base.R
-import com.yupfeg.base.tools.LinearGradientProcessor
 import kotlin.math.max
 import kotlin.math.min
 
@@ -291,7 +290,7 @@ open class ArcProgressBar(
     fun getMaxProgress() : Float = mMaxSweepAngle
 
     /**
-     * 设置进度条的进度，同时启动动画
+     * 设置进度条的进度，同时开启属性动画更新进度
      * @param from 起始进度百分比，默认为从当前进度
      * @param to 目标进度百分比
      * @param duration 动画持续时间
@@ -310,38 +309,6 @@ open class ArcProgressBar(
         ).apply {
             this.duration = duration.toLong()
             this.interpolator = LinearInterpolator()
-            start()
-        }
-    }
-
-    /**
-     * 设置进度百分比，并开启根据进度变换颜色的动画
-     * @param from 起始进度百分比，默认为从当前进度开始
-     * @param to 目标进度百分比
-     * @param startColor 起始颜色
-     * @param endColor 结束颜色
-     * @param duration 动画持续时间
-     * @return [ValueAnimator]属性动画对象，在视图移除时，注意关闭未结束的动画
-     * */
-    open fun setProgressWithColorChangeAnim(
-        from : Float = mCurrProgress, to : Float,
-        startColor : Int = Color.RED,
-        endColor: Int = Color.GREEN,
-        duration : Int = DEFAULT_ANIM_DURATION
-    ) : ValueAnimator{
-        val endValue = min(to,mMaxProgress.toFloat())
-        val fromValue = max(from,0f)
-        val processor = LinearGradientProcessor(startColor, endColor)
-
-        return ValueAnimator.ofFloat(fromValue,endValue).apply {
-            this.duration = duration.toLong()
-            this.interpolator = LinearInterpolator()
-            addUpdateListener {
-                //先移除shader,避免后续颜色值无法生效
-                mProgressPaint.shader = null
-                mProgressPaint.color = processor.getColorByRadio(it.animatedFraction)
-                setProgress(it.animatedValue as Float)
-            }
             start()
         }
     }
@@ -443,7 +410,7 @@ open class ArcProgressBar(
      * */
     @MainThread
     fun setProgressColors(@ColorInt color1: Int,@ColorInt color2 : Int){
-        setProgressColors(intArrayOf(color1,color2),floatArrayOf(0f,0.6f,0.8f,1.0f))
+        setProgressColors(intArrayOf(color1,color2),null)
     }
 
     /**
