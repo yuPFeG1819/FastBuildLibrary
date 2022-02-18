@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.util.TypedValue.COMPLEX_UNIT_DIP
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -37,6 +38,8 @@ open class ArcProgressBar(
         private const val DEFAULT_LABEL_TEXT_SIZE = 18f
         /**默认的百分比文本大小*/
         private const val DEFAULT_PERCENT_TEXT_SIZE = 20f
+        /**默认的百分比单位的文本大小*/
+        private const val DEFAULT_PERCENT_UNIT_TEXT_SIZE = 14f
         /**默认动画执行时间，单位ms*/
         private const val DEFAULT_ANIM_DURATION = 2000
     }
@@ -114,11 +117,6 @@ open class ArcProgressBar(
     protected var mLabelTextColor : Int = Color.BLACK
 
     /**
-     * 顶部标签文本的Padding范围
-     * */
-    protected val mLabelTextPaddingRect : Rect = Rect()
-
-    /**
      * 百分比顶部的标签文本内容，默认为null
      * */
     protected var mLabelText : String? = null
@@ -133,11 +131,31 @@ open class ArcProgressBar(
      * */
     protected var isIntPercent : Boolean = true
 
-    protected var mPercentTextSize : Float = 14f
+    /**
+     * 百分比文本字体大小
+     * */
+    protected var mPercentTextSize : Float = 15f
+
+    /**
+     * 百分比的单位文本字体大小
+     * */
+    protected var mPercentUnitTextSize : Float = 12f
+
+    /**
+     * 百分比的文本颜色
+     * */
     protected var mPercentTextColor : Int = Color.BLACK
 
-    /**百分比文本的padding属性*/
-    protected val mPercentTextPadding : Rect = Rect()
+    /**
+     * 百分比的单位文本颜色
+     * */
+    protected var mPercentUnitTextColor : Int = Color.GRAY
+
+    /**
+     * 百分比与单位之间的文本间距，px
+     * */
+    protected var mPercentUnitTextPadding : Float = 0f
+
 
     // </editor-fold>
 
@@ -235,13 +253,24 @@ open class ArcProgressBar(
         )
         //百分比文本
         mPercentTextSize = typeArray.getDimension(
-            R.styleable.ArcProgressBar_arcLabelTextSize,
+            R.styleable.ArcProgressBar_arcPercentTextSize,
             TypedValue.applyDimension(COMPLEX_UNIT_SP, DEFAULT_PERCENT_TEXT_SIZE,displayMetrics)
         )
         mPercentTextColor = typeArray.getColor(
             R.styleable.ArcProgressBar_arcPercentTextColor,Color.GRAY
         )
         isIntPercent = typeArray.getBoolean(R.styleable.ArcProgressBar_arcIntPercent,true)
+
+        mPercentUnitTextSize = typeArray.getDimension(
+            R.styleable.ArcProgressBar_arcPercentUnitTextSize,
+            TypedValue.applyDimension(COMPLEX_UNIT_SP, DEFAULT_PERCENT_UNIT_TEXT_SIZE,displayMetrics)
+        )
+        mPercentUnitTextColor = typeArray.getColor(
+            R.styleable.ArcProgressBar_arcPercentUnitTextColor,Color.GRAY
+        )
+        mPercentUnitTextPadding = typeArray.getDimension(
+            R.styleable.ArcProgressBar_arcPercentUnitTextPadding, 0f
+        )
 
         //typedArray用完之后需要回收，防止内存泄漏
         typeArray.recycle()
@@ -442,7 +471,7 @@ open class ArcProgressBar(
 
     // </editor-fold>
 
-    // <editor-fold desc="内部文本公开方法">
+    // <editor-fold desc="圆弧文本公开方法">
 
     /**
      * 设置标签文本内容，默认内容为null，不显示
@@ -493,6 +522,37 @@ open class ArcProgressBar(
      * */
     fun setPercentTextColor(@ColorInt color: Int){
         mPercentTextColor = color
+        invalidate()
+    }
+
+    /**
+     * 设置百分比单位的字体大小
+     * @param size 字体大小，单位sp
+     * */
+    fun setPercentUnitTextSize(size : Int){
+        mPercentUnitTextSize = TypedValue.applyDimension(
+            COMPLEX_UNIT_SP,size.toFloat(),resources.displayMetrics
+        )
+        invalidate()
+    }
+
+    /**
+     * 设置百分比单位的字体颜色
+     * @param color 字体颜色
+     * */
+    fun setPercentUnitTextColor(@ColorInt color : Int){
+        mPercentUnitTextColor = color
+        invalidate()
+    }
+
+    /**
+     * 设置百分比单位文本与百分比文本间的额外间距
+     * @param padding 额外间距，单位dp
+     * */
+    fun setPercentUnitPadding(padding : Float){
+        mPercentUnitTextPadding = TypedValue.applyDimension(
+            COMPLEX_UNIT_DIP, padding,resources.displayMetrics
+        )
         invalidate()
     }
 
@@ -568,6 +628,19 @@ open class ArcProgressBar(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        drawCircleArc(canvas)
+        //绘制标签文本
+        drawLabelText(canvas)
+        //绘制百分比文本
+        drawPercentText(canvas)
+    }
+
+    /**
+     * 绘制圆弧
+     * - 分离圆弧与文本的绘制，提供子类覆写
+     * @param canvas
+     * */
+    protected open fun drawCircleArc(canvas: Canvas){
         //绘制圆弧背景
         canvas.drawArc(mArcRectF,mStartAngle,mMaxSweepAngle,false,mNormalPaint)
         //绘制进度条圆弧
@@ -575,10 +648,6 @@ open class ArcProgressBar(
             mMaxSweepAngle * calculateRadio(),
             false,mProgressPaint
         )
-        //绘制标签文本
-        drawLabelText(canvas)
-        //绘制百分比文本
-        drawPercentText(canvas)
     }
 
     /**
@@ -616,10 +685,17 @@ open class ArcProgressBar(
      */
     protected open fun drawPercentText(canvas: Canvas){
         if (!isShowPercent) return
+        //绘制百分比文本
         mTextPaint.textSize = mPercentTextSize
         mTextPaint.color = mPercentTextColor
         val percentBaselineY = getPercentTextBaseline()
         canvas.drawText(getPercentText(),mCenterX,percentBaselineY,mTextPaint)
+
+        //绘制百分比单位
+        mTextPaint.textSize = mPercentUnitTextSize
+        mTextPaint.color = mPercentUnitTextColor
+        val unitStartX = getPercentUnitTextStartX("%")
+        canvas.drawText("%",unitStartX,percentBaselineY,mTextPaint)
     }
 
     /**
@@ -631,8 +707,6 @@ open class ArcProgressBar(
             //如果不显示标签文本，则文本的基线高度绘制在中心位置
             mCenterX - fontMetrics.bottom
         }else{
-            //计算文本高度
-//            val percentFontHeight = fontMetrics.bottom - fontMetrics.top
             //计算文本的基线Y坐标，圆心Y坐标 - 文本基线到文本顶部的偏移量（负值）
             //相当于将圆心Y坐标作为百分比文本的top线
             mCenterY - fontMetrics.top
@@ -654,8 +728,20 @@ open class ArcProgressBar(
      * */
     protected open fun getPercentText() : String{
         val progress = mCurrProgress * 100f / mMaxProgress
-        return if (isIntPercent) "${progress.toInt()} %"
-        else "${String.format("%.2f",progress)} %"
+        return if (isIntPercent) "${progress.toInt()}"
+        else String.format("%.2f",progress)
+    }
+
+    /**
+     * 获取百分比单位文本的起始坐标
+     * @param unit 百分比文本
+     * */
+    @Suppress("SameParameterValue")
+    protected open fun getPercentUnitTextStartX(unit : String) : Float{
+        //计算右侧圆弧的坐标
+        val arcInnerX = mArcRectF.right - mStrokeWidth
+        val textWidth = mTextPaint.measureText(unit)
+        return arcInnerX - textWidth - mRadius/3 + mPercentUnitTextPadding
     }
 
     // </editor-fold>

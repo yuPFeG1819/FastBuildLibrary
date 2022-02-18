@@ -38,5 +38,13 @@
         <attr name="arcLabelTextColor" format="color|reference"/>
         <!-- 标签文本内容-->
         <attr name="arcLabelText" format="string"/>
+
+        <!-- 百分比单位文本的字体大小-->
+        <attr name="arcPercentUnitTextSize" format="dimension"/>
+        <!-- 百分比单位文本的字体颜色-->
+        <attr name="arcPercentUnitTextColor" format="color|reference"/>
+        <!-- 百分比单位文本的左侧间距，控制与百分比文本的距离，默认为0-->
+        <attr name="arcPercentUnitTextPadding" format="dimension"/>
+
     </declare-styleable>
 </resources>
