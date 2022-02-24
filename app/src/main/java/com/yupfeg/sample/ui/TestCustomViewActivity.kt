@@ -2,12 +2,18 @@ package com.yupfeg.sample.ui
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.Button
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.yupfeg.base.tools.anim.*
 import com.yupfeg.base.tools.anim.evalutor.LinearColorEvaluator
 import com.yupfeg.base.view.activity.BaseActivity
 import com.yupfeg.base.widget.ArcProgressBar
+import com.yupfeg.base.widget.grid.BaseNineGridAdapter
+import com.yupfeg.base.widget.grid.NineGridLayout
 import com.yupfeg.logger.ext.logd
 import com.yupfeg.sample.R
 
@@ -43,11 +49,33 @@ class TestCustomViewActivity : BaseActivity(){
 //            floatArrayOf(0f,0.6f,0.8f,1.0f)
 //        )
 //        arcProgressView.setProgressWithAnimate(0f,100f,2000)
-
         arcProgressView?.setOnProgressChangeListener(object : ArcProgressBar.OnProgressChangeListener{
             override fun onProgressChange(progress: Float, max: Int) {
                 logd("进度条状态更新 : ${progress} / ${max}")
             }
+        })
+
+        val gridLayout = findViewById<NineGridLayout>(R.id.nine_grid_layout)
+
+        gridLayout.setViewAdapter(object : BaseNineGridAdapter(){
+
+            init {
+                setSingleViewSize(1200,1000)
+            }
+
+            override val count: Int
+                get() = 8
+
+            override fun getView(viewGroup: ViewGroup, position: Int): View {
+                val imageView =  ImageView(viewGroup.context)
+                imageView.setBackgroundColor(ContextCompat.getColor(viewGroup.context, android.R.color.holo_red_light))
+                imageView.layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                return imageView
+            }
+
         })
 
     }
