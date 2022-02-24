@@ -577,7 +577,7 @@ open class ArcProgressBar(
         val diameter = mRadius * 2
         //限制圆弧的范围
         mArcRectF.set(startX,startY,startX + diameter,startY + diameter)
-        //设置测量的视图尺寸
+        //保存测量的视图尺寸
         setMeasuredDimension(measureViewWidth,measureViewHeight)
         isMeasured = true
         //初始化着色器
