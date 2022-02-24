@@ -45,6 +45,48 @@
         <attr name="arcPercentUnitTextColor" format="color|reference"/>
         <!-- 百分比单位文本的左侧间距，控制与百分比文本的距离，默认为0-->
         <attr name="arcPercentUnitTextPadding" format="dimension"/>
+    </declare-styleable>
 
+    <!-- 红点标记视图的自定义属性 -->
+    <declare-styleable name="BadgeView">
+        <!-- 红点标记数量 -->
+        <attr name="badgeNum" format="integer"/>
+
+        <!-- 红点标记的额外间距-->
+        <attr name="badgePadding" format="dimension"/>
+        <!-- 红点标记的最小圆形半径-->
+        <attr name="minRadius" format="dimension"/>
+        <!-- 红点标记视图的中心X轴偏移量-->
+        <attr name="badgeOffsetX" format="dimension"/>
+        <!-- 红点标记视图的中心Y轴偏移量-->
+        <attr name="badgeOffsetY" format="dimension"/>
+
+        <!-- 红点标记视图的文本颜色-->
+        <attr name="badgeTextColor" format="color|reference"/>
+        <!-- 红点标记的文本字体大小-->
+        <attr name="badgeTextSize" format="dimension"/>
+        <!-- 红点标记视图的背景颜色-->
+        <attr name="badgeColor" format="color|reference"/>
+        <!-- 红点标记的描边颜色-->
+        <attr name="badgeStrokeColor" format="color|reference"/>
+        <!--  红点标记的描边宽度  -->
+        <attr name="badgeStrokeWidth" format="dimension"/>
+        <!--  红点标记图形限制模式的图形颜色-->
+        <attr name="badgeGraphColor" format="color|reference"/>
+        <!--   红点标记图形限制模式的图形半径-->
+        <attr name="badgeGraphRadius" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="NineGridLayout">
+        <!-- item间距 -->
+        <attr name="gridSpace" format="dimension"/>
+        <!-- 更多数量文本颜色-->
+        <attr name="gridMoreNumTextColor" format="color|reference"/>
+        <!--  更多数量文本数量-->
+        <attr name="gridMoreNumTextSize" format="dimension"/>
+        <!-- 更多遮罩颜色-->
+        <attr name="gridMoreMaskColor" format="color|reference"/>
+        <!--  item数量超出最大限制后，是否显示遮罩层-->
+        <attr name="moreNumMask" format="boolean"/>
     </declare-styleable>
 </resources>
