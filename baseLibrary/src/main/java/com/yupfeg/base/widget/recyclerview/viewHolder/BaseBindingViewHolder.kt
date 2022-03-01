@@ -42,7 +42,7 @@ abstract class BaseBindingViewHolder<T,VDB : ViewDataBinding>(itemView : View) :
      * @param itemData 列表item项对象
      * @param position 列表item索引
      * */
-    abstract fun onBind(binding : VDB,itemData : T,position : Int)
+    protected abstract fun onBind(binding : VDB,itemData : T,position : Int)
 
     open fun release(){
         mBinding.unbind()

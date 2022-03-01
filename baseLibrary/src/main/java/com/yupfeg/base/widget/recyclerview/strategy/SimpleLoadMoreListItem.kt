@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yupfeg.base.R
 import com.yupfeg.base.widget.ext.setThrottleClickListener
 import com.yupfeg.base.widget.recyclerview.ListLoadMoreState
+import com.yupfeg.base.widget.recyclerview.RecyclerListAdapter
 import com.yupfeg.base.widget.recyclerview.viewHolder.BaseViewHolder
 
 /**可分页的加载更多item功能接口*/
@@ -58,7 +59,11 @@ class SimpleLoadMoreListItemDelegate(
         return position.toLong()
     }
 
-    override fun createViewHolder(parentView: ViewGroup, itemView: View): RecyclerView.ViewHolder {
+    override fun createViewHolder(
+        parentView: ViewGroup,
+        itemView: View,
+        listAdapter: RecyclerListAdapter
+    ): RecyclerView.ViewHolder {
         return BaseViewHolder.createNewInstance(itemView)
     }
 

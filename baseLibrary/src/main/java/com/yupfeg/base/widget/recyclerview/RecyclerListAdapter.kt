@@ -136,7 +136,7 @@ class RecyclerListAdapter private constructor(
         setHasStableIds(true)
     }
 
-    //<editor-fold desc="==============生命周期方法===============">
+    //<editor-fold desc="==============抽象方法实现===============">
 
     override fun getItemId(position: Int): Long {
         val itemData = adapterList[position]
@@ -149,7 +149,9 @@ class RecyclerListAdapter private constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val itemStrategy = mViewTypeItemStrategies.getValue(viewType)
-        return itemStrategy.createViewHolder(parent, itemStrategy.inflateLayoutView(parent))
+        return itemStrategy.createViewHolder(
+            parent, itemStrategy.inflateLayoutView(parent),this
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -219,7 +221,7 @@ class RecyclerListAdapter private constructor(
         super.onViewDetachedFromWindow(holder)
     }
 
-    //</editor-fold desc="==============生命周期方法==============“>
+    //</editor-fold desc="==============抽象方法实现==============“>
 
     /**
      * [GridLayoutManager]拓展函数，设置itemViewHolder占据列表视图的列数

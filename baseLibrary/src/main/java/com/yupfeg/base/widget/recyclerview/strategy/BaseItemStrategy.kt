@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.yupfeg.base.widget.recyclerview.RecyclerListAdapter
 import com.yupfeg.base.widget.recyclerview.viewHolder.BaseBindingViewHolder
 
 /**
@@ -54,8 +55,11 @@ abstract class BaseItemStrategy<T,in VH : RecyclerView.ViewHolder>(
      * * 对应[RecyclerView.Adapter.onCreateViewHolder]
      * @param parentView recyclerView的跟布局视图
      * @param itemView inflate[layoutId]的View
+     * @param listAdapter 列表的原始adapter实例，更多用于列表item设置回调时，获取对应实体
      * */
-    abstract fun createViewHolder(parentView : ViewGroup,itemView : View) : RecyclerView.ViewHolder
+    abstract fun createViewHolder(
+        parentView : ViewGroup,itemView : View,listAdapter : RecyclerListAdapter
+    ) : RecyclerView.ViewHolder
 
     /**绑定ViewHolder数据
      * * 对应[RecyclerView.Adapter.onBindViewHolder]
@@ -100,8 +104,13 @@ abstract class BaseItemStrategy<T,in VH : RecyclerView.ViewHolder>(
 
     //</editor-fold>
 
+    // <editor-fold desc="diff定向刷新相关">
+
     override fun getChangePayload(oldItem: T, newItem: T): Any? {
         return "changePayload"
     }
+
+    // </editor-fold>
+
 }
 
