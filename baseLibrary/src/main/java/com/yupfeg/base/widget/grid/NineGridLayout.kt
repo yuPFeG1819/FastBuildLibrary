@@ -316,19 +316,36 @@ open class NineGridLayout(
 
     // </editor-fold>
 
-    // <editor-fold desc="添加视图">
+    // <editor-fold desc="添加item视图">
 
     /**
-     * 添加视图适配器
+     * 校验是否已存在adapter
+     * */
+    fun hasAdapter() = mItemAdapter != null
+
+    /**
+     * 添加视图适配器，并更新item视图变化
      * @param adapter 子视图适配器
      * */
     fun setViewAdapter(adapter: Adapter){
         mItemAdapter = adapter
-        val newCount = adapter.count
+        notifyItemChanged()
+    }
+
+    /**
+     * 更新item视图的变化
+     * - 调用方法会触发布局请求
+     * */
+    fun notifyItemChanged(){
+        mItemAdapter?: throw NullPointerException(
+            "item adapter is null , you should set item adapter first"
+        )
+
+        val newCount = mItemAdapter!!.count
         val childCount = min(newCount,MAX_CHILD_COUNT)
         //根据新的视图数量，初始化九宫格的行数与列数
         initRowAndColumn(childCount)
-        tryAddChangedViews(adapter,childCount)
+        tryAddChangedViews(mItemAdapter!!,childCount)
         requestLayout()
     }
 

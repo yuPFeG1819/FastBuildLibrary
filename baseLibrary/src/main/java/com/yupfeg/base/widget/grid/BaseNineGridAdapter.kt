@@ -14,12 +14,12 @@ abstract class BaseNineGridAdapter : NineGridLayout.Adapter{
 
     /**
      * 设置只有单个视图时的View尺寸，通常由后台提供
-     * @param height 单个item视图时的高度，px
      * @param width 单个item视图时的宽度，px
+     * @param height 单个item视图时的高度，px
      * */
-    fun setSingleViewSize(height : Int,width : Int){
-        mSingleViewHeight = height
+    fun setSingleViewSize(width : Int,height : Int){
         mSingleViewWidth = width
+        mSingleViewHeight = height
     }
 
     final override val singleViewHeight : Int
