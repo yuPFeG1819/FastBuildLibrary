@@ -27,6 +27,7 @@ import com.yupfeg.result.permission.dialog.DefaultRationaleDialogFragment
 import com.yupfeg.sample.R
 import com.yupfeg.sample.TestWindowInsetActivity
 import com.yupfeg.sample.databinding.ActivityMainBinding
+import com.yupfeg.sample.ui.list.TestListActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -207,16 +208,21 @@ class MainActivity : BaseActivity() {
             performSelectImage()
         }
 
-        /**
-         * 测试嵌套滑动
-         * */
-        fun naviToTestNestedScroll(){
-            startActivity(Intent(this@MainActivity,TestCoordinatorActivity::class.java))
-        }
+//        /**
+//         * 测试嵌套滑动
+//         * */
+//        fun naviToTestNestedScroll(){
+//            startActivity(Intent(this@MainActivity,TestCoordinatorActivity::class.java))
+//        }
 
         /**测试自定义View*/
         fun naviToCustomView(){
             startActivity(Intent(this@MainActivity,TestCustomViewActivity::class.java))
+        }
+
+        /**跳转测试列表页*/
+        fun naviTestList(){
+            startActivity(Intent(this@MainActivity,TestListActivity::class.java))
         }
     }
 
