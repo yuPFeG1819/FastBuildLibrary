@@ -122,15 +122,12 @@ fun View.bindBackgroundDrawable(@DrawableRes drawableResId : Int?){
 @Suppress("unused")
 @BindingAdapter(value = ["clickDelay","onViewClick"], requireAll = false)
 fun View.bindViewSingleClick(
-    clickDelay : Int = ThrottleClickListenerWrapper.DEF_DELAY,
+    clickDelay : Int = 0,
     onClickListener: View.OnClickListener?
 ){
     onClickListener?:return
-    if (clickDelay == 0){
-        setOnClickListener(onClickListener)
-        return
-    }
-    setThrottleClickListener(delayTime = clickDelay, onClickListener = onClickListener)
+    val delay = if (clickDelay <= 0) ThrottleClickListenerWrapper.DEF_DELAY else clickDelay
+    setThrottleClickListener(delayTime = delay, onClickListener = onClickListener)
 }
 
 /**
