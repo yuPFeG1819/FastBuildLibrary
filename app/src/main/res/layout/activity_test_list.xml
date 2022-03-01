@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yupfeg.sample.ui.list.TestListViewModel"
+            />
+
+        <variable
+            name="viewConfig"
+            type="com.yupfeg.sample.ui.list.TestListActivity.BindingConfig" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <!-- <editor-fold desc="顶部标题栏"> -->
+
+<!--        <View-->
+<!--            android:id="@+id/view_title_bar_bg"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:background="@drawable/bg_title_bar"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            />-->
+
+<!--        <androidx.appcompat.widget.AppCompatTextView-->
+<!--            android:id="@+id/tv_title_bar_text"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="标题栏"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textColor="@color/white"-->
+<!--            app:layout_constraintStart_toStartOf="@id/view_title_bar_bg"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/view_title_bar_bg"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/view_title_bar_bg"-->
+<!--            app:layout_constraintTop_toTopOf="@id/view_title_bar_bg"-->
+<!--            />-->
+
+<!--        <androidx.appcompat.widget.AppCompatImageView-->
+<!--            android:id="@+id/iv_title_bar_back"-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:src="@drawable/ic_vector_left_arrow"-->
+<!--            android:tint="@color/white"-->
+<!--            app:layout_constraintStart_toStartOf="@id/view_title_bar_bg"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/view_title_bar_bg"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            />-->
+        <include
+            android:id="@+id/included_title_bar"
+            layout="@layout/include_title_bar"
+            app:viewConfig="@{viewConfig}"
+            />
+        <!-- </editor-fold>-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_test_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            layoutManager="@{viewConfig.layoutManager}"
+            recyclerAdapter="@{viewConfig.listAdapter}"
+            adapterList="@{viewModel.listStateFlow}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/included_title_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

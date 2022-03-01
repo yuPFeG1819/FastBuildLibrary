@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="itemData"
+            type="com.yupfeg.sample.ui.list.TestListItemBean"
+            />
+        <variable
+            name="onItemClickListener"
+            type="com.yupfeg.sample.ui.list.OnTestListItemClickListener"
+            />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_test_list_item_user_head"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@color/design_default_color_secondary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_test_list_item_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="测试名称"
+            android:text="@{itemData.userName}"
+            android:textSize="14sp"
+            android:textColor="@android:color/holo_orange_dark"
+            app:layout_constraintStart_toEndOf="@id/iv_test_list_item_user_head"
+            app:layout_constraintTop_toTopOf="@id/iv_test_list_item_user_head"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:maxLines="1"
+            />
+
+        <!--        发布时间-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_test_list_item_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="10分钟前"
+            android:text="@{itemData.time}"
+            android:textSize="12sp"
+            android:textColor="#FF9800"
+            app:layout_constraintStart_toStartOf="@id/tv_test_list_item_user_name"
+            app:layout_constraintEnd_toEndOf="@id/tv_test_list_item_user_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_test_list_item_user_name"
+            app:layout_constraintBottom_toBottomOf="@id/iv_test_list_item_user_head"
+            android:layout_marginTop="5dp"
+            android:maxLines="1"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_test_list_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{itemData.content}"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_test_list_item_user_head"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="20dp"
+            />
+
+        <com.yupfeg.base.widget.grid.NineGridLayout
+            android:id="@+id/nine_grid_layout_test_list_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_test_list_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            />
+
+        <View
+            android:id="@+id/view_test_list_item_ver_divider_top"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_dc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nine_grid_layout_test_list_item"
+            android:layout_marginTop="10dp"
+            />
+
+        <View
+            android:id="@+id/view_test_list_item_ver_divider_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_dc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_test_list_item_ver_divider_top"
+            android:layout_marginTop="50dp"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_btn_test_list_item_shard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="分享"
+            android:textSize="16sp"
+            android:gravity="center"
+            onViewClick="@{()->onItemClickListener.onShard(itemData)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_test_list_item_ver_33"
+            app:layout_constraintTop_toBottomOf="@id/view_test_list_item_ver_divider_top"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_list_item_ver_divider_bottom"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_btn_test_list_item_comment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="评价"
+            android:textSize="16sp"
+            android:gravity="center"
+            onViewClick="@{()->onItemClickListener.onComment(itemData)}"
+            app:layout_constraintStart_toEndOf="@id/guideline_test_list_item_ver_33"
+            app:layout_constraintEnd_toStartOf="@id/guideline_test_list_item_ver_66"
+            app:layout_constraintTop_toBottomOf="@id/view_test_list_item_ver_divider_top"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_list_item_ver_divider_bottom"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_btn_test_list_item_praise"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="点赞"
+            android:textSize="16sp"
+            android:gravity="center"
+            onViewClick="@{()->onItemClickListener.onPraise(itemData)}"
+            app:layout_constraintStart_toEndOf="@id/guideline_test_list_item_ver_66"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_test_list_item_ver_divider_top"
+            app:layout_constraintBottom_toBottomOf="@id/view_test_list_item_ver_divider_bottom"
+            />
+
+        <View
+            android:id="@+id/view_test_list_item_left_divider"
+            android:layout_width="0.5dp"
+            android:layout_height="0dp"
+            android:background="@color/gray_dc"
+            app:layout_constraintStart_toStartOf="@id/guideline_test_list_item_ver_33"
+            app:layout_constraintTop_toBottomOf="@id/view_test_list_item_ver_divider_top"
+            app:layout_constraintBottom_toTopOf="@id/view_test_list_item_ver_divider_bottom"
+            />
+
+        <View
+            android:id="@+id/view_test_list_item_right_divider"
+            android:layout_width="0.5dp"
+            android:layout_height="0dp"
+            android:background="@color/gray_dc"
+            app:layout_constraintStart_toStartOf="@id/guideline_test_list_item_ver_66"
+            app:layout_constraintTop_toBottomOf="@id/view_test_list_item_ver_divider_top"
+            app:layout_constraintBottom_toTopOf="@id/view_test_list_item_ver_divider_bottom"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_test_list_item_ver_33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3333"
+            />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_test_list_item_ver_66"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.6666"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

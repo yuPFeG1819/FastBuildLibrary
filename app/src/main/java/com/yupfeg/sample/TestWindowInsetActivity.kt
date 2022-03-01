@@ -1,9 +1,11 @@
 package com.yupfeg.sample
 
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
+import androidx.lifecycle.LiveData
 import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.tools.window.*
 import com.yupfeg.base.view.activity.bindingActivity
@@ -14,6 +16,7 @@ import com.yupfeg.base.widget.ext.showKeyboard
 import com.yupfeg.logger.ext.logd
 import com.yupfeg.sample.databinding.ActivityTestWindowInsetBinding
 import com.yupfeg.sample.ui.TestWindowInsetViewModel
+import com.yupfeg.sample.widget.ITitleConfig
 
 /**
  * 测试WindowInsetController
@@ -60,9 +63,16 @@ class TestWindowInsetActivity : AppCompatActivity(){
         mBinding.viewConfig = null
     }
 
-    inner class BindingConfig{
+    inner class BindingConfig : ITitleConfig{
 
-        val textWatcher = DSLTextWatcher().apply {
+        override fun back() {
+            finish()
+        }
+
+        override val titleName: LiveData<String>
+            get() = mViewModel.titleLiveData
+
+        val textWatcher : TextWatcher = DSLTextWatcher().apply {
             afterTextChanged = {
                 logd(it?.toString()?:"")
             }
