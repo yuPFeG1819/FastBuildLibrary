@@ -12,11 +12,7 @@ import java.io.Serializable
  */
 @Suppress("unused")
 object ContactsTools {
-    /**
-     * 通讯录的列表实体
-     * @author yuPFeG
-     * @date 2021/09/02
-     */
+    /**通讯录的列表实体*/
     data class ContactUserBean(
         /**本地通讯录id*/
         val contactId : Long,
