@@ -110,8 +110,8 @@ class RecyclerListAdapter private constructor(
 
     //<editor-fold desc="分页加载更多相关">
 
-    /**触发预加载操作时执行动作*/
-    var onPreLoadAction : (()->Unit) ?= null
+    /**触发预加载下一页操作时执行动作*/
+    var doOnPreloadAction : (()->Unit) ?= null
 
     /**预加载的提前阀值，提前多少item开始获取下一页列表数据 */
     var prefetchSizeLimit : Int = 1
@@ -122,7 +122,7 @@ class RecyclerListAdapter private constructor(
      * @return true-执行预加载操作
      */
     private fun checkPreLoadMore(position: Int) =
-        onPreLoadAction?.let {
+        doOnPreloadAction?.let {
             //当前下标数超出预加载的阀值，且处于滑动状态，才执行预加载操作
             position == max(itemCount - 1 - prefetchSizeLimit, 0)
                     && mCurrScrollState != SCROLL_STATE_IDLE
@@ -175,7 +175,7 @@ class RecyclerListAdapter private constructor(
 
         if (checkPreLoadMore(position)){
             //执行预加载下一页操作
-            onPreLoadAction?.invoke()
+            doOnPreloadAction?.invoke()
         }
     }
 
@@ -190,6 +190,8 @@ class RecyclerListAdapter private constructor(
                 super.onScrollStateChanged(recyclerView, newState)
             }
         })
+        //更新ViewType的缓存池大小
+        updateAllItemViewTypeCacheSize(recyclerView)
         //兼容GridLayoutManager，便于控制itemViewHolder的宽度
         (recyclerView.layoutManager as? GridLayoutManager)?.setGridSpanSizeLookup()
         super.onAttachedToRecyclerView(recyclerView)
@@ -222,6 +224,22 @@ class RecyclerListAdapter private constructor(
     }
 
     //</editor-fold desc="==============抽象方法实现==============“>
+
+    /**
+     * 更新所有ItemViewType的缓存池大小
+     * @param recyclerView 当前绑定的列表容器视图
+     * */
+    private fun updateAllItemViewTypeCacheSize(recyclerView: RecyclerView){
+        val recyclerPool = recyclerView.recycledViewPool
+        for (itemStrategy in mItemStrategies.values) {
+            if (!itemStrategy.isPoolCacheNeedChange) continue
+            //更新当前ViewType在缓存池内的缓存大小
+            recyclerPool.setMaxRecycledViews(
+                itemStrategy.itemType,itemStrategy.viewTypePoolCacheSize
+            )
+        }
+    }
+
 
     /**
      * [GridLayoutManager]拓展函数，设置itemViewHolder占据列表视图的列数

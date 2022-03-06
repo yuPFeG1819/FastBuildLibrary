@@ -67,7 +67,7 @@ fun RecyclerView.bindListLoadMoreAction(onLoadMoreAction : (()->Unit)?,
                                        prefetchSize : Int = 1){
     this.adapter?: throw NullPointerException("you must set adapter to RecyclerView")
     (this.adapter as? RecyclerListAdapter)?.also {
-        it.onPreLoadAction = onLoadMoreAction
+        it.doOnPreloadAction = onLoadMoreAction
         it.prefetchSizeLimit = prefetchSize
     }?: throw NullPointerException("you must set RecyclerListAdapter to RecyclerView adapter")
 }

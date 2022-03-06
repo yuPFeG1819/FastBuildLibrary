@@ -21,6 +21,11 @@ abstract class BaseItemStrategy<T,in VH : RecyclerView.ViewHolder>(
     val dataClass: Class<out T>
 ) : DiffUtil.ItemCallback<T>(){
 
+    companion object{
+        /**默认缓存池的缓存数量，与列表缓存池大小的默认值相同*/
+        private const val DEF_POOL_CACHE_SIZE = 5
+    }
+
     /**item的布局id*/
     @get:LayoutRes
     abstract val layoutId : Int
@@ -36,6 +41,19 @@ abstract class BaseItemStrategy<T,in VH : RecyclerView.ViewHolder>(
     /**item的类型，默认为[layoutId]*/
     open val itemType : Int
         get() = layoutId
+
+    /**
+     * 当前ViewType在缓存池内的缓存数量，通常不需要修改
+     * - 若ViewType对应的ItemView复用性较低，或者较大较长，占用内存较多，避免由于View在缓存池内强引用而无法回收视图。
+     * 可以将ViewType对应在缓存池内的缓存数量适当降低，在适当时刻能够释放ItemView。
+     * */
+    open val viewTypePoolCacheSize = DEF_POOL_CACHE_SIZE
+
+    /**
+     * ViewType对应的缓存池大小需要修改
+     * */
+    val isPoolCacheNeedChange : Boolean
+        get() = viewTypePoolCacheSize != DEF_POOL_CACHE_SIZE
 
     /**获取当前item的布局View*/
     open fun inflateLayoutView(parentView: ViewGroup) : View =
