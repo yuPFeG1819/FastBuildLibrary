@@ -1,6 +1,5 @@
 package com.yupfeg.base.view.ext
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -9,11 +8,33 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import com.yupfeg.base.R
 
+// <editor-fold desc="fragment 参数 拓展">
+
 /**
- * AndroidX下的Fragment相关拓展方法提取文件
- * @author yuPFeG
- * @date 2020/08/05
- */
+ * [Fragment]的拓展函数，延迟获取[Fragment]创建时的参数
+ * - 使用by关键字进行代理
+ * @param key 创建时保存在[Bundle]的key值
+ * @param default 如果无法获取指定类型的值，则返回默认值
+ * */
+@Suppress("unused")
+inline fun <reified T> Fragment.argumentsLazy(key : String, default : T)
+= lazy(LazyThreadSafetyMode.NONE){
+    arguments?.get(key) as? T ?: default
+}
+
+/**
+ * [Fragment]的拓展函数，延迟获取[Fragment]创建时的参数
+ * - 使用by关键字进行代理
+ * @param key 创建时保存在[Bundle]的key值
+ * */
+@Suppress("unused")
+inline fun <reified T> Fragment.argumentsLazyOrNull(key: String)
+= lazy(LazyThreadSafetyMode.NONE){
+    arguments?.get(key) as? T
+}
+
+// </editor-fold>
+
 
 // <editor-fold desc="Fragment show hide 拓展">
 /**
@@ -22,6 +43,7 @@ import com.yupfeg.base.R
  * @param showIndex  默认显示的下标
  * @param fragments  加载的fragment的列表
  */
+@Deprecated("目前会导致嵌套fragment内，仅仅只是重置了view,但fragment的变量没有被重置")
 @Suppress("unused")
 fun FragmentActivity.addFragmentsToContainerView(@IdRes containerViewId : Int,
                                                  showIndex : Int = 0,
@@ -38,6 +60,7 @@ fun FragmentActivity.addFragmentsToContainerView(@IdRes containerViewId : Int,
  * 到对应的[FragmentActivity.getSupportFragmentManager]内，否则会报错！
  * @param showFragment 需要显示的fragment
  */
+@Deprecated("目前会导致嵌套fragment内，仅仅只是重置了view,但fragment的变量没有被重置")
 @Suppress("unused")
 fun FragmentActivity.showHideFragmentOnContainerView(showFragment: Fragment){
     performShowHideFragments(
@@ -52,6 +75,7 @@ fun FragmentActivity.showHideFragmentOnContainerView(showFragment: Fragment){
  * @param showIndex  默认显示的下标
  * @param fragments  加载的fragment的列表
  */
+@Deprecated("目前会导致嵌套fragment内，仅仅只是重置了view,但fragment的变量没有被重置")
 @Suppress("unused")
 fun Fragment.addFragmentsToContainerView(
     @IdRes containerViewId : Int,
@@ -70,6 +94,7 @@ fun Fragment.addFragmentsToContainerView(
  * 到对应的[Fragment.getChildFragmentManager]内，否则会报错！
  * @param showFragment 需要显示的fragment
  */
+@Deprecated("目前会导致嵌套fragment内，仅仅只是重置了view,但fragment的变量没有被重置")
 @Suppress("unused")
 fun Fragment.showHideFragmentOnContainerView(showFragment: Fragment){
     performShowHideFragments(
@@ -91,6 +116,7 @@ fun Fragment.showHideFragmentOnContainerView(showFragment: Fragment){
  *@param fragmentManager FragmentManager
  *@param fragments  控制显示的Fragments
  */
+@Deprecated("目前会导致嵌套fragment内，仅仅只是重置了view,但fragment的变量没有被重置")
 private fun performAddShowHideFragments(
     @IdRes containerViewId: Int,
     showIndex: Int,
@@ -136,6 +162,7 @@ private fun performAddShowHideFragments(
  *@param showFragment  需要显示的fragment，需要该Fragment已经add到[FragmentManager]
  *@param fragmentManager FragmentManager
  */
+@Deprecated("目前会导致嵌套fragment内，仅仅只是重置了view,但fragment的变量没有被重置")
 private fun performShowHideFragments(
     showFragment : Fragment,
     fragmentManager : FragmentManager
@@ -165,61 +192,4 @@ private fun performShowHideFragments(
 }
 
 // </editor-fold desc="Fragment show hide 拓展">
-
-// <editor-fold desc="Fragment的Activity跳转拓展">
-
-/**
- * 使用预设的页面启动动画，启动跳转activity
- * @param clazz 目标activity
- * @param bundle 跳转传递值
- * @param animType 跳转动画类型 [TransitionAnimType]，默认为[TransitionAnimType.SLIDE_RIGHT_IN]
- */
-@Suppress("unused")
-fun Fragment.startActivityWithAnim(
-    clazz: Class<*>, bundle: Bundle?,
-    animType: TransitionAnimType = TransitionAnimType.SLIDE_RIGHT_IN
-) {
-    requireActivity().apply {
-        val intent = Intent(this, clazz)
-        bundle?.let { intent.putExtras(bundle) }
-        startActivity(intent)
-        performTransitionAnim(animType)
-    }
-}
-
-/**
- * 使用预设的页面启动动画，启动跳转activity并设置返回请求码
- * @param clazz 目标activity
- * @param bundle 跳转传递值
- * @param requestCode   返回时请求码
- * @param animType 跳转动画类型 [TransitionAnimType],默认为[TransitionAnimType.SLIDE_RIGHT_IN]
- */
-@Suppress("unused")
-fun Fragment.startActivityWithAnimForResult(
-    clazz: Class<*>, bundle: Bundle?, requestCode: Int,
-    animType: TransitionAnimType = TransitionAnimType.SLIDE_RIGHT_IN
-) {
-    val intent = Intent(requireActivity(), clazz)
-    bundle?.let { intent.putExtras(bundle) }
-    startActivityWithAnimForResult(intent, requestCode, animType)
-}
-
-/**
- * 使用预设的页面启动动画，启动跳转activity并设置返回请求码
- * @param intent 跳转意图
- * @param requestCode   返回时请求码
- * @param animType 跳转动画类型 [TransitionAnimType],默认为[TransitionAnimType.SLIDE_RIGHT_IN]
- */
-@Suppress("MemberVisibilityCanBePrivate")
-fun Fragment.startActivityWithAnimForResult(
-    intent: Intent, requestCode: Int,
-    animType: TransitionAnimType = TransitionAnimType.SLIDE_RIGHT_IN
-) {
-    requireActivity().apply {
-        startActivityForResult(intent, requestCode)
-        performTransitionAnim(animType)
-    }
-}
-
-// </editor-fold desc="Fragment的Activity跳转方法">
 
