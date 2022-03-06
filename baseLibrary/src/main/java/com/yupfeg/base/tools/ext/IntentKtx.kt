@@ -41,6 +41,7 @@ inline operator fun <reified T> Bundle?.get(key : String) : T? = this?.get(key) 
 
 /**
  * [Context]的拓展函数，使用键值对快速创建[Intent]对象
+ * @param T [Intent]跳转目标类的类型
  * @param pairs 保存在[Bundle]的键值对
  * */
 @Suppress("unused")
@@ -49,6 +50,7 @@ inline fun <reified T> Context.intentOf(vararg pairs: Pair<String,*>) : Intent
 
 /**
  * [Context]的拓展函数，快速创建[Intent]对象
+ * @param T [Intent]跳转目标类的类型
  * @param bundle [Bundle]
  * */
 inline fun <reified T> Context.intentOf(bundle: Bundle) : Intent
