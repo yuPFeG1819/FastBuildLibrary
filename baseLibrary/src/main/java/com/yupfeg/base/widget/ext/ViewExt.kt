@@ -1,16 +1,11 @@
 package com.yupfeg.base.widget.ext
 
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.yupfeg.base.tools.ext.dipToPx
 
 /**
  * View的拓展函数
@@ -69,64 +64,6 @@ class ThrottleClickListenerWrapper(
             mLastTime = currentTimeMillis
             clickListener.onClick(v)
         }
-    }
-}
-
-// </editor-fold>
-
-// <editor-fold desc="视图背景Drawable">
-//TODO 利用KOtlin-DSL方式，构建drawable shape
-@Suppress("unused")
-data class ViewBackgroundConfig(
-    @ColorInt var solidColor : Int,
-    @ColorRes val startColor : Int,
-    @ColorRes val endColor : Int,
-    var topLeftRadius : Float = 0f,
-    var topRightRadius : Float = 0f,
-    var downLeftRadius : Float = 0f,
-    var downRightRadius : Float = 0f,
-)
-
-/**
- * 设置View的矩形背景
- * @param solidColor 背景填充色,可以利用`Color.parse`或者[ContextCompat.getColor]获取颜色值
- * @param radius 矩形的圆角弧度
- * @param strokeWidth 描边大小(dp)
- * @param strokeColor 描边颜色,可以利用`Color.parse`或者[ContextCompat.getColor]获取颜色值
- */
-@Suppress("unused")
-fun View.setRectBackground(@ColorInt solidColor : Int, radius : Float,
-                           strokeWidth : Float = 0f, @ColorInt strokeColor : Int = 0){
-    this.background = GradientDrawable().apply {
-        setColor(solidColor)
-        cornerRadius = radius
-        if (strokeColor == 0 || strokeColor == 0){
-            setStroke(strokeWidth.dipToPx(), strokeColor)
-        }
-    }
-}
-
-
-/**
- * 设置View的矩形背景
- * @param solidColor 背景填充色，可以利用`Color.parse`或者[ContextCompat.getColor]获取颜色值
- * @param topLeftRadius 矩形左上角的圆角弧度
- * @param topRightRadius 矩形右上角的圆角弧度
- * @param downLeftRadius 矩形左下角的圆角弧度
- * @param downRightRadius 矩形右下角的圆角弧度
- * @param strokeWidth 描边的宽度(dp)
- * @param strokeColor 描边颜色，可以利用`Color.parse`或者[ContextCompat.getColor]获取颜色值
- */
-@Suppress("unused")
-fun View.setRectBackground(@ColorRes solidColor : Int,
-                           topLeftRadius : Float = 0f, topRightRadius : Float = 0f,
-                           downLeftRadius : Float = 0f, downRightRadius : Float = 0f,
-                           strokeWidth: Float = 0f, @ColorRes strokeColor : Int = 0){
-    val context = this.context
-    this.background = GradientDrawable().apply {
-        setColor(ContextCompat.getColor(context,solidColor))
-        cornerRadii = floatArrayOf(topLeftRadius,topRightRadius,downLeftRadius,downRightRadius)
-        setStroke(strokeWidth.dipToPx(),ContextCompat.getColor(context,strokeColor))
     }
 }
 
