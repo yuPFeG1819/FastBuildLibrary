@@ -18,8 +18,7 @@ fun Long.toDateFormatString(
     locale: Locale = Locale.CHINA
 ) : String{
     val date = Date(this)
-    val mTargetFormat = if (targetFormat.isNotEmpty()) targetFormat
-    else DateTimeTools.DEFAULT_DATE_TIME_FORMAT
+    val mTargetFormat = targetFormat.ifEmpty { DateTimeTools.DEFAULT_DATE_TIME_FORMAT }
     val format = SimpleDateFormat(mTargetFormat,locale)
     return format.format(date)
 }
@@ -192,8 +191,7 @@ fun String.parseDateFormat(
     timeZone : TimeZone? = null
 ) : Date?{
     return if (this.isNotEmpty()){
-        val formatPattern = if (fromFormat.isNotEmpty()) fromFormat
-        else DateTimeTools.DEFAULT_DATE_TIME_FORMAT
+        val formatPattern = fromFormat.ifEmpty { DateTimeTools.DEFAULT_DATE_TIME_FORMAT }
         try {
             val dateFormat = SimpleDateFormat(formatPattern,locale)
             timeZone?.also { dateFormat.timeZone = it }
@@ -243,8 +241,7 @@ fun Date.toStringByFormat(
     dateFormat: String = DateTimeTools.DEFAULT_DATE_TIME_FORMAT,
     locale: Locale = Locale.CHINA
 ) : String?{
-    val targetFormat = if (dateFormat.isNotEmpty()) dateFormat
-    else DateTimeTools.DEFAULT_DATE_TIME_FORMAT
+    val targetFormat = dateFormat.ifEmpty { DateTimeTools.DEFAULT_DATE_TIME_FORMAT }
     val format = SimpleDateFormat(targetFormat, locale)
     return format.format(this)?:null
 }
