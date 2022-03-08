@@ -123,6 +123,7 @@ class MainActivity : BaseActivity() {
     override fun initView(savedInstanceState: Bundle?) {
         mBinding.apply {
             config = BindingConfig()
+            viewModel = mViewModel
         }
         fitImmersiveStatusBar(isDarkText = false)
         //延伸视图到状态栏，并添加额外padding

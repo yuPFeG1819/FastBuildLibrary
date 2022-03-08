@@ -5,6 +5,9 @@
             name="config"
             type="com.yupfeg.sample.ui.MainActivity.BindingConfig"
             />
+        <variable
+            name="viewModel"
+            type="com.yupfeg.sample.ui.MainViewModel" />
     </data>
 
     <LinearLayout
@@ -116,13 +119,19 @@
 <!--                onViewClick="@{()->config.naviToTestNestedScroll()}"-->
 <!--                />-->
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="200dp"
+                android:layout_height="45dp"
                 android:text="测试自定义View"
+                tools:textColor="@color/gray_dc"
+                android:textColor="@{viewModel.testTextColorState}"
+                android:gravity="center"
                 android:layout_marginTop="10dp"
+                android:background="@{viewModel.testDrawableBg}"
                 onViewClick="@{()->config.naviToCustomView()}"
+                android:layout_marginStart="15dp"
                 />
+
 
             <Button
                 android:layout_width="wrap_content"
