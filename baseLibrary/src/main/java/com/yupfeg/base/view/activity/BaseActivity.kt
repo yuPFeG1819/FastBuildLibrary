@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.yupfeg.base.view.ext.TransitionAnimType
 import com.yupfeg.base.view.ext.setTransitionAnim
 
 /**
@@ -25,7 +26,7 @@ abstract class BaseActivity : AppCompatActivity(){
 
     override fun onBackPressed() {
         finish()
-        setTransitionAnim()
+        setTransitionAnim(TransitionAnimType.SLIDE_RIGHT_OUT)
     }
 
     // </editor-fold>

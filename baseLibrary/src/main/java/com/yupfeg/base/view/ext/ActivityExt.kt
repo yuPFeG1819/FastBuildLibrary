@@ -11,7 +11,7 @@ enum class TransitionAnimType{
 
 /**
  * [Activity]的拓展函数，执行切换动画
- * @param animType 动画类型[TransitionAnimType]
+ * @param animType 动画类型[TransitionAnimType]，默认为从右侧滑出
  */
 @Suppress("unused")
 fun Activity.setTransitionAnim(animType: TransitionAnimType){
