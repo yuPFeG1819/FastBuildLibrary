@@ -5,7 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.yupfeg.base.view.ext.finishWithAnim
+import com.yupfeg.base.view.ext.setTransitionAnim
 
 /**
  * 基类Activity
@@ -24,7 +24,8 @@ abstract class BaseActivity : AppCompatActivity(){
     }
 
     override fun onBackPressed() {
-        finishWithAnim()
+        finish()
+        setTransitionAnim()
     }
 
     // </editor-fold>
