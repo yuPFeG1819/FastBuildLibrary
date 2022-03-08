@@ -3,12 +3,6 @@ package com.yupfeg.base.tools
 import java.math.BigDecimal
 
 /**
- * Double类型的精确计算拓展文件
- * @author yuPFeG
- * @date 2020/07/22
- */
-
-/**
  * 精确模式
  * * ROUND_UP
  * 舍入远离零的舍入模式。
@@ -50,49 +44,73 @@ import java.math.BigDecimal
  * 如果对获得精确结果的操作指定此舍入模式，则抛出ArithmeticException。
 */
 
-/**默认的需要精确至小数点后几位*/
-private const val DECIMAL_POINT_NUMBER :Int = 2
+/**默认的需要精确至小数点后的位数，默认为2*/
+const val DEF_DECIMAL_POINT_NUMBER :Int = 2
 
 /**
- * [Double]类型的拓展函数，精确到指定小数点位数的【加】操作
+ * [Double]的拓展中缀函数，进行高精度的[+]运算，精确到2位小数
+ * */
+@Suppress("unused")
+infix fun Double.addDecimal(other: Double) : Double = addDecimal(other,DEF_DECIMAL_POINT_NUMBER)
+
+/**
+ * [Double]类型的拓展函数，精确到指定小数点位数的【加】计算
  * @param other
- * @param decimalNum 精确的小数点位数，默认为[DECIMAL_POINT_NUMBER] = 2位小数
+ * @param decimalNum 精确的小数点位数，默认为[DEF_DECIMAL_POINT_NUMBER] = 2位小数
  */
 @Suppress("unused")
-fun Double.addDecimal(other : Double, decimalNum : Int = DECIMAL_POINT_NUMBER): Double {
+fun Double.addDecimal(other : Double, decimalNum : Int): Double {
     return BigDecimal(this).add(BigDecimal(other))
         .setScale(decimalNum,BigDecimal.ROUND_HALF_UP).toDouble()
 }
 
 /**
- * [Double]类型的拓展函数，精确到指定小数点位数的【减】操作
+ * [Double]的拓展中缀函数，进行高精度的[-]运算，保留2位小数
+ * */
+@Suppress("unused")
+infix fun Double.minusDecimal(other: Double) : Double = minusDecimal(other,DEF_DECIMAL_POINT_NUMBER)
+
+/**
+ * [Double]类型的拓展函数，精确到指定小数点位数的【减】计算
  * @param other
- * @param decimalNum 精确的小数点位数，默认为[DECIMAL_POINT_NUMBER] = 2位小数
+ * @param decimalNum 精确的小数点位数，默认为[DEF_DECIMAL_POINT_NUMBER] = 2位小数
  */
 @Suppress("unused")
-fun Double.subtractDecimal(other:Double,decimalNum : Int = DECIMAL_POINT_NUMBER): Double {
+fun Double.minusDecimal(other:Double, decimalNum : Int): Double {
     return BigDecimal(this).subtract(BigDecimal(other))
         .setScale(decimalNum,BigDecimal.ROUND_HALF_UP).toDouble()
 }
 
 /**
+ * [Double]的拓展中缀函数，进行高精度的[*]运算，保留2位小数
+ * */
+@Suppress("unused")
+infix fun Double.multiplyDecimal(other: Double) = multiplyDecimal(other,DEF_DECIMAL_POINT_NUMBER)
+
+/**
  * [Double]类型的拓展函数，精确到指定小数点位数的【乘】操作
  * @param other
- * @param decimalNum 精确的小数点位数，默认为[DECIMAL_POINT_NUMBER] = 2位小数
+ * @param decimalNum 精确的小数点位数，默认为[DEF_DECIMAL_POINT_NUMBER] = 2位小数
  */
 @Suppress("unused")
-fun Double.multiplyDecimal(other:Double,decimalNum : Int = DECIMAL_POINT_NUMBER): Double {
+fun Double.multiplyDecimal(other:Double,decimalNum : Int): Double {
     return BigDecimal(this).multiply(BigDecimal(other))
         .setScale(decimalNum,BigDecimal.ROUND_HALF_UP).toDouble()
 }
 
 /**
+ * [Double]的拓展中缀函数，进行高精度的[/]运算，保留2位小数
+ * */
+@Suppress("unused")
+infix fun Double.divDecimal(other: Double) = divideDecimal(other,DEF_DECIMAL_POINT_NUMBER)
+
+/**
  * [Double]类型的拓展函数，精确到指定小数点位数的【除】操作
  * @param other
- * @param decimalNum 精确的小数点位数，默认为[DECIMAL_POINT_NUMBER] = 2位小数
+ * @param decimalNum 精确的小数点位数，默认为[DEF_DECIMAL_POINT_NUMBER] = 2位小数
  */
 @Suppress("unused")
-fun Double.divideDecimal(other:Double,decimalNum : Int = DECIMAL_POINT_NUMBER): Double {
+fun Double.divideDecimal(other:Double,decimalNum : Int): Double {
     return BigDecimal(this).divide(BigDecimal(other))
         .setScale(decimalNum,BigDecimal.ROUND_HALF_UP).toDouble()
 }
