@@ -29,6 +29,8 @@
   >
   > [StartTaskDispatcher](https://gitee.com/yupfeg/StartTaskDispatcher) 启动任务调度器，进行启动优化
   > [ExecutorProvider](https://gitee.com/yupfeg/ExecutorProvider) 线程池库，收敛项目线程应用
+  > [CodeDrawableDsl](https://gitee.com/yupfeg/CodeDrawableDsl) 动态构建Drawable的库
+  > 
 
 - ~~[RxJava](https://github.com/ReactiveX/RxJava)~~ 已移除依赖
 - [Glide](https://github.com/bumptech/glide) 图片加载库
@@ -41,13 +43,13 @@
 
 ## MVVM与MVI架构组件封装
 
-- 引入`UseCase`业务用例 `Domain`层,承载业务逻辑功能以及原子化状态。
+- 引入`UseCase`业务用例作为 `Domain`层,承载业务逻辑功能以及原子化状态。
 
   > - `UseCase`内提供给`CoroutineScope`根据生命周期管理任务调度。
   >
   > - 添加`UseCaseTaskScheduler`支持`UseCase`在非UI场景使用。
   >
-  > - 如果是MVI架构可尝试只在`UseCase`内进行数据替换。
+  > - 如果是MVI架构可尝试只在`UseCase`内进行业务逻辑处理，数据状态交由外部`ViewModel`进行统一管理。
   >
   > - 提供常用**列表分页加载**功能的`UseCase`
 
@@ -164,9 +166,15 @@
 
 ## 其他杂项
 
+- 自定义View
+  - 未读消息红点标记视图 `BadgeView`
+  - 九宫格布局 `NineGridLayout`
+  - 弧形进度条 `ArcProgressBar`
+  - 
+
 - 桌面消息红点提醒
 
-  > 利用策略模式，根据设备品牌控制桌面红点操作
+  > 利用类的多态，（静态策略）模式，根据设备品牌控制桌面红点操作
 
 - WebView缓存池
 
@@ -186,8 +194,6 @@
 
 - 屏幕尺寸相关函数 `ScreenExt`
 
-- 代码构建`Drawable Shape`
-
 - Activity管理栈`ActivityStackHelper`
 
   > 管理所有`Activity`，更多是提供跨`Activity`关闭等操作
@@ -196,7 +202,7 @@
 
 - `Double`的高精度运算操作
 
-  > 提供`Double`的拓展函数，利用`BigDecimal`进行高精度运算
+  > 提供`Double`的拓展函数，利用`BigDecimal`进行高精度运算，保留指定的小数点后的位数
 
 - 提供`File`本地文件相关工具类
 
@@ -227,6 +233,6 @@
   
 - 考虑RecyclerView内部嵌入RefreshLayout下拉刷新机制
 
-- 尝试使用Kotlin-dsl方式方便配置拓展，代码构建`Drawable Shape`，避免项目内存在过多的`Drawable文件`
+- ~~尝试使用Kotlin-dsl方式方便配置拓展，代码构建`Drawable Shape`，避免项目内存在过多的`Drawable`文件~~(已完成)
 
-- 完善在`DataBinding`中构建代码`drawable shape`的方式
+- ~~完善在`DataBinding`中构建代码`drawable shape`的方式~~ (已抽取到单独项目库依赖[CodeDrawableDsl](https://gitee.com/yupfeg/CodeDrawableDsl))
