@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,25 +34,28 @@
 
     <Button
         android:id="@+id/btn_test_start_anim"
-        android:layout_width="100dp"
-        android:layout_height="45dp"
-        android:text="开始动画"
-        android:gravity="center"
+        android:layout_width="105dp"
+        android:layout_height="44dp"
         android:background="@android:color/holo_orange_dark"
-        app:layout_constraintStart_toStartOf="@id/arc_progress_bar"
-        app:layout_constraintEnd_toEndOf="@id/arc_progress_bar"
-        app:layout_constraintTop_toBottomOf="@id/arc_progress_bar"
+        android:gravity="center"
         android:stateListAnimator="@null"
-        />
+        android:text="开始动画"
+        app:layout_constraintEnd_toEndOf="@id/arc_progress_bar"
+        app:layout_constraintStart_toStartOf="@id/arc_progress_bar"
+        app:layout_constraintTop_toBottomOf="@id/arc_progress_bar" />
 
     <com.yupfeg.base.widget.badge.BadgeView
         android:id="@+id/badge_view"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:badgeNum="111"
-        app:badgeColor="@android:color/holo_orange_dark"
+        app:badgeColor="@android:color/holo_red_dark"
+        app:badgeStrokeColor="@color/white"
+        app:badgeStrokeWidth="1dp"
         app:badgeGraphRadius="1dp"
         app:badgeGraphColor="@android:color/white"
+        app:badgeMode="numLimit"
+        app:badgeMaxNum="99"
         app:layout_constraintEnd_toEndOf="@id/btn_test_start_anim"
         app:layout_constraintTop_toTopOf="@id/btn_test_start_anim"
         app:layout_constraintBottom_toTopOf="@id/btn_test_start_anim"
