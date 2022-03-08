@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.yupfeg.base.viewmodel.BaseViewModel
 import com.yupfeg.executor.ExecutorProvider
+import com.yupfeg.sample.data.DataRepository
+import com.yupfeg.sample.domain.WanAndroidArticleUseCase
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,19 +18,21 @@ import kotlinx.coroutines.launch
  * @author yuPFeG
  * @date
  */
-class TestListViewModel : BaseViewModel(){
+class TestListViewModel(private val dataRepo : DataRepository = DataRepository()) : BaseViewModel(){
 
     val titleName : LiveData<String>
         get() = mTitleName
 
     private val mTitleName = MutableLiveData<String>("测试列表")
 
+    val articleUseCase = WanAndroidArticleUseCase(dataRepo)
 
     private val mListStateFlow = MutableStateFlow<List<Any>>(emptyList())
 
     val listStateFlow : StateFlow<List<Any>> = mListStateFlow.asStateFlow()
 
     fun getTestListData(){
+
         viewModelScope.launch(ExecutorProvider.ioExecutor.asCoroutineDispatcher()) {
             val list = mutableListOf<Any>()
             for (i in 0 until 20){
@@ -47,4 +51,5 @@ class TestListViewModel : BaseViewModel(){
             mListStateFlow.emit(list)
         }
     }
+
 }

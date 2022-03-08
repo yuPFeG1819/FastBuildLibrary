@@ -46,6 +46,7 @@ class TestListActivity : BaseActivity(){
 
     override fun initData() {
         mViewModel.getTestListData()
+        mViewModel.articleUseCase.queryArticleList(1)
     }
 
     private fun createListAdapter() : RecyclerListAdapter{

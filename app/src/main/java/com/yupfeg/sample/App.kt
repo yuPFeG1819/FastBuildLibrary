@@ -4,6 +4,8 @@ import com.yupfeg.base.application.BaseApplication
 import com.yupfeg.base.tools.ext.initToast
 import com.yupfeg.logger.ext.setDslLoggerConfig
 import com.yupfeg.logger.printer.LogcatPrinter
+import com.yupfeg.remote.tools.handler.GlobalHttpResponseProcessor
+import com.yupfeg.sample.tools.GlobalResponseHandler
 
 class App : BaseApplication(){
 
@@ -11,6 +13,9 @@ class App : BaseApplication(){
         super.onCreate()
         initLoggerConfig()
         initToast()
+
+        //设置全局http响应
+        GlobalHttpResponseProcessor.setResponseHandler(GlobalResponseHandler())
     }
 
     /**
