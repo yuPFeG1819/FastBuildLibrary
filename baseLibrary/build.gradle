@@ -111,17 +111,19 @@ dependencies {
     kapt (AndroidX.Room.compiler)
     //-----------自用封装库----------
     //网络库
-    api(ThirdParty.httpMediator)
+    api(ThirdParty.Self.httpMediator)
     //日志库
-    api(ThirdParty.logger)
+    api(ThirdParty.Self.logger)
     //单次执行LiveData
-    api(ThirdParty.stateLiveData)
+    api(ThirdParty.Self.stateLiveData)
     //resultAPI封装
-    api(ThirdParty.easyResultApi)
+    api(ThirdParty.Self.easyResultApi)
     //启动任务调度器
-    api(ThirdParty.startUpDispatcher)
+    api(ThirdParty.Self.startUpDispatcher)
     //线程库
-    api(ThirdParty.executorProvider)
+    api(ThirdParty.Self.executorProvider)
+    //drawable dsl封装
+    api(ThirdParty.Self.drawableDsl)
     //----------------网络相关-------------
     //支持RxJava3 CallBack处理
     api (Network.retrofitRxJava3Adapter)

@@ -66,6 +66,51 @@ object ThirdParty {
     }
 
     /**
+     * 自用组件库
+     * */
+    object Self{
+        /**
+         * 自用日志输出库
+         * * [Gitee](https://gitee.com/yupfeg/logger)
+         */
+        const val logger = "com.gitee.yupfeg:logger:1.0.4"
+        /**
+         * 自用网络库
+         * * [Gitee](https://gitee.com/yupfeg/http_request_mediator)
+         */
+        const val httpMediator = "com.gitee.yupfeg:http_request_mediator:1.0.6"
+
+        /**
+         * 自用的单次执行LiveData封装
+         * */
+        const val stateLiveData = "com.gitee.yupfeg:state-live-data-wrapper:1.0.1"
+
+        /**
+         * 自用ResultAPI封装库
+         * * [Gitee](https://gitee.com/yupfeg/easy-result-api)
+         * */
+        const val easyResultApi = "com.gitee.yupfeg:easy-result-api:1.1.0"
+
+        /**
+         * 自用的启动任务调度器
+         * * [Gitee](https://gitee.com/yupfeg/StartTaskDispatcher)
+         * */
+        const val startUpDispatcher = "com.github.yuPFeG1819:StartTaskDispatcher:1.0.4"
+
+        /**
+         * 自用线程库
+         * * [Gitee](https://gitee.com/yupfeg/ExecutorProvider)
+         * */
+        const val executorProvider = "com.gitee.yupfeg:ExecutorProvider:1.0.2"
+
+        /**
+         * 自用的Drawable库
+         * * [Gitee](https://gitee.com/yupfeg/CodeDrawableDsl)
+         * */
+        const val drawableDsl = "com.gitee.yupfeg:CodeDrawableDsl:0.1.0"
+    }
+
+    /**
      * 适配了Android 11的toast框架
      * * [GitHub](https://github.com/getActivity/ToastUtils)
      * */
@@ -84,40 +129,6 @@ object ThirdParty {
      * * [Github](https://github.com/airbnb/lottie-android)
      * */
     const val lottie = "com.airbnb.android:lottie:3.4.0"
-
-    /**
-     * 自用日志输出库
-     * * [Gitee](https://gitee.com/yupfeg/logger)
-     */
-    const val logger = "com.gitee.yupfeg:logger:1.0.4"
-    /**
-     * 自用网络库
-     * * [Gitee](https://gitee.com/yupfeg/http_request_mediator)
-     */
-    const val httpMediator = "com.gitee.yupfeg:http_request_mediator:1.0.6"
-
-    /**
-     * 自用的单次执行LiveData封装
-     * */
-    const val stateLiveData = "com.gitee.yupfeg:state-live-data-wrapper:1.0.1"
-
-    /**
-     * 自用ResultAPI封装库
-     * * [Gitee](https://gitee.com/yupfeg/easy-result-api)
-     * */
-    const val easyResultApi = "com.gitee.yupfeg:easy-result-api:1.1.0"
-
-    /**
-     * 自用的启动任务调度器
-     * * [Gitee](https://gitee.com/yupfeg/StartTaskDispatcher)
-     * */
-    const val startUpDispatcher = "com.github.yuPFeG1819:StartTaskDispatcher:1.0.4"
-
-    /**
-     * 自用线程库
-     * * [Gitee](https://gitee.com/yupfeg/ExecutorProvider)
-     * */
-    const val executorProvider = "com.gitee.yupfeg:ExecutorProvider:1.0.2"
 
     /**
      * Mmkv 基于mmap内存映射的key-value储存框架
