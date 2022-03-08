@@ -91,7 +91,7 @@ open class BadgeView(
     /**
      * 当前的标记视图的显示模式
      * */
-    protected var mBadgeMode : BadgeMode = BadgeMode.GRAPH_LIMIT
+    protected var mBadgeMode : BadgeMode = BadgeMode.NUM_LIMIT
 
     /**
      * 标记视图的显示模式
@@ -157,7 +157,9 @@ open class BadgeView(
         val displayMetrics = resources.displayMetrics
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.BadgeView)
 
-        mBadgeNum = typeArray.getInt(R.styleable.BadgeView_badgeNum,0)
+        mBadgeNum = typeArray.getInteger(R.styleable.BadgeView_badgeNum,0)
+        mMaxNum = typeArray.getInteger(R.styleable.BadgeView_badgeMaxNum, DEF_MAX_NUM)
+
         mBadgePadding = typeArray.getDimension(R.styleable.BadgeView_badgePadding,
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEF_PADDING,displayMetrics)
         )
@@ -174,7 +176,7 @@ open class BadgeView(
         )
 
         val bgColor = typeArray.getColor(R.styleable.BadgeView_badgeColor,Color.RED)
-        val strokeColor = typeArray.getColor(R.styleable.BadgeView_badgeStrokeWidth,Color.WHITE)
+        val strokeColor = typeArray.getColor(R.styleable.BadgeView_badgeStrokeColor,Color.WHITE)
         val strokeWidth = typeArray.getDimension(R.styleable.BadgeView_badgeStrokeWidth,0f)
         val specialColor = typeArray.getColor(R.styleable.BadgeView_badgeGraphColor,Color.WHITE)
         mGraphRadius = typeArray.getDimension(
@@ -183,6 +185,13 @@ open class BadgeView(
                 TypedValue.COMPLEX_UNIT_DIP, DEF_GRAPH_RADIUS,displayMetrics
             )
         )
+
+        val modeValue = typeArray.getInt(R.styleable.BadgeView_badgeMode,BadgeMode.NUM_LIMIT.ordinal)
+        mBadgeMode = when(modeValue){
+            BadgeMode.EXACT.ordinal -> BadgeMode.EXACT
+            BadgeMode.GRAPH_LIMIT.ordinal -> BadgeMode.GRAPH_LIMIT
+            else -> BadgeMode.NUM_LIMIT
+        }
 
         typeArray.recycle()
 
@@ -198,7 +207,6 @@ open class BadgeView(
     // </editor-fold>
 
 
-//    @Deprecated("暂未实现绑定视图功能")
 //    fun bindTargetView(view: View){
 //        mTargetView = view
 //
@@ -215,6 +223,126 @@ open class BadgeView(
 //
 //        findBadgeViewCenter()
 //    }
+
+    // <editor-fold desc="设置标记文本内容">
+
+    /**
+     * 设置标记数字
+     * @param num 未读消息数量
+     * */
+    fun setBadgeNum(num : Int){
+        mBadgeNum = if (num <= 0) 0 else num
+        setBadgeTextInternal(mBadgeNum)
+        invalidate()
+    }
+
+    private fun setBadgeTextInternal(num : Int){
+        if (num <= 0){
+            mBadgeText = ""
+            return
+        }
+
+        mBadgeText = when(mBadgeMode){
+            BadgeMode.NUM_LIMIT -> if (num > mMaxNum) "${mMaxNum}+" else "$num"
+            BadgeMode.EXACT,BadgeMode.GRAPH_LIMIT -> "$num"
+        }
+    }
+
+    /**
+     * 设置可显示最大数字
+     * @param num
+     * */
+    fun setMaxNum(num : Int){
+        mMaxNum = num
+        setBadgeTextInternal(mBadgeNum)
+        invalidate()
+    }
+
+    // </editor-fold>
+
+    // <editor-fold desc="设置显示类型">
+
+    /**
+     * 设置标记显示模式
+     * @param mode 显示模式[BadgeMode]
+     * */
+    fun setBadgeMode(mode: BadgeMode){
+        mBadgeMode = mode
+        setBadgeTextInternal(mBadgeNum)
+        invalidate()
+    }
+
+    // </editor-fold>
+
+    // <editor-fold desc="设置背景绘制属性">
+
+    /**
+     * 设置标签背景绘制圆形的最小半径
+     * @param radius 圆形半径
+     * */
+    fun setMinRadius(radius: Int){
+        mMinRadius = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,radius.toFloat(),resources.displayMetrics
+        )
+    }
+
+    /**
+     * 设置标签背景颜色
+     * @param color 背景颜色int值
+     * */
+    fun setBadgeColor(@ColorInt color : Int){
+        mBgPaint.color = color
+        invalidate()
+    }
+
+    /**
+     * 设置背景绘制额外间距
+     * @param padding 额外间距，作用于四个顶边，单位dp
+     * */
+    fun setBadgePadding(padding : Float){
+        mBadgePadding = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,padding,resources.displayMetrics
+        )
+        invalidate()
+    }
+
+    /**
+     * 设置背景描边
+     * @param size 描边宽度，单位dp
+     * @param color 描边颜色int值
+     * */
+    fun setBadgeStroke(size : Int,@ColorInt color : Int){
+        mStrokePaint.strokeWidth = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,size.toFloat(),resources.displayMetrics
+        )
+        mStrokePaint.color = color
+        invalidate()
+    }
+
+    /**
+     * 设置图形限制模式的圆形半径
+     * @param radius 圆形半径，单位dp
+     * */
+    fun setGraphModeCircleRadius(radius : Int){
+        mGraphRadius = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,radius.toFloat(),resources.displayMetrics
+        )
+        if (!isShowGraphMode()) return
+        invalidate()
+    }
+
+    /**
+     * 设置图形限制模式的图形颜色
+     * @param color 图形颜色
+     * */
+    fun setGraphModeColor(@ColorInt color: Int){
+        mGraphPaint.color = color
+        if (!isShowGraphMode()) return
+        invalidate()
+    }
+
+    // </editor-fold>
+
 
     // <editor-fold desc="测量尺寸">
 
@@ -233,7 +361,7 @@ open class BadgeView(
 //        val locations = IntArray(2)
 //        val rectWidth = max(mBadgeTextRectF.width(),mBackgroundRectF.height())
 
-        //TODO 目标视图坐标的右上角，作为标签视图的中心位置
+        //TODO 计算绑定目标视图坐标的右上角，作为标签视图的中心位置
         //计算中心点位置
         mBadgeCenterPointF.x = mBadgeWidth/2 + mCenterOffsetX
         mBadgeCenterPointF.y = mBadgeHeight/2 + mCenterOffsetY
@@ -250,7 +378,9 @@ open class BadgeView(
             mBadgeTextRectF.bottom = fontMetrics.bottom - fontMetrics.top
         }?:run {
             //如果内容为空，则设置默认圆点尺寸
-            val defRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5f,resources.displayMetrics)
+            val defRadius = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,5f,resources.displayMetrics
+            )
             mBadgeTextRectF.right = defRadius
             mBadgeTextRectF.bottom = defRadius
         }
@@ -378,123 +508,6 @@ open class BadgeView(
      * */
     protected open fun isShowGraphMode() : Boolean{
         return mBadgeMode == BadgeMode.GRAPH_LIMIT && mBadgeNum > mMaxNum
-    }
-
-    // </editor-fold>
-
-    // <editor-fold desc="设置标记文本内容">
-
-    /**
-     * 设置标记数字
-     * @param num 未读消息数量
-     * */
-    fun setBadgeNum(num : Int){
-        mBadgeNum = if (num <= 0) 0 else num
-        setBadgeTextInternal(mBadgeNum)
-        invalidate()
-    }
-
-    private fun setBadgeTextInternal(num : Int){
-        if (num <= 0){
-            mBadgeText = ""
-            return
-        }
-
-        mBadgeText = when(mBadgeMode){
-            BadgeMode.NUM_LIMIT -> if (num > mMaxNum) "${mMaxNum}+" else "$num"
-            BadgeMode.EXACT,BadgeMode.GRAPH_LIMIT -> "$num"
-        }
-    }
-
-    /**
-     * 设置可显示最大数字
-     * @param num
-     * */
-    fun setMaxNum(num : Int){
-        mMaxNum = num
-        setBadgeTextInternal(mBadgeNum)
-        invalidate()
-    }
-
-    /**
-     * 设置标记显示模式
-     * @param mode 显示模式[BadgeMode]
-     * */
-    fun setBadgeMode(mode: BadgeMode){
-        mBadgeMode = mode
-        setBadgeTextInternal(mBadgeNum)
-        invalidate()
-    }
-
-    // </editor-fold>
-
-    // <editor-fold desc="设置显示类型">
-
-    // <editor-fold desc="设置背景绘制属性">
-
-    /**
-     * 设置标签背景绘制圆形的最小半径
-     * @param radius 圆形半径
-     * */
-    fun setMinRadius(radius: Int){
-        mMinRadius = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,radius.toFloat(),resources.displayMetrics
-        )
-    }
-
-    /**
-     * 设置标签背景颜色
-     * @param color 背景颜色int值
-     * */
-    fun setBadgeColor(@ColorInt color : Int){
-        mBgPaint.color = color
-        invalidate()
-    }
-
-    /**
-     * 设置背景绘制额外间距
-     * @param padding 额外间距，作用于四个顶边，单位dp
-     * */
-    fun setBadgePadding(padding : Float){
-        mBadgePadding = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,padding,resources.displayMetrics
-        )
-        invalidate()
-    }
-
-    /**
-     * 设置背景描边
-     * @param size 描边宽度，单位dp
-     * @param color 描边颜色int值
-     * */
-    fun setBadgeStroke(size : Int,@ColorInt color : Int){
-        mStrokePaint.strokeWidth = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,size.toFloat(),resources.displayMetrics
-        )
-        mStrokePaint.color = color
-        invalidate()
-    }
-
-    /**
-     * 设置图形限制模式的圆形半径
-     * @param radius 圆形半径，单位dp
-     * */
-    fun setGraphModeCircleRadius(radius : Int){
-        mGraphRadius = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,radius.toFloat(),resources.displayMetrics
-        )
-        if (!isShowGraphMode()) return
-        invalidate()
-    }
-
-    /**
-     * 设置图形限制模式的图形颜色
-     * @param color 图形颜色
-     * */
-    fun setGraphModeColor(@ColorInt color: Int){
-        mGraphPaint.color = color
-        if (!isShowGraphMode()) return
-        invalidate()
     }
 
     // </editor-fold>

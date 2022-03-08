@@ -1,4 +1,4 @@
-package com.yupfeg.base.widget.slideview
+package com.yupfeg.base.widget.indicator
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -18,7 +18,7 @@ import com.yupfeg.logger.ext.logd
  * @author yuPFeG
  * @date 2021/05/11
  */
-class HorizontalSlideView : View{
+class HorizontalIndicatorView : View{
 
     private var mViewWidth : Int = 0
     private var mViewHeight : Int = 0
@@ -35,7 +35,7 @@ class HorizontalSlideView : View{
      * 默认比例为1
      * */
     @Suppress("MemberVisibilityCanBePrivate")
-    var indicatorRatio : Float = 1f
+    var indicatorRatio : Float = 0.5f
         set(value){
             field = value
             updateIndicatorWidth()
@@ -96,13 +96,13 @@ class HorizontalSlideView : View{
     @SuppressLint("ResourceType")
     private fun AttributeSet.getCustomAttrValue(){
         val typedArray = context.obtainStyledAttributes(
-            this, R.styleable.HorizontalSlideView
+            this, R.styleable.HorizontalIndicatorView
         )
         mIndicatorColor = typedArray.getColor(
-            R.styleable.HorizontalSlideView_indicatorColor,Color.TRANSPARENT
+            R.styleable.HorizontalIndicatorView_indicatorColor,Color.TRANSPARENT
         )
         mSliderBackgroundColor = typedArray.getColor(
-            R.styleable.HorizontalSlideView_sliderBackgroundColor,Color.TRANSPARENT
+            R.styleable.HorizontalIndicatorView_sliderBackgroundColor,Color.TRANSPARENT
         )
         typedArray.recycle()
     }
@@ -126,12 +126,10 @@ class HorizontalSlideView : View{
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        logd("水平滑动指示器的onDraw绘制，指示器颜色：${mIndicatorPaint.color}")
         mBackgroundRect?.also { rectF->
             canvas?.drawRoundRect(rectF,mSliderRoundSize,mSliderRoundSize,mBackgroundPaint)
         }
         mIndicatorRect?.also { rectF ->
-            logd("绘制指示器Rect : $rectF")
             canvas?.drawRoundRect(rectF,mSliderRoundSize,mSliderRoundSize,mIndicatorPaint)
         }
     }
@@ -147,6 +145,7 @@ class HorizontalSlideView : View{
             //最大可显示水平方向的尺寸
             val displayWidth = recyclerView.computeHorizontalScrollExtent()
             if (scrollRange == 0 || displayWidth == 0) return@addOnLayoutChangeListener
+            //TODO 需要设置最大占用比例
             indicatorRatio = displayWidth * 1f / scrollRange
         }
 

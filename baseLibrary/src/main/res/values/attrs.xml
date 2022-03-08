@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    横向滑动指示器View的自定义属性-->
-    <declare-styleable name="HorizontalSlideView">
+    <declare-styleable name="HorizontalIndicatorView">
         <!-- 滑块指示器颜色 -->
         <attr name="indicatorColor" format="color|reference"/>
         <!-- 滚动条背景颜色-->
@@ -49,8 +49,10 @@
 
     <!-- 红点标记视图的自定义属性 -->
     <declare-styleable name="BadgeView">
-        <!-- 红点标记数量 -->
+        <!-- 红点标记数字 -->
         <attr name="badgeNum" format="integer"/>
+        <!-- 红点标记显示的最大数字，默认为99-->
+        <attr name="badgeMaxNum" format="integer"/>
 
         <!-- 红点标记的额外间距-->
         <attr name="badgePadding" format="dimension"/>
@@ -60,6 +62,16 @@
         <attr name="badgeOffsetX" format="dimension"/>
         <!-- 红点标记视图的中心Y轴偏移量-->
         <attr name="badgeOffsetY" format="dimension"/>
+
+        <!-- 红点标记视图的显示模式-->
+        <attr name="badgeMode">
+            <!-- 默认值，数字限制模式，超出最大数字限制，在数字后面绘制`+`号-->
+            <enum name="numLimit" value="0"/>
+            <!-- 精确模式，完全显示所有数字-->
+            <enum name="exact" value="1"/>
+            <!-- 图形限制模式，超出最大数字限制，会在标记视图内特定图形，不显示数字，比如`...`图形 -->
+            <enum name="graphLimit" value="2"/>
+        </attr>
 
         <!-- 红点标记视图的文本颜色-->
         <attr name="badgeTextColor" format="color|reference"/>
@@ -77,6 +89,7 @@
         <attr name="badgeGraphRadius" format="dimension"/>
     </declare-styleable>
 
+    <!--    九宫格布局的自定义属性-->
     <declare-styleable name="NineGridLayout">
         <!-- item间距 -->
         <attr name="gridSpace" format="dimension"/>
