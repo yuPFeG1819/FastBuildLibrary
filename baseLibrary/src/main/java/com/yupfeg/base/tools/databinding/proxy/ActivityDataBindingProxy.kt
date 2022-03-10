@@ -1,4 +1,4 @@
-package com.yupfeg.base.view.activity
+package com.yupfeg.base.tools.databinding.proxy
 
 import androidx.activity.ComponentActivity
 import androidx.annotation.LayoutRes
@@ -14,28 +14,27 @@ import kotlin.reflect.KProperty
  * @param T layout对应的DataBinding自动生成类
  * @param layoutId 布局id
  */
+@Suppress("unused")
 inline fun <reified T : ViewDataBinding> ComponentActivity.bindingActivity(
-    @LayoutRes layoutId : Int
+    @LayoutRes layoutId : Int,
 ) = ActivityDataBindingDelegate<T>(layoutId,this.lifecycle)
 
 /**
- * [ComponentActivity]的DataBinding委托类
+ * [ComponentActivity]获取`DataBinding`实例的属性委托类
  * @param layoutId 布局Id
  * @param lifecycle [ComponentActivity]的lifecycle，仅用于订阅生命周期
- * @param endLifecycle 销毁binding对象的生命周期
  * @author yuPFeG
  * @date 2021/03/09
  */
 class ActivityDataBindingDelegate<T : ViewDataBinding>(
     @LayoutRes val layoutId : Int,
     lifecycle : Lifecycle,
-    endLifecycle : Lifecycle.State = Lifecycle.State.DESTROYED
 ) : ReadOnlyProperty<ComponentActivity,T>{
 
     private var mViewBinding : T? = null
 
     init {
-        lifecycle.addObserver(LifecycleEndObserver(endLifecycle){
+        lifecycle.addObserver(LifecycleEndObserver(Lifecycle.State.DESTROYED){
             //在Lifecycle.State.DESTROYED 将会解绑并销毁binding，防止内存泄漏
             mViewBinding?.unbind()
             mViewBinding = null
