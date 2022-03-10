@@ -3,10 +3,10 @@ package com.yupfeg.sample.ui.list
 import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.yupfeg.base.tools.databinding.proxy.bindingActivity
 import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.tools.window.fitImmersiveStatusBar
 import com.yupfeg.base.view.activity.BaseActivity
-import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.base.widget.recyclerview.RecyclerListAdapter
 import com.yupfeg.sample.R

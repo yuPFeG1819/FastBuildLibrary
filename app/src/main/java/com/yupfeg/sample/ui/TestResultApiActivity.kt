@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.core.os.bundleOf
+import com.yupfeg.base.tools.databinding.proxy.bindingActivity
 import com.yupfeg.base.tools.pool.WebViewPool
 import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.view.activity.BaseActivity
-import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.sample.R
 import com.yupfeg.sample.databinding.ActivityTestResultApiBinding

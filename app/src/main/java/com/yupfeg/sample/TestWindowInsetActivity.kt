@@ -6,9 +6,9 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
 import androidx.lifecycle.LiveData
+import com.yupfeg.base.tools.databinding.proxy.bindingActivity
 import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.tools.window.*
-import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.base.widget.ext.DSLTextWatcher
 import com.yupfeg.base.widget.ext.hideKeyboard
