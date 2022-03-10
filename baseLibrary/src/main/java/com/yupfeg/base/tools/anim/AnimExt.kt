@@ -72,7 +72,7 @@ fun AnimatorSet.playTogether(vararg wrapper: AnimatorDsl) {
     if (wrapper.isNullOrEmpty()) return
     val builder : AnimatorSet.Builder = play(wrapper[0])
     for (index in 1..wrapper.lastIndex){
-        builder.with(wrapper[index])
+        builder with wrapper[index]
     }
 }
 
@@ -89,13 +89,14 @@ fun AnimatorSet.playSequentially(vararg wrapper: AnimatorDsl){
     }
 
     for (i in 0..wrapper.lastIndex){
-        play(wrapper[i]).before(wrapper[i+1])
+        play(wrapper[i]) before wrapper[i+1]
     }
 }
 
 /**
- * [AnimatorSet]的拓展函数，构建动画依赖序列
+ * [AnimatorSet]的拓展函数，开启构建动画依赖序列，将[wrapper]的动画对象作为锚点
  * @param wrapper 锚点动画，[AnimatorDsl]属性动画的包装类
+ * @return [AnimatorSet.Builder]，返回动画依赖关系
  * */
 @Suppress("unused")
 fun AnimatorSet.play(wrapper: AnimatorDsl) : AnimatorSet.Builder{
