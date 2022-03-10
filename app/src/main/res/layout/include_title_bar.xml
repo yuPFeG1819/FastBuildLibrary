@@ -41,6 +41,18 @@
             android:layout_marginBottom="15dp"
             />
 
+        <androidx.constraintlayout.helper.widget.Layer
+            android:id="@+id/layer_test_window_inset_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_title_bar_bg"
+            app:layout_constraintBottom_toBottomOf="@id/view_title_bar_bg"
+            app:constraint_referenced_ids="iv_title_bar_back"
+            android:padding="15dp"
+            onViewClick="@{()->viewConfig.back()}"
+            />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_title_bar_back"
             android:layout_width="25dp"
@@ -51,7 +63,6 @@
             app:layout_constraintBottom_toBottomOf="@id/view_title_bar_bg"
             android:layout_marginBottom="15dp"
             android:layout_marginStart="15dp"
-            onViewClick="@{()->viewConfig.back()}"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
