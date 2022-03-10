@@ -2,6 +2,7 @@ package com.yupfeg.sample.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.TypedArray
@@ -10,15 +11,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.*
-import androidx.lifecycle.*
+import androidx.lifecycle.lifecycleScope
 import com.yupfeg.base.tools.ContactsTools
+import com.yupfeg.base.tools.databinding.proxy.bindingActivity
+import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.tools.file.getUriFromFile
 import com.yupfeg.base.tools.image.ImageLoader
-import com.yupfeg.base.tools.ext.showShortToast
-import com.yupfeg.base.tools.window.*
+import com.yupfeg.base.tools.window.fitImmersiveStatusBar
+import com.yupfeg.base.tools.window.fitToSystemStatusBar
+import com.yupfeg.base.tools.window.getStatusBarHeight
+import com.yupfeg.base.tools.window.isNavigationBarVisible
 import com.yupfeg.base.view.activity.BaseActivity
-import com.yupfeg.base.view.activity.bindingActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.logger.ext.logd
 import com.yupfeg.result.*
@@ -29,11 +32,8 @@ import com.yupfeg.sample.TestWindowInsetActivity
 import com.yupfeg.sample.databinding.ActivityMainBinding
 import com.yupfeg.sample.ui.list.TestListActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
-import kotlin.coroutines.resume
 
 class MainActivity : BaseActivity() {
 
@@ -71,6 +71,10 @@ class MainActivity : BaseActivity() {
                 tintColor = getThemeColor(R.attr.colorPrimary)
             )
         }
+
+    private val mTestDialog : Dialog by lazy(LazyThreadSafetyMode.NONE){
+        TestBindingDialog(this,this.lifecycle)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -209,12 +213,12 @@ class MainActivity : BaseActivity() {
             performSelectImage()
         }
 
-//        /**
-//         * 测试嵌套滑动
-//         * */
-//        fun naviToTestNestedScroll(){
-//            startActivity(Intent(this@MainActivity,TestCoordinatorActivity::class.java))
-//        }
+        /**
+         * 测试嵌套滑动
+         * */
+        fun naviToTestNestedScroll(){
+            startActivity(Intent(this@MainActivity,TestNestedScrollActivity::class.java))
+        }
 
         /**测试自定义View*/
         fun naviToCustomView(){
@@ -224,6 +228,12 @@ class MainActivity : BaseActivity() {
         /**跳转测试列表页*/
         fun naviTestList(){
             startActivity(Intent(this@MainActivity,TestListActivity::class.java))
+        }
+
+        fun showTestDialog(){
+            if (!mTestDialog.isShowing){
+                mTestDialog.show()
+            }
         }
     }
 

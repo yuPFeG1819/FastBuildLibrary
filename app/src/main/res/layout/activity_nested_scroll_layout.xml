@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <com.yupfeg.sample.widget.NestedScrollLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        >
+
+        <TextView
+            android:id="@+id/tv_nested_scroll_head"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:text="HeadView"
+            android:textSize="30sp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@android:color/holo_red_light"
+            app:layout_constraintTop_toTopOf="parent"
+            isFitToStatusBar="@{true}"
+            />
+
+        <TextView
+            android:id="@+id/tv_nested_scroll_tab"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="TabLayout"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:background="@android:color/holo_blue_dark"
+            app:layout_constraintTop_toBottomOf="@id/tv_nested_scroll_head"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager_nested_scroll_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nested_scroll_tab"
+            />
+
+    </com.yupfeg.sample.widget.NestedScrollLayout>
+</layout>

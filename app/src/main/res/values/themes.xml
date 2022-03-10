@@ -15,4 +15,14 @@
         <item name="android:navigationBarColor">#ffFFFFFF</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="DialogStyle" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--透明灰色的覆盖层 backgroundDimEnabled = true / false无覆盖层-->
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 </resources>

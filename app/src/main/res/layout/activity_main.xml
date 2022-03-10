@@ -43,105 +43,118 @@
                 />
         </FrameLayout>
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".ui.MainActivity"
-            android:orientation="vertical"
-            >
-            <Button
-                android:id="@+id/btn_main_test_system_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="测试请求权限"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.testRequestPermission()}"
-                />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="测试ResultAPI跳转"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.testResultApiStartActivity()}"
-                />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="测试WindowInset"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.naviToTestWindowInset()}"
-                />
-            <Button
-                android:id="@+id/btn_main_take_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="跳转系统相机"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.takeSystemPicture()}"
-                />
+            android:layout_height="wrap_content">
+            <LinearLayout
 
-            <Button
-                android:id="@+id/btn_main_pick_content"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="跳转Pick Content"
-                android:textAllCaps="false"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.pickGallery()}"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".ui.MainActivity"
+                android:orientation="vertical"
+                >
+                <Button
+                    android:id="@+id/btn_main_test_system_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="测试请求权限"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.testRequestPermission()}"
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="测试ResultAPI跳转"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.testResultApiStartActivity()}"
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="测试WindowInset"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.naviToTestWindowInset()}"
+                    />
+                <Button
+                    android:id="@+id/btn_main_take_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="跳转系统相机"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.takeSystemPicture()}"
+                    />
 
-            <Button
-                android:id="@+id/btn_main_pick_contact"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="选择联系人"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.pickContact()}"
-                />
+                <Button
+                    android:id="@+id/btn_main_pick_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="跳转Pick Content"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.pickGallery()}"
+                    />
 
-            <Button
-                android:id="@+id/btn_main_get_image_content"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Get Content选择图片"
-                android:textAllCaps="false"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.selectImageFromGallery()}"
-                />
+                <Button
+                    android:id="@+id/btn_main_pick_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="选择联系人"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.pickContact()}"
+                    />
 
-<!--            <Button-->
-<!--                android:id="@+id/btn_main_test_nested_scroll"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:text="测试嵌套滑动"-->
-<!--                android:textAllCaps="false"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                onViewClick="@{()->config.naviToTestNestedScroll()}"-->
-<!--                />-->
+                <Button
+                    android:id="@+id/btn_main_get_image_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Get Content选择图片"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.selectImageFromGallery()}"
+                    />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="200dp"
-                android:layout_height="45dp"
-                android:text="测试自定义View"
-                tools:textColor="@color/gray_dc"
-                android:textColor="@{viewModel.testTextColorState}"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                android:background="@{viewModel.testDrawableBg}"
-                onViewClick="@{()->config.naviToCustomView()}"
-                android:layout_marginStart="15dp"
-                />
+                <Button
+                    android:id="@+id/btn_main_test_nested_scroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="测试嵌套滑动"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.naviToTestNestedScroll()}"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="200dp"
+                    android:layout_height="45dp"
+                    android:text="测试自定义View"
+                    tools:textColor="@color/gray_dc"
+                    android:textColor="@{viewModel.testTextColorState}"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@{viewModel.testDrawableBg}"
+                    onViewClick="@{()->config.naviToCustomView()}"
+                    android:layout_marginStart="15dp"
+                    />
 
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="测试列表页"
-                android:layout_marginTop="10dp"
-                onViewClick="@{()->config.naviTestList()}"
-                />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="测试列表页"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.naviTestList()}"
+                    />
 
-        </LinearLayout>
-        
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="测试Dialog"
+                    android:layout_marginTop="10dp"
+                    onViewClick="@{()->config.showTestDialog()}"
+                    />
+
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 </layout>
