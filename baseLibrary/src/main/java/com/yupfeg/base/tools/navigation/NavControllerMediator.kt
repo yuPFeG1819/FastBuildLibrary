@@ -9,7 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import com.yupfeg.base.tools.lifecycle.LifecycleEndObserver
+import com.yupfeg.base.tools.lifecycle.AutoLifecycleStateObserver
 import java.lang.IllegalArgumentException
 import kotlin.reflect.KProperty
 
@@ -34,7 +34,7 @@ class NavControllerMediator(lifecycle: Lifecycle) {
     }
 
     init {
-        lifecycle.addObserver(LifecycleEndObserver(Lifecycle.State.DESTROYED){
+        lifecycle.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
             //在Lifecycle.State.DESTROYED 将会销毁Nav引用的View对象，防止内存泄漏
             viewInstance = null
             mInstance = null

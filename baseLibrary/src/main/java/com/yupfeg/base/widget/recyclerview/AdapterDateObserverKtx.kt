@@ -3,7 +3,7 @@ package com.yupfeg.base.widget.recyclerview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.yupfeg.base.tools.lifecycle.LifecycleEndObserver
+import com.yupfeg.base.tools.lifecycle.AutoLifecycleStateObserver
 import java.lang.NullPointerException
 
 /**
@@ -62,7 +62,7 @@ fun RecyclerView.observeAdapterItemChange(
     this.adapter?:throw NullPointerException("RecyclerView needs set the adapter")
 
     this.adapter?.registerAdapterDataObserver(dataObserver)
-    owner.lifecycle.addObserver(LifecycleEndObserver(endState = Lifecycle.State.DESTROYED){
+    owner.lifecycle.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
         //在视图声明周期结束时，移除适配器数据变化订阅
         this.adapter?.unregisterAdapterDataObserver(dataObserver)
     })
