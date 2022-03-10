@@ -5,7 +5,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
-import com.yupfeg.base.tools.lifecycle.LifecycleEndObserver
+import com.yupfeg.base.tools.lifecycle.AutoLifecycleStateObserver
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -34,7 +34,7 @@ class ActivityDataBindingDelegate<T : ViewDataBinding>(
     private var mViewBinding : T? = null
 
     init {
-        lifecycle.addObserver(LifecycleEndObserver(Lifecycle.State.DESTROYED){
+        lifecycle.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
             //在Lifecycle.State.DESTROYED 将会解绑并销毁binding，防止内存泄漏
             mViewBinding?.unbind()
             mViewBinding = null

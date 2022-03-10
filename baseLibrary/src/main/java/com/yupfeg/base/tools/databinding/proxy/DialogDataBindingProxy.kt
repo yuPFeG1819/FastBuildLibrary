@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import com.yupfeg.base.tools.lifecycle.LifecycleEndObserver
+import com.yupfeg.base.tools.lifecycle.AutoLifecycleStateObserver
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -33,7 +33,7 @@ class DialogDataBindingProxy<T : ViewDataBinding>(
     private var mDataBinding : T? = null
 
     init {
-        lifecycle.addObserver(LifecycleEndObserver(Lifecycle.State.DESTROYED){
+        lifecycle.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
             //在生命周期结束时，回收binding对象，防止内存泄漏
             mDataBinding?.unbind()
             mDataBinding = null
