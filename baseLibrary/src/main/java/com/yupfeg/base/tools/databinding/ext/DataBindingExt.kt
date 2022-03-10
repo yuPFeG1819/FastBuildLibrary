@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import java.lang.reflect.Method
 
 /**
  * 创建layoutId对应的DataBinding类实例
@@ -29,4 +30,22 @@ inline fun <reified T : ViewDataBinding> requireBindingInflate(
 @Suppress("unused")
 inline fun <reified T : ViewDataBinding> requireBindingView(view: View): T =
     requireNotNull(DataBindingUtil.bind(view)) { "cannot find the matched layout." }
+
+const val DATA_BINDING_INFLATE_NAME = "inflate"
+const val DATA_BINDING_BIND_NAME = "bind"
+
+/**
+ * 反射获取自动生成DataBinding类内部的`inflate`方法信息
+ * - 在build/generated/data_binding_base_class_source_out目录下查看对应生成的文件
+ * */
+fun <T : ViewDataBinding> Class<T>.getInflateMethod() : Method
+    = this.getMethod(DATA_BINDING_INFLATE_NAME,LayoutInflater::class.java)
+
+/**
+ * 反射获取自动生成DataBinding类内部的`bind`方法信息
+ * - 在build/generated/data_binding_base_class_source_out目录下查看对应生成的文件
+ * */
+@Suppress("unused")
+fun <T : ViewDataBinding> Class<T>.getBindMethod() : Method
+    = this.getMethod(DATA_BINDING_BIND_NAME,View::class.java)
 
