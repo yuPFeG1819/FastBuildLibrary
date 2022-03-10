@@ -5,7 +5,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.yupfeg.base.tools.databinding.ext.getInflateMethod
-import com.yupfeg.base.tools.lifecycle.LifecycleEndObserver
+import com.yupfeg.base.tools.lifecycle.AutoLifecycleEventObserver
+import com.yupfeg.base.tools.lifecycle.AutoLifecycleStateObserver
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -15,19 +16,19 @@ import kotlin.reflect.KProperty
  */
 @Suppress("unused")
 inline fun <reified T : ViewDataBinding> Fragment.bindingFragment()
-        = FragmentDataBindingProxy(T::class.java,this.viewLifecycleOwner.lifecycle)
+        = FragmentDataBindingProxy(T::class.java,this)
 
 /**
  * [Fragment]获取`DataBinding`实例的属性委托类
  * * 使用by关键字委托获取`DataBinding`实例
  * @param clazz DataBinding类class
- * @param lifecycle 绑定[Fragment]的[Lifecycle]，仅用于订阅生命周期，注意使用[Fragment.getViewLifecycleOwner]
+ * @param fragment 绑定的[Fragment]的[Lifecycle]，仅用于订阅生命周期，注意使用[Fragment.getViewLifecycleOwner]
  * @author yuPFeG
  * @date 2021/03/09
  */
 class FragmentDataBindingProxy<out T : ViewDataBinding>(
     clazz: Class<T>,
-    lifecycle : Lifecycle,
+    fragment: Fragment
 ) : ReadOnlyProperty<Fragment,T>{
 
     private var mViewBinding: T? = null
@@ -38,10 +39,18 @@ class FragmentDataBindingProxy<out T : ViewDataBinding>(
     private val mBindInflateMethod = clazz.getInflateMethod()
 
     init {
-        lifecycle.addObserver(LifecycleEndObserver(Lifecycle.State.DESTROYED){
-            //在生命周期结束时,解绑并销毁binding数据，防止内存泄漏
-            mViewBinding?.unbind()
-            mViewBinding = null
+        fragment.lifecycle.addObserver(AutoLifecycleEventObserver(Lifecycle.Event.ON_CREATE){
+            //Fragment与其中的View生命周期可能存在不一致情况，需要分开进行订阅，否则可能导致DataBinding为空
+            //在onCreate时添加订阅ViewLifecycleOwner的生命周期，
+            fragment.viewLifecycleOwnerLiveData.observe(fragment){ viewLifecycleOwner->
+                //在viewLifecycleOwner有值时添加订阅View的生命周期
+                viewLifecycleOwner?.lifecycle?.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
+                    //在View生命周期结束时,解绑并销毁binding数据，防止内存泄漏
+                    mViewBinding?.unbind()
+                    mViewBinding = null
+                })
+            }
+
         })
     }
 
@@ -55,7 +64,7 @@ class FragmentDataBindingProxy<out T : ViewDataBinding>(
         val dataBinding = if (fragment.view == null){
             //在onCreateView内调用，此时view还没有赋值，
             //反射方法进行构建DataBinding类实例
-            mBindInflateMethod.invoke(fragment.layoutInflater) as? T
+            mBindInflateMethod.invoke(null,fragment.layoutInflater) as? T
         }else{
             //在onViewCreated内或之后调用，view已赋值
 //            (mBindViewMethod.invoke(null,fragment.requireView()) as T)
