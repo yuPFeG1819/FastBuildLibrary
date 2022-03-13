@@ -18,12 +18,12 @@ import kotlinx.coroutines.launch
  * @author yuPFeG
  * @date
  */
-class TestListViewModel(private val dataRepo : DataRepository = DataRepository()) : BaseViewModel(){
+class TestListViewModel(dataRepo : DataRepository = DataRepository()) : BaseViewModel(){
 
     val titleName : LiveData<String>
         get() = mTitleName
 
-    private val mTitleName = MutableLiveData<String>("测试列表")
+    private val mTitleName = MutableLiveData("测试列表")
 
     val articleUseCase = WanAndroidArticleUseCase(dataRepo)
 
@@ -41,10 +41,12 @@ class TestListViewModel(private val dataRepo : DataRepository = DataRepository()
                     content = "测试阿斯拉达就按死了控件的拉克丝就打了卡时间打老实交代阿临时卡接单啦开始减肥坷垃神教阿赫反馈路径安徽的是${i}"
                     time = "10${i}分钟前"
                     userName = "测试标题文办名称${i}"
-                    imgDates = if (i > 0 && i % 2 == 0) List(15){ "测试222${it}${i}" }
-                    else List(i+1) {"1222${i}"}
-                    singleImgWidth = 1000
-                    singleImgHeight = 800
+                    imgDates = if (i == 0 ) List(1){ "测试222${it}${i}" }
+                    else List(i+1) {"测试1222${i}"}
+                    if (imgDates?.size?:0 == 1){
+                        singleImgWidth = 1000
+                        singleImgHeight = 800
+                    }
                 }
                 list.add(item)
             }

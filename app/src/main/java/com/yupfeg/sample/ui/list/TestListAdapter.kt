@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.widget.grid.BaseNineGridAdapter
+import com.yupfeg.base.widget.grid.NineGridLayout
 import com.yupfeg.base.widget.recyclerview.RecyclerListAdapter
 import com.yupfeg.base.widget.recyclerview.strategy.BaseItemStrategy
 import com.yupfeg.base.widget.recyclerview.viewHolder.BaseBindingViewHolder
@@ -89,8 +91,13 @@ class TestListItemViewHolder(
     private val mGridAdapter = ImgNineGridAdapter()
 
     init{
-
         mBinding.nineGridLayoutTestListItem.setViewAdapter(mGridAdapter)
+        mBinding.nineGridLayoutTestListItem.setOnItemClickListener(object : NineGridLayout.OnItemClickListener{
+            override fun onItemClick(view: View, position: Int) {
+                val viewHolderIndex = this@TestListItemViewHolder.layoutPosition
+                showShortToast("点击当前 itemIndex : $viewHolderIndex - $position 的item")
+            }
+        })
         mBinding.onItemClickListener = onItemCLickListener
     }
 
