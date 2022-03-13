@@ -35,6 +35,18 @@ interface ImageLoadable {
     )
 
     /**
+     * 暂停指定作用域范围内的图片加载请求
+     * @param context [Context]生命周期作用域
+     * */
+    fun pauseRequest(context: Context)
+
+    /**
+     * 恢复指定作用域范围的图片加载请求
+     * @param context [Context]生命周期作用域
+     */
+    fun resumeRequest(context: Context)
+
+    /**
      * 清理指定View的bitmap缓存
      * @param imageView
      * */

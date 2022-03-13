@@ -38,6 +38,7 @@ object ImageLoader {
      * @param loadStartAction 加载前的显示回调
      * @param loadErrorAction 加载失败的显示回调
      */
+    @JvmStatic
     fun loadBitmap(
         context: Context,
         config: ImageLoadOptions.() -> Unit,
@@ -54,11 +55,22 @@ object ImageLoader {
         )
     }
 
+    @JvmStatic
+    fun pauseRequest(context: Context){
+        imageLoadHelper.pauseRequest(context)
+    }
+
+    @JvmStatic
+    fun resumeRequest(context: Context){
+        imageLoadHelper.resumeRequest(context)
+    }
+
     /**
      * 清理指定View的Bitmap
      * @param imageView 指定ImageView
      */
     @Suppress("unused")
+    @JvmStatic
     fun clearBitmapCacheOnView(imageView: ImageView) {
         imageLoadHelper.cleanTargetViewBitmapCache(imageView)
     }
@@ -68,6 +80,7 @@ object ImageLoader {
      * * 最好在子线程执行，耗时操作
      * @param context
      * */
+    @JvmStatic
     fun cleanAllCache(context: Context){
         imageLoadHelper.cleanAllCache(context)
     }
@@ -75,8 +88,8 @@ object ImageLoader {
     /**
      * 更新系统相册的显示
      */
-
     @Suppress("unused")
+    @JvmStatic
     fun updateSystemGallery(context: Context, imgFilePath: String) {
         scannerByMedia(context, imgFilePath)
     }

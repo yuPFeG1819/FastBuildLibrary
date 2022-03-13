@@ -67,17 +67,18 @@ class GlideLoadHelper : ImageLoadable {
         }
     }
 
-    /**
-     * 清理指定View的bitmap缓存
-     * @param imageView
-     * */
+    override fun pauseRequest(context: Context) {
+        GlideApp.with(context).pauseRequests()
+    }
+
+    override fun resumeRequest(context: Context) {
+        Glide.with(context).resumeRequests()
+    }
+
     override fun cleanTargetViewBitmapCache(imageView: ImageView) {
         Glide.with(imageView.context).clear(imageView)
     }
 
-    /**
-     * 清理所有图片缓存
-     * */
     override fun cleanAllCache(context: Context) {
         Glide.get(context).clearMemory()
         Glide.get(context).clearDiskCache()
