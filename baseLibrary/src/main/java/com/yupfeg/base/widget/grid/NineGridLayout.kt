@@ -72,6 +72,8 @@ open class NineGridLayout(
      * */
     var isShowMask : Boolean = true
 
+    private var mOnItemClickListener : OnItemClickListener? = null
+
     constructor(context: Context) : this(context,null)
 
     constructor(context: Context,attrs: AttributeSet?) : this(context,attrs,0)
@@ -166,6 +168,13 @@ open class NineGridLayout(
         invalidate()
     }
 
+    /**
+     * 设置item视图的点击事件
+     * */
+    fun setOnItemClickListener(listener: OnItemClickListener){
+        this.mOnItemClickListener = listener
+    }
+
     // <editor-fold desc="测量尺寸">
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -247,6 +256,10 @@ open class NineGridLayout(
     // <editor-fold desc="布局位置">
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        onLayoutChildren()
+    }
+
+    open fun onLayoutChildren(){
         if (mRowNum == 0 || mColumnNum == 0) return
         var usedLeft = paddingLeft
         var usedTop = paddingTop
@@ -273,7 +286,15 @@ open class NineGridLayout(
                 //叠加已用高度
                 usedTop += mChildViewHeight + mChildViewSpace
             }
+            //设置防抖点击事件
+            childView.setOnClickListener(SingleClickListenerWrapper {
+                dispatchChildrenClick(childView,index)
+            })
         }
+    }
+
+    open fun dispatchChildrenClick(child : View,position: Int){
+        mOnItemClickListener?.onItemClick(child,position)
     }
 
     // </editor-fold>
@@ -363,6 +384,38 @@ open class NineGridLayout(
         }
     }
     // </editor-fold>
+
+    private class SingleClickListenerWrapper(
+        private val originListener : OnClickListener
+    ) : OnClickListener{
+        companion object{
+            /**默认延迟时间*/
+            const val DELAY_TIME = 400
+        }
+
+        /**上次点击时间*/
+        private var mLastTime = 0L
+
+        override fun onClick(v: View?) {
+            val currentTimeMillis = System.currentTimeMillis()
+            if (currentTimeMillis - mLastTime > DELAY_TIME){
+                mLastTime = currentTimeMillis
+                originListener.onClick(v)
+            }
+        }
+    }
+
+    /**
+     * 九宫格Item视图点击事件
+     * */
+    interface OnItemClickListener{
+        /**
+         * Item点击时调用
+         * @param view 触发点击事件的View
+         * @param position 当前点击在九宫格内的索引
+         * */
+        fun onItemClick(view : View,position: Int)
+    }
 
     /**
      * 提供九宫格子View内容的适配器
