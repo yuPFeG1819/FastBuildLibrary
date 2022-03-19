@@ -73,7 +73,7 @@ object ThirdParty {
          * 自用日志输出库
          * * [Gitee](https://gitee.com/yupfeg/logger)
          */
-        const val logger = "com.gitee.yupfeg:logger:1.0.4"
+        const val logger = "com.gitee.yupfeg:logger:1.2.1"
         /**
          * 自用网络库
          * * [Gitee](https://gitee.com/yupfeg/http_request_mediator)
