@@ -13,10 +13,12 @@ import kotlin.reflect.KProperty
 /**
  * [Fragment]拓展函数，通过属性委托的by关键字，获取dataBinding的对象
  * @param T layout对应的DataBinding自动生成类
+ * @param doOnRelease 视图销毁时执行的DataBinding内部变量回收操作，可选，默认为null
  */
 @Suppress("unused")
-inline fun <reified T : ViewDataBinding> Fragment.bindingFragment()
-        = FragmentDataBindingProxy(T::class.java,this)
+inline fun <reified T : ViewDataBinding> Fragment.bindingFragment(
+    noinline doOnRelease : ((T)->Unit)? = null
+) = FragmentDataBindingProxy(T::class.java,this,doOnRelease)
 
 /**
  * [Fragment]获取`DataBinding`实例的属性委托类
@@ -28,7 +30,8 @@ inline fun <reified T : ViewDataBinding> Fragment.bindingFragment()
  */
 class FragmentDataBindingProxy<out T : ViewDataBinding>(
     clazz: Class<T>,
-    fragment: Fragment
+    fragment: Fragment,
+    private val doOnRelease : ((T)->Unit)? = null
 ) : ReadOnlyProperty<Fragment,T>{
 
     private var mViewBinding: T? = null
@@ -44,10 +47,14 @@ class FragmentDataBindingProxy<out T : ViewDataBinding>(
             //在onCreate时添加订阅ViewLifecycleOwner的生命周期，
             fragment.viewLifecycleOwnerLiveData.observe(fragment){ viewLifecycleOwner->
                 //在viewLifecycleOwner有值时添加订阅View的生命周期
-                viewLifecycleOwner?.lifecycle?.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
-                    //在View生命周期结束时,解绑并销毁binding数据，防止内存泄漏
-                    mViewBinding?.unbind()
-                    mViewBinding = null
+                viewLifecycleOwner?.lifecycle?.addObserver(
+                    AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
+                        //在View生命周期结束时,解绑并销毁binding数据，防止内存泄漏
+                        mViewBinding?.also {
+                            doOnRelease?.invoke(it)
+                            it.unbind()
+                            mViewBinding = null
+                        }
                 })
             }
 

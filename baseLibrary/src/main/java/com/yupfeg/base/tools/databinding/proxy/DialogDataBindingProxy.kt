@@ -4,21 +4,22 @@ import android.app.Dialog
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.yupfeg.base.tools.lifecycle.AutoLifecycleStateObserver
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
- * [Fragment]拓展函数，通过属性委托的by关键字，获取dataBinding的对象
+ * [Dialog]拓展函数，通过属性委托的by关键字，获取dataBinding的对象
  * @param T layout对应的DataBinding自动生成类
  * @param layoutId 布局id
+ * @param lifecycle 当前Dialog使用lifecycle
+ * @param doOnRelease 视图销毁时执行的DataBinding内部变量回收操作，可选，默认为null
  */
 @Suppress("unused")
 inline fun <reified T : ViewDataBinding> Dialog.bindingDialog(
-    @LayoutRes layoutId: Int,lifecycle: Lifecycle
-) = DialogDataBindingProxy<T>(layoutId,lifecycle)
+    @LayoutRes layoutId: Int,lifecycle: Lifecycle,noinline doOnRelease : ((T)->Unit)? = null
+) = DialogDataBindingProxy(layoutId,lifecycle,doOnRelease)
 
 /**
  * [Dialog]获取`DataBinding`实例的属性委托类
@@ -28,6 +29,7 @@ inline fun <reified T : ViewDataBinding> Dialog.bindingDialog(
 class DialogDataBindingProxy<T : ViewDataBinding>(
     @LayoutRes private val layoutId : Int,
     lifecycle: Lifecycle,
+    private val doOnRelease : ((T)->Unit)? = null
 ) : ReadOnlyProperty<Dialog, T> {
 
     private var mDataBinding : T? = null
@@ -35,8 +37,11 @@ class DialogDataBindingProxy<T : ViewDataBinding>(
     init {
         lifecycle.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
             //在生命周期结束时，回收binding对象，防止内存泄漏
-            mDataBinding?.unbind()
-            mDataBinding = null
+            mDataBinding?.also {
+                doOnRelease?.invoke(it)
+                it.unbind()
+                mDataBinding = null
+            }
         })
     }
 

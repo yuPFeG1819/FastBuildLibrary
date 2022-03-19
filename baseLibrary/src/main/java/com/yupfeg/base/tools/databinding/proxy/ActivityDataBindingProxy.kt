@@ -13,11 +13,12 @@ import kotlin.reflect.KProperty
  * [ComponentActivity]拓展函数，通过属性委托的by关键字，获取dataBinding的对象
  * @param T layout对应的DataBinding自动生成类
  * @param layoutId 布局id
+ * @param doOnDestroy 执行需要回收DataBinding内部变量的操作，可选，默认为null
  */
 @Suppress("unused")
 inline fun <reified T : ViewDataBinding> ComponentActivity.bindingActivity(
-    @LayoutRes layoutId : Int,
-) = ActivityDataBindingDelegate<T>(layoutId,this.lifecycle)
+    @LayoutRes layoutId : Int, noinline doOnDestroy : ((T?)->Unit)? = null
+) = ActivityDataBindingDelegate(layoutId,this.lifecycle,doOnDestroy)
 
 /**
  * [ComponentActivity]获取`DataBinding`实例的属性委托类
@@ -29,6 +30,7 @@ inline fun <reified T : ViewDataBinding> ComponentActivity.bindingActivity(
 class ActivityDataBindingDelegate<T : ViewDataBinding>(
     @LayoutRes val layoutId : Int,
     lifecycle : Lifecycle,
+    private val doOnDestroy: ((T?) -> Unit)? = null,
 ) : ReadOnlyProperty<ComponentActivity,T>{
 
     private var mViewBinding : T? = null
@@ -36,7 +38,10 @@ class ActivityDataBindingDelegate<T : ViewDataBinding>(
     init {
         lifecycle.addObserver(AutoLifecycleStateObserver(Lifecycle.State.DESTROYED){
             //在Lifecycle.State.DESTROYED 将会解绑并销毁binding，防止内存泄漏
-            mViewBinding?.unbind()
+            mViewBinding?.also {
+                doOnDestroy?.invoke(it)
+                it.unbind()
+            }
             mViewBinding = null
         })
     }
