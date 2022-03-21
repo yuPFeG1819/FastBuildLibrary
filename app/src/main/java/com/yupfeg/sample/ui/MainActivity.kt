@@ -37,7 +37,9 @@ import java.io.File
 
 class MainActivity : BaseActivity() {
 
-    private val mBinding : ActivityMainBinding by bindingActivity(layoutId)
+    private val mBinding : ActivityMainBinding by bindingActivity(layoutId){
+        it?.config = null
+    }
 
     private val mTestResultActivityLauncher = StartActivityResultLauncher(this)
     private val mRequestPermissionLauncher = RequestPermissionLauncher(this)
@@ -104,7 +106,6 @@ class MainActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         logd("onDestroy")
-        mBinding.config = null
         if (mRationalDialogFragment.isAdded){
             mRationalDialogFragment.dismiss()
         }
@@ -182,7 +183,7 @@ class MainActivity : BaseActivity() {
                     Toast.makeText(this@MainActivity,"接收返回值${it["key"]}",Toast.LENGTH_SHORT).show()
                 }
             }
-
+            Toast.makeText(this@MainActivity,"发起页面跳转等待值",Toast.LENGTH_SHORT).show()
 
             //测试跳转页面
 //            mTestResultActivityLauncher.launch<TestResultApiActivity>{ resultIntent->
