@@ -1,11 +1,64 @@
 package com.yupfeg.base.tools.pool
 
 import androidx.core.util.Pools
+import com.yupfeg.base.tools.pool.ObjectFactoryPool.Companion.DEFAULT_POOL_SIZE
 import com.yupfeg.logger.ext.logd
 
 /**
+ * 快捷构建线程安全的对象缓存池
+ * @param poolSize 缓存池大小
+ * @param creator 对象池的新对象创建逻辑
+ * @param reset 对象回收重置逻辑，默认可为null
+ * */
+@Suppress("unused")
+fun <T> threadSafeObjectPools(
+    poolSize: Int = DEFAULT_POOL_SIZE,
+    creator : (()->T),
+    reset : ((T)->Unit)? = null
+) : ObjectFactoryPool<T>{
+    return ObjectFactoryPool.createThreadSafe(poolSize,
+        createFactory = object : ObjectFactoryPool.CreateFactory<T>{
+            override fun create(): T {
+                return creator.invoke()
+            }
+        },
+        resetFactory = object : ObjectFactoryPool.ResetFactory<T>{
+            override fun reset(instance: T) {
+                reset?.invoke(instance)
+            }
+        }
+    )
+}
+
+/**
+ * 快捷构建，线程不安全的对象缓存池
+ * @param poolSize 缓存池大小
+ * @param creator 对象创建逻辑
+ * @param reset 对象回收重置逻辑，默认可为null
+ * */
+@Suppress("unused")
+fun <T> objectPools(
+    poolSize: Int = DEFAULT_POOL_SIZE,
+    creator: () -> T,
+    reset: ((T) -> Unit)? = null
+) : ObjectFactoryPool<T>{
+    return ObjectFactoryPool.createUnSafe(poolSize,
+        createFactory = object : ObjectFactoryPool.CreateFactory<T>{
+            override fun create(): T {
+                return creator.invoke()
+            }
+        },
+        resetFactory = object : ObjectFactoryPool.ResetFactory<T>{
+            override fun reset(instance: T) {
+                reset?.invoke(instance)
+            }
+        }
+    )
+}
+
+/**
  * 自定义对象池
- * * 修改自Glide库内部的FactoryPools
+ * * 修改自Glide库内部的`FactoryPools`，内部使用`Pools`构建对象池
  * @author yuPFeG
  * @date 2020/12/17
  */
@@ -18,7 +71,7 @@ class ObjectFactoryPool<T> private constructor(
 
     companion object{
         private const val TAG = "FactoryObjectPool"
-        private const val DEFAULT_POOL_SIZE = 5
+        const val DEFAULT_POOL_SIZE = 5
 
         @Suppress("unused")
         @JvmStatic
@@ -28,6 +81,14 @@ class ObjectFactoryPool<T> private constructor(
             resetFactory: ResetFactory<T>? = null
         ) : ObjectFactoryPool<T>{
             return createInstance(Pools.SynchronizedPool(poolSize),createFactory,resetFactory)
+        }
+
+        fun <T> createUnSafe(
+            poolSize : Int = DEFAULT_POOL_SIZE,
+            createFactory : CreateFactory<T>,
+            resetFactory: ResetFactory<T>? = null
+        ) : ObjectFactoryPool<T>{
+            return createInstance(Pools.SimplePool(poolSize),createFactory,resetFactory)
         }
 
         @Suppress("unused")
