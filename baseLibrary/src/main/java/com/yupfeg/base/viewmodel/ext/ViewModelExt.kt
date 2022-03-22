@@ -66,8 +66,7 @@ inline fun <reified T : ViewModel> Fragment.viewModelDelegate(
 @MainThread
 inline fun <reified T : ViewModel> Fragment.activityViewModelDelegate(
     noinline factoryProducer : (()-> ViewModelProvider.Factory)?= null
-)
-    = ViewModelDelegate(
+) = ViewModelDelegate(
     clazz = T::class,
     storeProducer = {requireActivity().viewModelStore},
     factoryProducer = factoryProducer?:{requireActivity().defaultViewModelProviderFactory}

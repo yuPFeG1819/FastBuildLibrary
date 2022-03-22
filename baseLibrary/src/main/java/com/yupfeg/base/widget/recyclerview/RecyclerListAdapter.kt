@@ -19,7 +19,6 @@ typealias AdapterItemStrategy = BaseItemStrategy<Any, RecyclerView.ViewHolder>
  *
  * @param mItemStrategies adapter的item策略类Map，管理当前adapter内部所有具体业务逻辑的item委托类
  * @param diffExecutor diff计算执行的线程池
- *ActivityThread
  * @author yuPFeG
  * @date 2020/10/20
  */
