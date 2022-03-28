@@ -92,11 +92,11 @@ object WebViewPool{
             clearCache(true)
             //从父布局中移除视图
             (parent as? ViewGroup)?.removeView(instance)
-//            //销毁webView内所有对象
-//            removeAllViews()
-//            destroy()
+            //销毁webView内所有对象
+            removeAllViews()
+            destroy()
             //重新添加到缓存队列
-            mQueue.offer(this)
+//            mQueue.offer(this)
         }
     }
 
@@ -131,9 +131,10 @@ object WebViewPool{
      * */
     private fun WebView.performWebViewOptions(opts: WebViewOptions) : WebView{
         settings.initWebViewSetting(opts)
-        //在原有user Agent后面拼接固定字段，标识为来自app访问
-        settings.userAgentString =
-            "${settings.userAgentString} ${opts.extraUserAgent}"
+        //在原有user Agent后面拼接固定字段
+        opts.extraUserAgent?.also {
+            settings.userAgentString = "${settings.userAgentString} $it"
+        }
         //设置滚动条的样式
         scrollBarStyle = WebView.SCROLLBARS_OUTSIDE_OVERLAY
         opts.webChromeClient?.also {
