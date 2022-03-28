@@ -4,11 +4,16 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
-import com.yupfeg.base.application.BaseApplication
 import com.yupfeg.base.viewmodel.BaseViewModel
 import com.yupfeg.drawable.*
+import com.yupfeg.sample.App
 import com.yupfeg.sample.domain.OtherUseCase
 import com.yupfeg.sample.domain.TestUseCase
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  *
@@ -24,9 +29,18 @@ class MainViewModel : BaseViewModel(){
 
     val testTextColorState = createTextColorStateList()
 
+    private val mEventShardFlow = MutableSharedFlow<String>(
+        replay = 0, extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val eventSharedFlow : SharedFlow<String> = mEventShardFlow.asSharedFlow()
+
     init {
         addUseCase(testUseCase)
         addUseCase(otherUserCase)
+    }
+
+    fun sendSharedEvent(name : String){
+        mEventShardFlow.tryEmit("test ${name}")
     }
 
     private fun createTestCodeDrawable() : Drawable {
@@ -36,7 +50,7 @@ class MainViewModel : BaseViewModel(){
                 left = 3
                 top = 3
                 drawable = shapeDrawable {
-                    solid = ContextCompat.getColor(BaseApplication.appContext,android.R.color.darker_gray)
+                    solid = ContextCompat.getColor(App.appContext,android.R.color.darker_gray)
                     radius = 12f
                 }
             }

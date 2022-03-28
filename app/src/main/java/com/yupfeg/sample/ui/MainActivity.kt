@@ -11,6 +11,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.yupfeg.base.tools.ContactsTools
 import com.yupfeg.base.tools.databinding.proxy.bindingActivity
@@ -32,6 +34,8 @@ import com.yupfeg.sample.TestWindowInsetActivity
 import com.yupfeg.sample.databinding.ActivityMainBinding
 import com.yupfeg.sample.ui.list.TestListActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -103,6 +107,11 @@ class MainActivity : BaseActivity() {
         logd("onPause")
     }
 
+    override fun onStop() {
+        super.onStop()
+        logd("onStop")
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         logd("onDestroy")
@@ -140,7 +149,13 @@ class MainActivity : BaseActivity() {
     }
 
     /**初始化数据*/
-    override fun initData() {}
+    override fun initData() {
+        mViewModel.eventSharedFlow.flowWithLifecycle(this.lifecycle,Lifecycle.State.STARTED)
+            .onEach {
+                showShortToast("show ${it}")
+            }
+            .launchIn(lifecycleScope)
+    }
 
     /**
      * [Context]的拓展函数，获取当前主题颜色属性
@@ -232,6 +247,7 @@ class MainActivity : BaseActivity() {
         }
 
         fun showTestDialog(){
+            mViewModel.sendSharedEvent("showDialog")
             if (!mTestDialog.isShowing){
                 mTestDialog.show()
             }

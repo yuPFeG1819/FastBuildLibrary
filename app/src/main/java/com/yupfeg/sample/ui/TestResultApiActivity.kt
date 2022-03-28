@@ -14,6 +14,7 @@ import com.yupfeg.base.view.activity.BaseActivity
 import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.sample.R
 import com.yupfeg.sample.databinding.ActivityTestResultApiBinding
+import com.yupfeg.sample.ui.list.TestListActivity
 
 /**
  *
@@ -87,6 +88,7 @@ class TestResultApiActivity : BaseActivity(){
     override fun initData() {
         mViewModel.spannableClickEvent.observe(this){
             showShortToast("点击SpannableString")
+            startActivity(Intent(this@TestResultApiActivity,TestListActivity::class.java))
         }
     }
 
