@@ -75,7 +75,7 @@ class GlideLoadHelper : ImageLoadable {
         Glide.with(context).resumeRequests()
     }
 
-    override fun cleanTargetViewBitmapCache(imageView: ImageView) {
+    override fun clearTargetViewRequest(imageView: ImageView) {
         Glide.with(imageView.context).clear(imageView)
     }
 

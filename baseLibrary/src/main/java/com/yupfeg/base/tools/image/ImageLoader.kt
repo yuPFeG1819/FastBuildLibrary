@@ -66,13 +66,13 @@ object ImageLoader {
     }
 
     /**
-     * 清理指定View的Bitmap
+     * 清理指定View的正在进行的请求
      * @param imageView 指定ImageView
      */
     @Suppress("unused")
     @JvmStatic
-    fun clearBitmapCacheOnView(imageView: ImageView) {
-        imageLoadHelper.cleanTargetViewBitmapCache(imageView)
+    fun clearTargetViewRequest(imageView: ImageView) {
+        imageLoadHelper.clearTargetViewRequest(imageView)
     }
 
     /**

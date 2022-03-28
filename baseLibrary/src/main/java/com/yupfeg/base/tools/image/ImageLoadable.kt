@@ -47,10 +47,10 @@ interface ImageLoadable {
     fun resumeRequest(context: Context)
 
     /**
-     * 清理指定View的bitmap缓存
+     * 清理指定View的正在进行的请求
      * @param imageView
      * */
-    fun cleanTargetViewBitmapCache(imageView: ImageView)
+    fun clearTargetViewRequest(imageView: ImageView)
 
     /**
      * 清理所有图片缓存
