@@ -25,7 +25,7 @@ object ThirdParty {
          * kotlin插件与api版本号
          * 需要与dependencies.gradle内的versions.kotlin_plugin保持一致
          * */
-        private const val kotlinVersion = "1.5.31"
+        private const val kotlinVersion = "1.6.10"
         private const val coroutinesVersion = "1.5.2"
         const val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
@@ -73,12 +73,12 @@ object ThirdParty {
          * 自用日志输出库
          * * [Gitee](https://gitee.com/yupfeg/logger)
          */
-        const val logger = "com.gitee.yupfeg:logger:1.2.1"
+        const val logger = "com.gitee.yupfeg:logger:1.2.2"
         /**
          * 自用网络库
          * * [Gitee](https://gitee.com/yupfeg/http_request_mediator)
          */
-        const val httpMediator = "com.gitee.yupfeg:http_request_mediator:1.0.6"
+        const val httpMediator = "com.gitee.yupfeg:http_request_mediator:1.0.9"
 
         /**
          * 自用的单次执行LiveData封装
