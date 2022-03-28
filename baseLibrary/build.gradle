@@ -97,7 +97,6 @@ dependencies {
     api (AndroidX.Lifecycle.liveDataKtx)
     api (AndroidX.Lifecycle.viewModelSavedState)
     api (AndroidX.Lifecycle.service)
-    api (AndroidX.Lifecycle.process)
 
 //    kapt (AndroidX.Lifecycle.compiler)
     //Navigation库
