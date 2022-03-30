@@ -47,7 +47,7 @@
 
   > - `UseCase`内提供给`CoroutineScope`根据生命周期管理任务调度。
   >
-  > - 添加`UseCaseTaskScheduler`支持`UseCase`在非UI场景使用。
+  > - 整合提供`UseCaseQueue`，在`ViewModel`与其他非UI场景的业务用例维护逻辑，在时机合适时取消业务用例
   >
   > - 如果是MVI架构可尝试只在`UseCase`内进行业务逻辑处理，数据状态交由外部`ViewModel`进行统一管理。
   >
@@ -55,7 +55,6 @@
 
 - `ViewModel`拓展
 
-  > - 自定义`ViewModel`的委托类，利用by关键字获取实例，并且同时为内部持有的`UseCase`对象订阅视图生命周期
   > - 新增`Application`作用域的`ViewModelStore`，提供添加允许在全应用作用域的`ViewModel`，用于分发视图信息，统一管理跨页面事件分发，避免不可控的全局事件分发
 
 - 提供`DataMapper`，隔离数据层与表现层
@@ -166,12 +165,32 @@
 
 ## 其他杂项
 
+- 整合应用进程全局功能，抽离移除`Application`的基类，避免继承的耦合
+
+  > 参考`Jetpack ProcessLifecycleOwner`的思路，通过`Application.registerActivityLifecycleCallbacks`订阅所有`Activity`的生命周期变化。
+  >
+  > 1. 对外提供`LifecycleOwner`，内部创建`LifecycleRegistry`，用于监听在前台视图启动后，分发应用生命周期，
+  >
+  > - onCreate只会分发一次，在第一次应用启动时分发
+  > - 在第一个Activity进入前台时，依次分发onStart、onResume
+  > - 在最后一个Activbity进入onPause时，启动延迟任务，延迟足够长时间，以过滤屏幕旋转重建的情况
+  > - 然后分发onPause、onStop事件，确定应用进入后台。
+  >
+  > 外部可以利用这个全局`LifecycleOwner`的`Lifecycle`，方便的监听应用进入前后台。
+  >
+  > 2. 提供`ActivityStack`栈，管理所有启动的Activity，在onCreate时推入栈，在onDestory时移出栈
+  >
+  >    方便进行对于视图的管理
+  >
+  > 3. 提供Application范围的协程作用域，以替代`GlobalScope`。
+  >
+  > 4. 提供Application范围的`ViewModelStroe`，方便利用在全`Application`范围的共享ViewModel，跨页面传递分发信息
+
 - 自定义View
   - 未读消息红点标记视图 `BadgeView`
   - 九宫格布局 `NineGridLayout`
   - 弧形进度条 `ArcProgressBar`
-  - 
-
+  
 - 桌面消息红点提醒
 
   > 利用类的多态，（静态策略）模式，根据设备品牌控制桌面红点操作
@@ -179,7 +198,7 @@
 - WebView缓存池
 
   > 尝试管理WebView实例，提供kotlin-dsl方式配置webView属性
-  > 仅提供预加载，除第一次加载WebView外，后续加载速度很快，且destroy后暂无办法复用
+  > 仅提供预加载功能，除第一次加载WebView外，后续加载速度很快，且destroy后暂无办法复用
   >
   > TODO :
   > - 尝试WebView放入单独进程，需要跨进程通信
