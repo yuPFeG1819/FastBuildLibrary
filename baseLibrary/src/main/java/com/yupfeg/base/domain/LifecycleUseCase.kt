@@ -8,7 +8,7 @@ import com.yupfeg.logger.ext.logd
 
 /**
  * 允许绑定视图生命周期的业务逻辑用例基类
- * - 仅在`ViewModel`内使用，需要手动绑定到视图的[Lifecycle]
+ * - 其实现类仅能在`ViewModel`内使用，需要手动绑定到视图的[Lifecycle]，不允许使用在后台场景的用例继承该类
  * - 谨慎继承该类，避免子类直接使用LifecycleOwner
  * - 特定场景可能需要视图生命周期，可以抽离部分页面的功能
  * ```

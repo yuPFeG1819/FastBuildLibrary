@@ -7,7 +7,9 @@ import kotlinx.coroutines.cancel
 
 /**
  * 业务用例的接口声明
- * * 需要手动管理内部
+ * * 推荐在`ViewModel`内统一调度所有，抽离`ViewModel`内重复的业务逻辑代码，方便在其他作用域复用，
+ * 例如向数据层请求数据的业务逻辑
+ * * 允许`UseCase`脱离`ViewModel`，单独运行在进程后台，提供给后台Service或者其他非UI场景
  * @author yuPFeG
  * @date 2021/10/08
  */

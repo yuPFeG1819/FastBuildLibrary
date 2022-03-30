@@ -20,7 +20,7 @@ import autodispose2.lifecycle.CorrespondingEventsFunction
 import autodispose2.lifecycle.LifecycleEndedException
 import autodispose2.lifecycle.LifecycleScopeProvider
 import com.yupfeg.base.domain.UseCase
-import com.yupfeg.base.viewmodel.BaseViewModel
+import com.yupfeg.base.domain.UseCaseQueue
 import com.yupfeg.rxjavasupport.domain.AutoDisposeUseCase
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -30,7 +30,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
  * 实现[LifecycleScopeProvider],能够自动管理ViewModel内调用的RxJava订阅
  */
 @Suppress("unused")
-open class AutoDisposeViewModel : BaseViewModel(), LifecycleScopeProvider<ViewModelScopeEvent> {
+open class AutoDisposeViewModel : ViewModel(), LifecycleScopeProvider<ViewModelScopeEvent> {
 
     companion object {
         /**
@@ -45,6 +45,12 @@ open class AutoDisposeViewModel : BaseViewModel(), LifecycleScopeProvider<ViewMo
                     "Cannot bind to ViewModel lifecycle after onCleared.")
             }
         }
+    }
+
+    private var isAddUseCase = false
+
+    private val mUseCaseScheduler : UseCaseQueue by  lazy(LazyThreadSafetyMode.NONE){
+        UseCaseQueue()
     }
 
     // Subject backing the auto disposing of subscriptions.
@@ -82,12 +88,13 @@ open class AutoDisposeViewModel : BaseViewModel(), LifecycleScopeProvider<ViewMo
 
     // </editor-fold>
 
-    override fun addUseCase(useCase: UseCase) {
+    protected fun addUseCase(useCase: UseCase) {
         (useCase as? AutoDisposeUseCase)?.apply {
             //赋值绑定的用例类对应的autoDispose作用域
             this.scopeProvider = this@AutoDisposeViewModel
         }
-        super.addUseCase(useCase)
+        mUseCaseScheduler.add(useCase)
+        if (!isAddUseCase) isAddUseCase = true
     }
 
     /**
@@ -96,7 +103,7 @@ open class AutoDisposeViewModel : BaseViewModel(), LifecycleScopeProvider<ViewMo
      */
     override fun onCleared() {
         lifecycleEvents.onNext(ViewModelScopeEvent.CLEARED)
-        super.onCleared()
+        mUseCaseScheduler.cancelAndRemoveAll()
     }
 
 
