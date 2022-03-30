@@ -9,7 +9,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 /**
- * 作用域覆盖Application的ViewModel代理类
+ * Application作用域的ViewModel代理类
+ * - 内部创建的ViewModel相当于进程内单例
  * @author yuPFeG
  * @date 2021/09/20
  */
@@ -40,7 +41,7 @@ class AppViewModelDelegate<out T : ViewModel>(
     private fun getViewModelInstance() : T{
         val viewModelStore = ProcessLifecycleOwner.viewModelStore
         val factory = factoryProducer()
-        //从Application作用域范围的ViewModel实例（相当于单例）
+        //Application作用域范围的ViewModel实例（相当于单例）
         return mViewModel?:ViewModelProvider(viewModelStore,factory)[clazz.java]
             .also { mViewModel = it }
     }
