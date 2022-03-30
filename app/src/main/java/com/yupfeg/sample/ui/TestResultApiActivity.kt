@@ -2,16 +2,15 @@ package com.yupfeg.sample.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Messenger
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.FrameLayout
+import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import com.yupfeg.base.tools.databinding.proxy.bindingActivity
-import com.yupfeg.base.tools.pool.WebViewPool
 import com.yupfeg.base.tools.ext.showShortToast
+import com.yupfeg.base.tools.pool.WebViewPool
 import com.yupfeg.base.view.activity.BaseActivity
-import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.sample.R
 import com.yupfeg.sample.databinding.ActivityTestResultApiBinding
 import com.yupfeg.sample.ui.list.TestListActivity
@@ -23,9 +22,9 @@ import com.yupfeg.sample.ui.list.TestListActivity
  */
 class TestResultApiActivity : BaseActivity(){
     private val mBinding : ActivityTestResultApiBinding by bindingActivity(layoutId)
-    private val mViewModel : TestResultViewModel by viewModelDelegate()
+    private val mViewModel : TestResultViewModel by viewModels()
 
-    private var mMessenger : Messenger? = null
+//    private var mMessenger : Messenger? = null
 //    private var mTestAIDL : TestServiceAIDL? = null
 
     private var mWebView : WebView ?= null

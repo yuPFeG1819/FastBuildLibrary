@@ -3,14 +3,14 @@ package com.yupfeg.sample.ui
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.yupfeg.base.viewmodel.BaseViewModel
+import androidx.lifecycle.ViewModel
 
 /**
  *
  * @author yuPFeG
  * @date
  */
-class TestWindowInsetViewModel : BaseViewModel(){
+class TestWindowInsetViewModel : ViewModel(){
 
     val onTestInputTest = ObservableField("")
 

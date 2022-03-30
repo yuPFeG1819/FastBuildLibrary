@@ -1,6 +1,7 @@
 package com.yupfeg.sample.ui.list
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yupfeg.base.tools.databinding.proxy.bindingActivity
@@ -8,8 +9,8 @@ import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.tools.process.ProcessLifecycleOwner
 import com.yupfeg.base.tools.window.fitImmersiveStatusBar
 import com.yupfeg.base.view.activity.BaseActivity
-import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.base.widget.recyclerview.RecyclerListAdapter
+import com.yupfeg.base.widget.recyclerview.smoothScrollToPositionOnStart
 import com.yupfeg.base.widget.recyclerview.strategy.SimpleLoadMoreListItemDelegate
 import com.yupfeg.sample.R
 import com.yupfeg.sample.databinding.ActivityTestListBinding
@@ -22,7 +23,7 @@ import com.yupfeg.sample.widget.ITitleConfig
  */
 class TestListActivity : BaseActivity(){
     private val mBinding : ActivityTestListBinding by bindingActivity(layoutId)
-    private val mViewModel : TestListViewModel by viewModelDelegate()
+    private val mViewModel : TestListViewModel by viewModels()
 
     private val mListAdapter : RecyclerListAdapter by lazy(LazyThreadSafetyMode.NONE){
         createListAdapter()
@@ -66,6 +67,9 @@ class TestListActivity : BaseActivity(){
 
             override fun onPraise(itemBean: TestListItemBean) {
                 showShortToast("点赞${itemBean.id}")
+                if (itemBean.id > 116){
+                    mBinding.rvTestList.smoothScrollToPositionOnStart(0)
+                }
             }
 
         })

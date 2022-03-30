@@ -10,6 +10,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -24,7 +25,6 @@ import com.yupfeg.base.tools.window.fitToSystemStatusBar
 import com.yupfeg.base.tools.window.getStatusBarHeight
 import com.yupfeg.base.tools.window.isNavigationBarVisible
 import com.yupfeg.base.view.activity.BaseActivity
-import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.logger.ext.logd
 import com.yupfeg.result.*
 import com.yupfeg.result.permission.RequestPermissionLauncher
@@ -54,7 +54,7 @@ class MainActivity : BaseActivity() {
     private val mPickContentLauncher = PickContentLauncher(this)
     private val mGetContentLauncher = GetMultiContentsLauncher(this)
 
-    private val mViewModel : MainViewModel by viewModelDelegate()
+    private val mViewModel : MainViewModel by viewModels()
 
     private val mRationalDialogFragment : DefaultRationaleDialogFragment
         by lazy(LazyThreadSafetyMode.NONE){
@@ -84,6 +84,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycle.addObserver(mViewModel.testUseCase)
         logd("onCreate")
     }
 
@@ -169,10 +170,6 @@ class MainActivity : BaseActivity() {
     }
 
     inner class BindingConfig{
-
-        fun naviBack(){
-            finish()
-        }
 
         fun testRequestPermission(){
             requestPermissions(

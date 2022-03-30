@@ -5,21 +5,18 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.method.MovementMethod
 import androidx.databinding.ObservableField
+import androidx.lifecycle.ViewModel
 import com.yupfeg.base.tools.spannable.append
 import com.yupfeg.base.tools.ext.dipToPx
-import com.yupfeg.base.viewmodel.BaseViewModel
 import com.yupfeg.livedata.EventLiveData
 import com.yupfeg.livedata.MutableEventLiveData
-import com.yupfeg.sample.domain.TestUseCase
 
 /**
  *
  * @author yuPFeG
  * @date
  */
-class TestResultViewModel : BaseViewModel() {
-
-    val testUseCase = TestUseCase()
+class TestResultViewModel : ViewModel() {
 
     val testSpannableString = ObservableField<CharSequence>()
     val textClickMovementMethod: MovementMethod = LinkMovementMethod.getInstance()

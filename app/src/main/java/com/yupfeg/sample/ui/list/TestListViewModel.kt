@@ -2,8 +2,9 @@ package com.yupfeg.sample.ui.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yupfeg.base.viewmodel.BaseViewModel
+import com.yupfeg.base.domain.UseCaseQueue
 import com.yupfeg.executor.ExecutorProvider
 import com.yupfeg.sample.data.DataRepository
 import com.yupfeg.sample.domain.WanAndroidArticleUseCase
@@ -18,18 +19,24 @@ import kotlinx.coroutines.launch
  * @author yuPFeG
  * @date
  */
-class TestListViewModel(dataRepo : DataRepository = DataRepository()) : BaseViewModel(){
+class TestListViewModel(dataRepo : DataRepository = DataRepository()) : ViewModel(){
 
     val titleName : LiveData<String>
         get() = mTitleName
 
     private val mTitleName = MutableLiveData("测试列表")
 
+    private val mUseCaseScheduler = UseCaseQueue()
+
     val articleUseCase = WanAndroidArticleUseCase(dataRepo)
 
     private val mListStateFlow = MutableStateFlow<List<Any>>(emptyList())
 
     val listStateFlow : StateFlow<List<Any>> = mListStateFlow.asStateFlow()
+
+    init {
+        mUseCaseScheduler.add(articleUseCase)
+    }
 
     fun getTestListData(){
 
@@ -54,4 +61,8 @@ class TestListViewModel(dataRepo : DataRepository = DataRepository()) : BaseView
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        mUseCaseScheduler.cancelAndRemoveAll()
+    }
 }

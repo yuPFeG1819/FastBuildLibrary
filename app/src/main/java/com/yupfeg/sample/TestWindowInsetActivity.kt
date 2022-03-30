@@ -3,13 +3,13 @@ package com.yupfeg.sample
 import android.os.Bundle
 import android.text.TextWatcher
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.*
 import androidx.lifecycle.LiveData
 import com.yupfeg.base.tools.databinding.proxy.bindingActivity
 import com.yupfeg.base.tools.ext.showShortToast
 import com.yupfeg.base.tools.window.*
-import com.yupfeg.base.viewmodel.ext.viewModelDelegate
 import com.yupfeg.base.widget.ext.DSLTextWatcher
 import com.yupfeg.base.widget.ext.hideKeyboard
 import com.yupfeg.base.widget.ext.showKeyboard
@@ -28,7 +28,7 @@ class TestWindowInsetActivity : AppCompatActivity(){
     private val mBinding : ActivityTestWindowInsetBinding
         by bindingActivity(R.layout.activity_test_window_inset)
 
-    private val mViewModel : TestWindowInsetViewModel by viewModelDelegate()
+    private val mViewModel : TestWindowInsetViewModel by viewModels()
 
     private var isInput : Boolean = false
 

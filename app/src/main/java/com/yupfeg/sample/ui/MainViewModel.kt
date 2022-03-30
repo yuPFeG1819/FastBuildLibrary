@@ -4,13 +4,13 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
-import com.yupfeg.base.viewmodel.BaseViewModel
+import androidx.lifecycle.ViewModel
+import com.yupfeg.base.domain.UseCaseQueue
 import com.yupfeg.drawable.*
 import com.yupfeg.sample.App
 import com.yupfeg.sample.domain.OtherUseCase
 import com.yupfeg.sample.domain.TestUseCase
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -20,10 +20,12 @@ import kotlinx.coroutines.flow.asSharedFlow
  * @author yuPFeG
  * @date
  */
-class MainViewModel : BaseViewModel(){
+class MainViewModel : ViewModel(){
 
     val testUseCase = TestUseCase()
     val otherUserCase = OtherUseCase()
+
+    private val mUseCaseQueue = UseCaseQueue()
 
     val testDrawableBg = createTestCodeDrawable()
 
@@ -35,8 +37,8 @@ class MainViewModel : BaseViewModel(){
     val eventSharedFlow : SharedFlow<String> = mEventShardFlow.asSharedFlow()
 
     init {
-        addUseCase(testUseCase)
-        addUseCase(otherUserCase)
+        mUseCaseQueue.add(testUseCase)
+        mUseCaseQueue.add(otherUserCase)
     }
 
     fun sendSharedEvent(name : String){
@@ -86,6 +88,10 @@ class MainViewModel : BaseViewModel(){
                 addState(AttrStates.StatePressed,false)
             }
         }
+    }
+
+    override fun onCleared() {
+        mUseCaseQueue.cancelAndRemoveAll()
     }
 
 }
