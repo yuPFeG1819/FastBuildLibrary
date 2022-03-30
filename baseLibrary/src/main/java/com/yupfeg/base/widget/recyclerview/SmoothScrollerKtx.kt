@@ -24,7 +24,7 @@ fun RecyclerView.smoothScrollToPositionOnStart(position: Int){
  * */
 @Suppress("unused")
 fun RecyclerView.smoothScrollToPositionOnEnd(position: Int){
-    smoothScrollToPosition(position,SNAP_TO_START)
+    smoothScrollToPosition(position,SNAP_TO_END)
 }
 
 /**
